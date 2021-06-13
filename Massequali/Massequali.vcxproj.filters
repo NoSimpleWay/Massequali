@@ -60,6 +60,9 @@
     <ClCompile Include="EWindowMain.cpp">
       <Filter>External</Filter>
     </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>External</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ext\includes\NSW_api\Batcher.h">
@@ -96,6 +99,9 @@
       <Filter>NSW_api</Filter>
     </ClInclude>
     <ClInclude Include="EWindowMain.h">
+      <Filter>External</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
       <Filter>External</Filter>
     </ClInclude>
   </ItemGroup>

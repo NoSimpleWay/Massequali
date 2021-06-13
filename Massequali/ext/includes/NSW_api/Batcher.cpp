@@ -1490,7 +1490,7 @@ void Batcher::draw_call_terrain()
 void Batcher::draw_call_shadowmap()
 {
 	glBindVertexArray(VAO);
-	glDrawElements(GL_TRIANGLES, 6 * (id / 56), GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, 6 * (id / 60), GL_UNSIGNED_INT, 0);
 }
 
 void Batcher::reset()

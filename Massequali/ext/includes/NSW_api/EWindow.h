@@ -29,9 +29,325 @@
 //#include "NSW_api/EWindowTest.h"
 
 class EWindowMain;
-class EButton;
+class EWindow;
+
+class EButton
+{
+public:
+	typedef void (*BUTTON_ACTION)(EButton* _b, float _d);
+
+	std::vector<BUTTON_ACTION> action_on_left_click;
+
+	enum ButtonSimpleChangerActivationType
+	{
+		CHANGER_ACTIVATION_TYPE_LEFT_CLICK,
+		CHANGER_ACTIVATION_TYPE_RIGHT_CLICK,
+		CHANGER_ACTIVATION_TYPE_DOUBLE_LEFT_CLICK,
+		CHANGER_ACTIVATION_TYPE_DROP_LIST_EXPAND,
+		CHANGER_ACTIVATION_TYPE_DROP_LIST_SELECT_ELEMENT,
+		CHANGER_ACTIVATION_TYPE_SLIDER_DRAG
+	};
+
+//////////////////////////////
+	struct SimpleFloatChanger
+	{
+		float*		target_float_pointer		= NULL;
+		float*		float_value					= new float(0.0f);
+		enum SimpleFloatChangerType
+		{
+			SIMPLE_FLOAT_CHANGER_BUTTON_VALUE,
+			SIMPLE_FLOAT_CHANGER_CONSTANT
+		};
+
+		int* float_changer_type = new int(0);
+	};
+	std::vector <SimpleFloatChanger*> simple_float_changer_list;
+//////////////////////////////
+	struct SimpleTextureChanger
+	{
+		EGabarite**		target_texture_pointer	= NULL;
+		EGabarite*		texture_value			= NULL;
+		enum SimpleTextureChangerType
+		{
+			SIMPLE_TEXTURE_CHANGER_BUTTON_VALUE,
+			SIMPLE_TEXTURE_CHANGER_CONSTANT
+		};
+
+		int* texture_changer_type = new int(0);
+	};
 
 
+	std::vector <SimpleTextureChanger*> simple_texture_changer_list;
+
+	//std::vector <float*> simple_float_changer;
+
+	BUTTON_ACTION action_on_left_double_click;
+	float* click_timer = new float(0.0f);
+
+	BUTTON_ACTION action_on_right_click;
+
+	BUTTON_ACTION action_on_input;
+	BUTTON_ACTION action_on_input_finish;
+
+	BUTTON_ACTION action_on_slider_drag;
+	BUTTON_ACTION action_on_drop_list_select_element;
+
+	//std::vector < DefaultButtonActions::SimpleValueChanger* > simple_value_changer_list;
+	
+	int * target_address_for_int;
+	int* target_value_for_int = new int(0);
+
+	float * target_address_for_float;
+	float * target_value_for_float = new float (0.0f);
+
+	bool* target_address_for_bool;
+	bool* target_value_for_bool = new bool(false);
+
+	short* target_address_for_short;
+	short* target_value_for_short = new short(1);
+
+	EGabarite** target_address_for_gabarite;
+
+	std::string* target_address_for_string;
+	std::string* target_value_for_string = new std::string("");
+
+	static void static_click();
+	static void static_click2();
+
+	static void set_left_click_action(void(*function)(EButton*, float));
+
+	float button_x_offset = 10;
+	float button_y_offset = 200;
+
+	float button_base_x = 200;
+	float button_base_y = 200;
+
+	float button_size_x = 100;
+	float button_size_y = 25;
+
+	float button_min_size_x = 100;
+	float button_min_size_y = 25;
+
+	std::string text = "";
+
+	bool have_input_mode = false;
+	bool is_input_mode_active = false;
+
+	bool is_active = true;
+	bool icon_adaptation = true;
+
+	float bound_size_left = 0;
+	float bound_size_right = 0;
+	float bound_size_up = 0;
+	float bound_size_down = 0;
+
+	bool is_expanded = false;
+	bool is_drop_list = false;
+
+	int master_position = Enums::PositionMaster::WINDOW;
+
+	int drop_elements = 0;
+	std::vector<string> drop_text;
+	std::vector<string> drop_text_base;
+	bool have_list_color = false;
+	std::vector<EColor*> drop_list_color;
+
+	bool slider_activate = false;
+
+	EGabarite* gabarite = NULL;
+
+	bool have_icon = false;
+	EColor* icon_color = new EColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+	int position_mode_x = Enums::PositionMode::LEFT;
+	int position_mode_y = Enums::PositionMode::DOWN;
+
+	int text_align_x = Enums::PositionMode::LEFT;
+
+	EWindow* master_window;
+	EButton* master_button;
+
+
+	float master_position_x = 0;
+	float master_position_y = 0;
+
+	EButton();
+	EButton(float _x, float _y, float _sx, float _sy);
+	//EButton(float _x, float _y, float _sx, float _sy, Enums::ButtonType _type);
+
+	bool have_description = true;
+	string description_text;
+	string prev_description_text;
+
+	bool have_text = true;
+
+	string input_hint;
+
+
+
+	~EButton();
+
+	bool is_number(char _c);
+
+	bool is_overlap();
+	bool is_click();
+	bool is_outclick();
+	bool is_right_click();
+	bool have_bg = true;
+	void update(float _d);
+	virtual void update_additional(float _d);
+
+	bool is_holdable = false;
+
+	bool is_slider = false;
+	float slider_value;
+	float slider_value_multiplier = 1.0f;
+
+	virtual void additional_draw(Batcher* _batch, float _d);
+	void default_draw(Batcher* _batch, float _d);
+
+
+	void text_pass(Batcher* _batch);
+	//virtual void incoming_data(FilterBlock* _block);
+
+	bool outclick_protection = false;
+
+	virtual void click_event();
+	virtual void right_click_event();
+	virtual void input_event();
+	virtual void input_finish_event();
+	virtual void drop_list_select_event();
+
+	virtual void slider_drag_event();
+
+
+	static int top_window_id;
+
+	bool flash_line_active = false;
+	float flash_cooldown = 0.5f;
+
+	bool can_be_removed = false;
+	bool* need_remove = new bool(false);
+
+	bool have_rama = false;
+	int rama_thikness = 2;
+	EColor* rama_color = new EColor(0.0f, 0.0f, 0.0f, 1.0f);
+	EColor* bg_color = new EColor(0.8f, 0.8f, 0.8f, 0.75f);
+	EColor* text_color = new EColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+	int catched_element = 0;
+	int selected_element = 0;
+
+	//Enums::ButtonType button_type;
+
+	bool input_only_numbers = false;
+
+	int data_id;
+
+	EColor* icon_color_default = new EColor(1.0f, 1.0f, 1.0f, 1.0f);
+	EColor* icon_color_deactivated = new EColor(0.5f, 0.5f, 0.5f, 0.5f);
+
+	EColor* rama_color_default = new EColor(1.0f, 1.0f, 1.0f, 1.0f);
+	EColor* rama_color_deactivated = new EColor(0.5f, 0.5f, 0.5f, 0.5f);
+
+	EColor* bg_color_default = new EColor(0.5f, 0.5f, 0.5f, 0.25f);
+	EColor* bg_color_deactivated = new EColor(0.1f, 0.1f, 0.1f, 0.1f);
+
+	void activate();
+	void deactivate();
+
+	bool dynamic_input_width = true;
+
+	std::string data_string;
+
+	bool slider_is_horizontal = true;
+
+	virtual void update_localisation();
+
+
+
+	bool input_auto_clear_text = false;
+
+	EFont* force_font;
+
+	//FilterBlockSeparator* master_separator;
+
+	bool can_receive_paste = false;
+
+	EWindow* simple_action_open_window;
+
+	std::string* side_text = new string("");
+
+	/*
+	EButtonAction* button_action_press;
+	EButtonAction* button_action_right_press;
+	EButtonAction* button_action_input_finish;
+	EButtonAction* button_action_outclick;*/
+
+
+	//bool& link_to_boolean;
+
+	
+
+	static EButton* clone_button(EButton* _b, float _x, float _y, float _sx, float _sy);
+
+	bool* double_click_started = new bool (false);
+	bool* is_double_click = new bool (false);
+
+	static bool any_input;
+	static bool any_overlap;
+
+	bool* is_consumable = new bool(false);
+	bool* is_radial_button = new bool(false);
+	float* maximum_value = new float (1.0f);
+
+	bool* is_checkbox = new bool(false);
+	bool* is_checked = new bool(false);
+
+	struct button_group
+	{
+		std::vector<EButton*> button_list;
+
+		float* size_x = new float(0.0f);
+		float* size_y = new float(0.0f);
+
+		float* position_x = new float(0.0f);
+		float* position_y = new float(0.0f);
+
+		std::string* name = new std::string("");
+
+		bool* can_be_stretched_x = new bool(true);
+		bool* can_be_stretched_y = new bool(true);
+	};
+
+	struct button_super_group
+	{
+		std::vector <button_group*> button_group_list;
+
+		float* size_x = new float(0.0f);
+		float* size_y = new float(0.0f);
+
+		float* position_x = new float(0.0f);
+		float* position_y = new float(0.0f);
+
+		bool* is_active = new bool(true);
+
+		std::string* name = new std::string("");
+	};
+
+	enum ButtonAutoAlign
+	{
+		BUTTON_AUTO_ALIGN_ADD_Y,
+		BUTTON_AUTO_ALIGN_ADD_X,
+		BUTTON_AUTO_ALIGN_RESET_X_AND_ADD_Y,
+		BUTTON_AUTO_ALIGN_RESET_Y_AND_ADD_X,
+		BUTTON_AUTO_ALIGN_FREE,
+		BUTTON_AUTO_ALIGN_NONE
+
+	};
+
+	int* selected_auto_align_mode = new int(0);
+};
 class EWindow
 {
 public:
@@ -305,238 +621,36 @@ public:
 
 
 	//void draw_lightmap();
+	std::vector< EButton::button_super_group* > button_group_list;
 
+	static EButton::button_group* get_button_group_by_name(EWindow* _w, std::string _super_group_name, std::string _group_name);
 };
 
-class EButton
+class DefaultButtonActions
 {
 public:
-	typedef void (*BUTTON_ACTION)(EButton* _b, float _d);
+	//static void ButtonActionSetTexture(EButton* _b, float _d);
 
-	BUTTON_ACTION action_on_left_click;
+	//static void button_action_close_master_window
 
-	BUTTON_ACTION action_on_left_double_click;
-	float* click_timer = new float(0.0f);
+	/*struct SimpleValueChanger
+	{
 
-	BUTTON_ACTION action_on_right_click;
+		enum StringValueChangerType
+		{
+			StringValueChangerType_CONTANT,
+			StringValueChangerType_BUTON_VALUE
+		};
 
-	BUTTON_ACTION action_on_input;
-	BUTTON_ACTION action_on_input_finish;
+		std::string		string_value_pointer		= NULL;
+		std::string*	string_value				= new string("");
+		int*			string_value_changer_type	= new int(StringValueChangerType::StringValueChangerType_CONTANT);
+	};*/
 
-	BUTTON_ACTION action_on_slider_drag;
-	BUTTON_ACTION action_on_drop_list_select_element;
 
-	
-	int * target_address_for_int;
-	int* target_value_for_int = new int(0);
-
-	float * target_address_for_float;
-	float * target_value_for_float = new float (0.0f);
-
-	bool* target_address_for_bool;
-	bool* target_value_for_bool = new bool(false);
-
-	short* target_address_for_short;
-	short* target_value_for_short = new short(1);
-
-	EGabarite** target_address_for_gabarite;
-
-	std::string* target_address_for_string;
-	std::string* target_value_for_string = new std::string("");
-
-	static void static_click();
-	static void static_click2();
-
-	static void set_left_click_action(void(*function)(EButton*, float));
-
-	float button_x = 10;
-	float button_y = 200;
-
-	float button_base_x = 200;
-	float button_base_y = 200;
-
-	float button_size_x = 100;
-	float button_size_y = 25;
-
-	float button_min_size_x = 100;
-	float button_min_size_y = 25;
-
-	std::string text = "";
-
-	bool have_input_mode = false;
-	bool is_input_mode_active = false;
-
-	bool is_active = true;
-	bool icon_adaptation = true;
-
-	float bound_size_left = 0;
-	float bound_size_right = 0;
-	float bound_size_up = 0;
-	float bound_size_down = 0;
-
-	bool is_expanded = false;
-	bool is_drop_list = false;
-
-	int master_position = Enums::PositionMaster::WINDOW;
-
-	int drop_elements = 0;
-	std::vector<string> drop_text;
-	std::vector<string> drop_text_base;
-	bool have_list_color = false;
-	std::vector<EColor*> drop_list_color;
-
-	bool slider_activate = false;
-
-	EGabarite* gabarite = NULL;
-
-	bool have_icon = false;
-	EColor* icon_color = new EColor(1.0f, 1.0f, 1.0f, 1.0f);
-
-	int position_mode_x = Enums::PositionMode::LEFT;
-	int position_mode_y = Enums::PositionMode::DOWN;
-
-	int text_align_x = Enums::PositionMode::LEFT;
-
-	EWindow* master_window;
-	EButton* master_button;
-
-
-	float master_position_x = 0;
-	float master_position_y = 0;
-
-	EButton();
-	EButton(float _x, float _y, float _sx, float _sy);
-	//EButton(float _x, float _y, float _sx, float _sy, Enums::ButtonType _type);
-
-	bool have_description = true;
-	string description_text;
-	string prev_description_text;
-
-	bool have_text = true;
-
-	string input_hint;
-
-
-
-	~EButton();
-
-	bool is_number(char _c);
-
-	bool is_overlap();
-	bool is_click();
-	bool is_outclick();
-	bool is_right_click();
-	bool have_bg = true;
-	void update(float _d);
-	virtual void update_additional(float _d);
-
-	bool is_holdable = false;
-
-	bool is_slider = false;
-	float slider_value;
-	float slider_value_multiplier = 1.0f;
-
-	virtual void additional_draw(Batcher* _batch, float _d);
-	void default_draw(Batcher* _batch, float _d);
-
-
-	void text_pass(Batcher* _batch);
-	//virtual void incoming_data(FilterBlock* _block);
-
-	bool outclick_protection = false;
-
-	virtual void click_event();
-	virtual void right_click_event();
-	virtual void input_event();
-	virtual void input_finish_event();
-	virtual void drop_list_select_event();
-
-	virtual void slider_drag_event();
-
-
-	static int top_window_id;
-
-	bool flash_line_active = false;
-	float flash_cooldown = 0.5f;
-
-	bool can_be_removed = false;
-	bool* need_remove = new bool(false);
-
-	bool have_rama = false;
-	int rama_thikness = 2;
-	EColor* rama_color = new EColor(0.0f, 0.0f, 0.0f, 1.0f);
-	EColor* bg_color = new EColor(0.8f, 0.8f, 0.8f, 0.75f);
-	EColor* text_color = new EColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-	int catched_element = 0;
-	int selected_element = 0;
-
-	//Enums::ButtonType button_type;
-
-	bool input_only_numbers = false;
-
-	int data_id;
-
-	EColor* icon_color_default = new EColor(1.0f, 1.0f, 1.0f, 1.0f);
-	EColor* icon_color_deactivated = new EColor(0.5f, 0.5f, 0.5f, 0.5f);
-
-	EColor* rama_color_default = new EColor(1.0f, 1.0f, 1.0f, 1.0f);
-	EColor* rama_color_deactivated = new EColor(0.5f, 0.5f, 0.5f, 0.5f);
-
-	EColor* bg_color_default = new EColor(0.5f, 0.5f, 0.5f, 0.25f);
-	EColor* bg_color_deactivated = new EColor(0.1f, 0.1f, 0.1f, 0.1f);
-
-	void activate();
-	void deactivate();
-
-	bool dynamic_input_width = true;
-
-	std::string data_string;
-
-	bool slider_is_horizontal = true;
-
-	virtual void update_localisation();
-
-
-
-	bool input_auto_clear_text = false;
-
-	EFont* force_font;
-
-	//FilterBlockSeparator* master_separator;
-
-	bool can_receive_paste = false;
-
-	EWindow* simple_action_open_window;
-
-	std::string* side_text = new string("");
-
-	/*
-	EButtonAction* button_action_press;
-	EButtonAction* button_action_right_press;
-	EButtonAction* button_action_input_finish;
-	EButtonAction* button_action_outclick;*/
-
-
-	//bool& link_to_boolean;
-
-	
-
-	static EButton* clone_button(EButton* _b, float _x, float _y, float _sx, float _sy);
-
-	bool* double_click_started = new bool (false);
-	bool* is_double_click = new bool (false);
-
-	static bool any_input;
-	static bool any_overlap;
-
-	bool* is_consumable = new bool(false);
-	bool* is_radial_button = new bool(false);
-	float* maximum_value = new float (1.0f);
-
-	bool* is_checkbox = new bool(false);
-	bool* is_checked = new bool(false);
 };
+
+
 
 class EButtonGroup
 {

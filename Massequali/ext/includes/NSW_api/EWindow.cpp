@@ -118,8 +118,8 @@ EButton::EButton(float _x, float _y, float _sx, float _sy)
 		EBA::set_method(&static_click2);
 	}*/
 
-	button_x = _x;
-	button_y = _y;
+	button_x_offset = _x;
+	button_y_offset = _y;
 
 	button_base_x = _x;
 	button_base_y = _y;
@@ -375,32 +375,32 @@ void EButton::update(float _d)
 
 	if ((master_position == Enums::PositionMaster::WINDOW) && (master_window != NULL))
 	{
-		if (position_mode_x == Enums::PositionMode::LEFT) { master_position_x = master_window->offset_x + button_x; }
-		if (position_mode_x == Enums::PositionMode::MID) { master_position_x = master_window->offset_x + (master_window->window_size_x - button_size_x) / 2.0f + button_x; }
-		if (position_mode_x == Enums::PositionMode::RIGHT) { master_position_x = master_window->offset_x + master_window->window_size_x + button_x - button_size_x; }
+		if (position_mode_x == Enums::PositionMode::LEFT) { master_position_x = master_window->offset_x + button_x_offset; }
+		if (position_mode_x == Enums::PositionMode::MID) { master_position_x = master_window->offset_x + (master_window->window_size_x - button_size_x) / 2.0f + button_x_offset; }
+		if (position_mode_x == Enums::PositionMode::RIGHT) { master_position_x = master_window->offset_x + master_window->window_size_x + button_x_offset - button_size_x; }
 
-		if (position_mode_y == Enums::PositionMode::DOWN) { master_position_y = master_window->offset_y + button_y; }
-		if (position_mode_y == Enums::PositionMode::MID) { master_position_y = master_window->offset_y + (master_window->window_size_y - button_size_y) / 2.0f + button_y; }
-		if (position_mode_y == Enums::PositionMode::UP) { master_position_y = master_window->offset_y + master_window->window_size_y + button_y - button_size_y; }
+		if (position_mode_y == Enums::PositionMode::DOWN) { master_position_y = master_window->offset_y + button_y_offset; }
+		if (position_mode_y == Enums::PositionMode::MID) { master_position_y = master_window->offset_y + (master_window->window_size_y - button_size_y) / 2.0f + button_y_offset; }
+		if (position_mode_y == Enums::PositionMode::UP) { master_position_y = master_window->offset_y + master_window->window_size_y + button_y_offset - button_size_y; }
 	}
 
 	if ((master_position == Enums::PositionMaster::BUTTON) && (master_button != NULL))
 	{
-		if (position_mode_x == Enums::PositionMode::SUPER_LEFT) { master_position_x = master_button->master_position_x + button_x - master_button->button_size_x; }
-		if (position_mode_x == Enums::PositionMode::LEFT) { master_position_x = master_button->master_position_x + button_x; }
-		if (position_mode_x == Enums::PositionMode::MID) { master_position_x = master_button->master_position_x + (master_button->button_size_x - button_size_x) / 2.0f + button_x; }
-		if (position_mode_x == Enums::PositionMode::RIGHT) { master_position_x = master_button->master_position_x + master_button->button_size_x + button_x - button_size_x; }
-		if (position_mode_x == Enums::PositionMode::SUPER_RIGHT) { master_position_x = master_button->master_position_x + master_button->button_size_x + button_x; }
+		if (position_mode_x == Enums::PositionMode::SUPER_LEFT) { master_position_x = master_button->master_position_x + button_x_offset - master_button->button_size_x; }
+		if (position_mode_x == Enums::PositionMode::LEFT) { master_position_x = master_button->master_position_x + button_x_offset; }
+		if (position_mode_x == Enums::PositionMode::MID) { master_position_x = master_button->master_position_x + (master_button->button_size_x - button_size_x) / 2.0f + button_x_offset; }
+		if (position_mode_x == Enums::PositionMode::RIGHT) { master_position_x = master_button->master_position_x + master_button->button_size_x + button_x_offset - button_size_x; }
+		if (position_mode_x == Enums::PositionMode::SUPER_RIGHT) { master_position_x = master_button->master_position_x + master_button->button_size_x + button_x_offset; }
 
-		if (position_mode_y == Enums::PositionMode::UP) { master_position_y = master_button->master_position_y + button_y + master_button->button_size_y; }
-		if (position_mode_y == Enums::PositionMode::MID) { master_position_y = master_button->master_position_y + (master_button->button_size_y - button_size_y) / 2.0f + button_y; }
-		if (position_mode_y == Enums::PositionMode::DOWN) { master_position_y = master_button->master_position_y + button_y - button_size_y; }
+		if (position_mode_y == Enums::PositionMode::UP) { master_position_y = master_button->master_position_y + button_y_offset + master_button->button_size_y; }
+		if (position_mode_y == Enums::PositionMode::MID) { master_position_y = master_button->master_position_y + (master_button->button_size_y - button_size_y) / 2.0f + button_y_offset; }
+		if (position_mode_y == Enums::PositionMode::DOWN) { master_position_y = master_button->master_position_y + button_y_offset - button_size_y; }
 	}
 
 	if (master_position == Enums::PositionMaster::SCREEN)
 	{
-		if (position_mode_x == Enums::PositionMode::LEFT) { master_position_x = button_x; }
-		if (position_mode_y == Enums::PositionMode::DOWN) { master_position_y = button_y; }
+		if (position_mode_x == Enums::PositionMode::LEFT) { master_position_x = button_x_offset; }
+		if (position_mode_y == Enums::PositionMode::DOWN) { master_position_y = button_y_offset; }
 	}
 
 	if (is_right_click())
@@ -489,9 +489,12 @@ void EButton::update(float _d)
 
 		if (*is_checkbox) {*is_checked = !*is_checked;}
 
-		if ((action_on_left_click != NULL) & (*click_timer <= 0.0f))
+		if ((!action_on_left_click.empty()) & (*click_timer <= 0.0f))
 		{
-			action_on_left_click(this, _d);
+			for (BUTTON_ACTION ba : action_on_left_click)
+			{
+				ba(this, _d);
+			}
 		}
 
 		if (*click_timer > 0.0f)
@@ -1072,10 +1075,10 @@ EButton* EButton::clone_button(EButton* _b, float _x, float _y, float _sx, float
 	EButton* but = new EButton(*_b);
 
 	but->button_base_x = _x;
-	but->button_x = _x;
+	but->button_x_offset = _x;
 
 	but->button_base_y = _y;
-	but->button_y = _y;
+	but->button_y_offset = _y;
 
 	return but;
 }
@@ -1120,287 +1123,157 @@ void EWindow::default_update(float _d)
 	float h_base_offset_x = 0.0f;
 
 
+	float button_added_position_x = 0.0f;
+	float button_added_position_y = 0.0f;
 
+	float maximum_button_gabarite_x = 0.0f;
+	float maximum_button_gabarite_y = 0.0f;
 
-	for (button_array_collection_massive* massive : button_array_collection_massive_list)
-	if (*massive->is_active)
+	float maximum_group_size_x = 0.0f;
+	float maximum_group_size_y = 0.0f;
+
+	float base_x = 0.0f;
+	float base_y = 0.0f;
+
+	float previvous_button_size_x = 0.0f;
+	float previvous_button_size_y = 0.0f;
+
+	float previvous_button_position_x = 0.0f;
+	float previvous_button_position_y = 0.0f;
+
+	float previvous_group_size_x = 0.0f;
+	float previvous_group_size_y = 0.0f;
+
+	float group_total_offset_x = 0.0f;
+	float group_total_offset_y = 0.0f;
+
+	//update buttons on button group and update button group
+	for (EButton::button_super_group* bsg : button_group_list)
+	if (*bsg->is_active)
 	{
-		h_base_offset_x = 0.0f;
-		*massive->size_y *= 0.95f;
 
-		if (*massive->size_y < 30.0f) { *massive->size_y = 30.0f; }
-		
+		//*bsg->position_x += _d * 20.0f;
 
-		float maximum_horizontal_size_x = 0.0f;
-		float maximum_horizontal_size_y = 0.0f;
 
-		for (button_array_horizontal_collection* horizontal : massive->button_array_horizontal_collection_list)
-		{
-			*horizontal->size_y *= 0.95f;
-			*horizontal->position_y = 0.95f;
-
-			*horizontal->position_x = 0.95f;
-
-			if ((*horizontal->push_method == ARRAY_PUSH_METHOD::APM_PUSH_X) & (maximum_horizontal_size_x > * horizontal->position_x))
+			for (EButton::button_group* bg : bsg->button_group_list)
 			{
-				*horizontal->position_x = maximum_horizontal_size_x + 5.0f;
-				
-				h_base_offset_x = maximum_horizontal_size_x + (*horizontal->size_x + 5.0f) * 0.0f;
-				maximum_horizontal_size_y = 0.0f;
-			}
-			else
-			{
-				*horizontal->position_x += h_base_offset_x;
-			}
 
-			
+				button_added_position_x = 0.0f;
+				button_added_position_y = 0.0f;
 
-			if ((*horizontal->push_method == ARRAY_PUSH_METHOD::APM_PUSH_Y) & (maximum_horizontal_size_y > * horizontal->position_y))
-			{*horizontal->position_y = maximum_horizontal_size_y + 5.0f;}
+				maximum_button_gabarite_x = 0.0f;
+				maximum_button_gabarite_y = 0.0f;
 
-			float tab_button_w = 0.0f;
+				base_x = 0.0f;
+				base_y = 0.0f;
 
+				previvous_button_position_x = *bsg->position_x + *bg->position_x + 5.0f;
+				previvous_button_position_y = *bsg->position_y + *bg->position_y + 5.0f;
 
+				previvous_button_size_x = 0.0f;
+				previvous_button_size_y = 0.0f;
 
-			
-				maximum_size_of_vertical = 0.0f;
-				for (button_array_vertical_collection* vertical : horizontal->button_array_vertical_collection_list)
-				if (*horizontal->selected_tab == *vertical->tab_id)
+				group_total_offset_x = *bsg->position_x + *bg->position_x;
+				group_total_offset_y = *bsg->position_y + *bg->position_y;
+
+				if (*bg->size_x < previvous_group_size_x) { *bg->size_x = previvous_group_size_x; }
+				if (*bg->position_y < previvous_group_size_y) { *bg->position_y = previvous_group_size_y + 5.0f; }
+
+				for (EButton* b : bg->button_list)
+				if (b->is_active)
 				{
-					*vertical->position_y *= 0.90f;
-					*vertical->size_y *= 0.90f;
-
-					if (maximum_size_of_vertical > * vertical->position_y) { *vertical->position_y = maximum_size_of_vertical; }
-
-					add_offset_x += *(vertical->position_x);
-					*vertical->maximum_button_on_array = 0;
-					
-
-					for (button_array* array : vertical->button_array_list)
+					//position relative screen
+					if (*b->selected_auto_align_mode == EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_FREE)
 					{
-						if (array->button_list.size() > *vertical->maximum_button_on_array)
-						{*vertical->maximum_button_on_array = array->button_list.size();}
-					}
-
-					maximum_button_size_x.clear();
-					maximum_button_size_x.insert(maximum_button_size_x.begin(), *vertical->maximum_button_on_array, 0.0f);
-
-					//get maximum button width on each row
-					for (button_array* array : vertical->button_array_list)
-					{
-						*array->size_y = 0.99f;
-						float vertical_size = 0.0f;
-
-						array_id = 0;
-						for (EButton* b : array->button_list)
-						{
-							if (b->is_active)
-							{
-								if (b->button_size_x > maximum_button_size_x.at(array_id)) { maximum_button_size_x.at(array_id) = b->button_size_x; }
-								//if (b->button_size_y > * array->size_y) { *array->size_y = b->button_size_y; }
-								//logger("");
-								if (*vertical->selected_distance_between_button_mode == button_array_vertical_collection::BUTTON_DISTANCE_ALIGN_RULE::FREE)
-								{
-									b->button_x = b->button_base_x + *massive->position_x + *horizontal->position_x + *vertical->position_x + *array->position_x + 2.0f;
-									b->button_y = b->button_base_y + *massive->position_y + *horizontal->position_y + *vertical->position_y + *array->position_y + 2.0f;
-
-									//logger_param("base y", b->button_base_y);
-								}
-								else
-								{
-									b->button_x = *massive->position_x + *horizontal->position_x + *vertical->position_x + *array->position_x + 2.0f;
-									b->button_y = *massive->position_y + *horizontal->position_y + *vertical->position_y + *array->position_y + b->bound_size_down + 2.0f;
-
-
-								}
-
-								/*if (b->button_base_y + b->button_size_y + *array->position_y > * array->size_y)*/
-							}
-							 
-							
-
-							array_id++;
-						}
-					}
-
-					float button_y_offset = 0.0f;
-					//set new button size
-					maximum_size_of_array = 0.0f;
-					for (button_array* z_array : vertical->button_array_list)
-					{
-
-						*z_array->size_x *= 0.95f;
-						*z_array->size_y *= 0.95f;
-
-						*z_array->position_y *= 0.95f;
-
-						float button_row_offset = 0.0f;
-						float maximum_y_size_of_button = 0.0f;
-						if (maximum_size_of_array > * z_array->position_y) { *z_array->position_y = maximum_size_of_array; }
-
-
-
-						array_id = 0;
-
-
-						
-						for (EButton* b : z_array->button_list)
-						if (b->is_active)
-						{
-							
-
-							if (!*vertical->selected_distance_between_button_mode == button_array_vertical_collection::BUTTON_DISTANCE_ALIGN_RULE::FREE)
-							{
-								b->button_x += button_row_offset;
-
-								b->button_y += button_y_offset;
-
-
-							}
-							else
-							{
-								if (b->button_base_x + b->button_size_x + 10.0f > * z_array->size_x)
-								{*z_array->size_x = b->button_base_x + b->button_size_x + 10.0f;}
-
-								//b->text_color->set_color(EColor::COLOR_ORANGE);
-								//b->text = std::to_string((int)((b->button_base_x + b->button_size_x))) + " " + std::to_string((int)(*z_array->size_x));
-							}
-							
-
-
-							if (*vertical->selected_distance_between_button_mode == button_array_vertical_collection::BUTTON_DISTANCE_ALIGN_RULE::MAXIMUM_BUTTON_SIZE)
-							{button_row_offset += maximum_button_size_x.at(array_id) + 2.0f;}
-
-							if (*vertical->selected_distance_between_button_mode == button_array_vertical_collection::BUTTON_DISTANCE_ALIGN_RULE::BUTTON_SIZE)
-							{button_row_offset += b->button_size_x + 5.0f;}
-
-							array_id++;
-
-							if (button_row_offset +2.0f > * vertical->size_x) { *vertical->size_x = button_row_offset + 2.0f; }
-
-							if (b->button_size_y + b->bound_size_down + b->button_base_y + *z_array->position_y > maximum_y_size_of_button)
-							{ maximum_y_size_of_button = b->button_base_y + b->button_size_y + b->bound_size_down + *z_array->position_y; }
-							
-							
-							
-
-							if (b->is_active)
-							{b->update(_d);}
-
-							
-							if (b->button_base_x + button_row_offset + 4.0f > * z_array->size_x )
-							{*z_array->size_x = b->button_base_x + button_row_offset + 4.0f;}
-
-							if (b->button_base_y + b->button_size_y + b->bound_size_down + 4.0f > *z_array->size_y )
-							{*z_array->size_y = b->button_base_y + b->bound_size_down + b->button_size_y + 4.0f;}
-							//*z_array->size_y = 100.0f;
-
-
-							if (*z_array->position_y + *z_array->size_y + 2.0f > maximum_size_of_array) { maximum_size_of_array = *z_array->position_y + *z_array->size_y + 2.0f; }
-						}
-						//maximum_y_size_of_button = 200.0f;
-						//if (maximum_y_size_of_button + 5.0f > * vertical->size_y)
-						//{*vertical->size_y = maximum_y_size_of_button + 5.0f; }
-
-						if (maximum_size_of_array > * vertical->size_y)
-						{ *vertical->size_y = maximum_size_of_array; }
-
-						//remove
-						for (int i = 0; i < z_array->button_list.size(); i++)
-						{
-							if (*z_array->button_list.at(i)->need_remove)
-							{
-								z_array->button_list.erase(z_array->button_list.begin() + i);
-							}
-						}
-
-					}
-
-					if (*vertical->size_y > * horizontal->size_y) { *horizontal->size_y = *vertical->size_y; }
-					if (*vertical->size_x + 10.0f > * horizontal->size_x) { *horizontal->size_x = *vertical->size_x + 10.0f; }
-
-					if (*vertical->position_y + *vertical->size_y  > maximum_size_of_vertical) { maximum_size_of_vertical = *vertical->position_y + *vertical->size_y; }
-					
-				}
-
-				if (maximum_size_of_vertical > *horizontal->size_y) { *horizontal->size_y = maximum_size_of_vertical;}
-				
-
-				
-				if (*horizontal->position_y + *horizontal->size_y + 30.0f > * massive->size_y) { *massive->size_y = *horizontal->position_y + *horizontal->size_y + 30.0f; }
-				if (*horizontal->position_x + *horizontal->size_x + 10.0f > * massive->size_x) { *massive->size_x = *horizontal->size_x + *horizontal->position_x + 10.0f; }
-
-				if (*horizontal->position_x + *horizontal->size_x > maximum_horizontal_size_x)
-				maximum_horizontal_size_x = *horizontal->position_x + *horizontal->size_x;
-
-				if (*horizontal->position_y + *horizontal->size_y > maximum_horizontal_size_y)
-				{ maximum_horizontal_size_y = *horizontal->position_y + *horizontal->size_y; }
-
-				//TAB BUTTONS
-				for (EButton* b : horizontal->tab_button_list)
-				{
-					b->button_x = *massive->position_x + *horizontal->position_x + tab_button_w;
-					b->button_y = *massive->position_y + *horizontal->position_y + *horizontal->size_y + b->button_size_y * 0.0f + 2.0f;
-
-					tab_button_w += b->button_size_x + 5.0f;
-
-					if (b->data_id == *horizontal->selected_tab)
-					{
-						b->bg_color->set_color(EColor::COLOR_WHITE);
-						b->rama_thikness = 3.0f;
+						b->button_x_offset = b->button_base_x + *bsg->position_x + *bg->position_x;
+						b->button_y_offset = b->button_base_y + *bsg->position_y + *bg->position_y;
 					}
 					else
 					{
-						b->bg_color->set_color(EColor::COLOR_DARK_GRAY);
-						b->rama_thikness = 1.0f;
+						b->button_x_offset = *bsg->position_x + *bg->position_x + 5.0f + base_x;
+						b->button_y_offset = *bsg->position_y + *bg->position_y + 5.0f + base_y;
 					}
 
-					if (b->is_active)
+
+					if
+					(
+						((!*bg->can_be_stretched_x) & (previvous_button_position_x + previvous_button_size_x + b->button_size_x + 5.0f >= *bg->size_x + group_total_offset_x))
+						||
+						(*b->selected_auto_align_mode == EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_RESET_X_AND_ADD_Y)
+					)
 					{
-						b->update(_d);
+						b->button_y_offset += maximum_button_gabarite_y + 5.0f;
+
+						base_y += maximum_button_gabarite_y + 5.0f;
+						maximum_button_gabarite_y = b->button_size_y;
+
+
 					}
+
+					if
+					(
+						((*bg->can_be_stretched_x) || (previvous_button_position_x + previvous_button_size_x + b->button_size_x + 5.0f < *bg->size_x + group_total_offset_x))
+						&
+						(*b->selected_auto_align_mode == EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_X)
+					)
+					{
+						b->button_x_offset = previvous_button_position_x + previvous_button_size_x + 5.0f;
+
+
+						if (b->button_size_x > maximum_button_gabarite_x) { maximum_button_gabarite_x = b->button_size_x; }
+						if (b->button_size_y > maximum_button_gabarite_y) { maximum_button_gabarite_y = b->button_size_y; }
+
+						
+					}
+
+					if (*b->selected_auto_align_mode == EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_Y)
+					{
+						b->button_y_offset += button_added_position_y;
+
+						button_added_position_x += b->button_size_x + 5.0f;
+						button_added_position_y += b->button_size_y + 5.0f;
+
+						if (b->button_size_x > maximum_button_gabarite_x) { maximum_button_gabarite_x = b->button_size_x; }
+
+					}
+
+					if (*b->selected_auto_align_mode == EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_RESET_Y_AND_ADD_X)
+					{
+						b->button_x_offset += maximum_button_gabarite_x + 5.0f;
+						maximum_button_gabarite_x = b->button_size_x;
+
+						button_added_position_x = b->button_size_x + 5.0f;
+						button_added_position_y += b->button_size_y + 5.0f;
+
+					}
+
+					if ((*bg->can_be_stretched_x) & (b->button_x_offset + b->button_size_x - *bg->position_x - *bsg->position_x + 5.0f > * bg->size_x)) { *bg->size_x = b->button_x_offset + b->button_size_x - *bg->position_x - *bsg->position_x + 5.0f; }
+					if (b->button_y_offset + b->button_size_y - *bg->position_y - *bsg->position_y + 5.0f > * bg->size_y) { *bg->size_y = b->button_y_offset + b->button_size_y - *bg->position_y - *bsg->position_y + 5.0f; }
+
+					
+
+					previvous_button_position_x = b->button_x_offset;
+					previvous_button_position_y = b->button_y_offset;
+
+					previvous_button_size_x = b->button_size_x;
+					previvous_button_size_y = b->button_size_y;
+
+					if (*bg->size_x > previvous_group_size_x) { previvous_group_size_x = *bg->size_x; }
+					if (*bg->size_y > previvous_group_size_y) { previvous_group_size_y = *bg->size_y; }
+
+					if (*bg->position_x + *bg->size_x > * bsg->size_x) { *bsg->size_x = *bg->position_x + *bg->size_x + 5.0f; }
+					if (*bg->position_y + *bg->size_y > * bsg->size_y) { *bsg->size_y = *bg->position_y + *bg->size_y + 5.0f; }
+
+					//b->text = EString::float_to_string(*b->selected_auto_align_mode);
+
+					b->update(_d);
+					b->update_additional(_d);
+
 				}
-		}
 
-		massive->button_close->button_x = *massive->position_x + *massive->size_x - massive->button_close->button_size_x;
-		massive->button_close->button_y = *massive->position_y + *massive->size_y - massive->button_close->button_size_y;
 
-		for (EButton* b : massive->service_button)
-		{
-			if (b->is_active)
-			{b->update(_d);}
+			}
 		}
-
-		if
-			(
-				(mouse_x >= *massive->position_x)
-				&
-				(mouse_x <= *massive->position_x + *massive->size_x)
-				&
-				(mouse_y >= *massive->position_y + *massive->size_y - 5.0f)
-				&
-				(mouse_y <= *massive->position_y + *massive->size_y + 30.0f)
-				&
-				(!EButton::any_input)
-				)
-		{
-			*massive->head_catched = true;
-			*massive->catch_highlight = true;
-		}
-		else
-		{
-			//*massive->head_catched = false;
-			*massive->catch_highlight = false;
-		}
-
-		if ((*massive->head_catched) & ((LMB)))
-		{
-			*massive->position_x += mouse_speed_x;
-			*massive->position_y += mouse_speed_y;
-		}
-
-		if (!LMB) { *massive->head_catched = false; }	
-	}
 
 
 }
@@ -1550,152 +1423,33 @@ void EWindow::default_draw_interface(float _d)
 
 
 	}*/
-	for (button_array_collection_massive* massive : button_array_collection_massive_list)
+
+
+	//float previvous_button_size_x = 0.0f;
+	//float previvous_button_size_y = 0.0f;
+
+
+	//draw buttons on button group and update button group
+
+	for (EButton::button_super_group* bsg : button_group_list)
+	if (*bsg->is_active)
 	{
-		float total_rama_offset_x = 0.0f;
-		float total_rama_offset_y = 0.0f;
+		EGraphicCore::batch->setcolor_alpha(EColor::COLOR_BLACK, 0.5f);
+		EGraphicCore::batch->draw_gabarite(*bsg->position_x, *bsg->position_y, *bsg->size_x, *bsg->size_y, EGraphicCore::gabarite_white_pixel);
 
-		if (*massive->is_active)
+		for (EButton::button_group* bg : bsg->button_group_list)
 		{
+			EGraphicCore::batch->setcolor_alpha(EColor::COLOR_GRAY, 0.9f);
+			EGraphicCore::batch->draw_gabarite(*bsg->position_x + *bg->position_x, *bsg->position_y + *bg->position_y, *bg->size_x, *bg->size_y, EGraphicCore::gabarite_white_pixel);
 
-			//draw massive textures////////////////////////////////////////////////////////////////
-			/**/
-			/**/	if ((*massive->catch_highlight) || (*massive->head_catched))
-			/**/ {
-			/**/		EGraphicCore::batch->setcolor_alpha(EColor::COLOR_BLUE, 0.5f);
-			/**/
-			/**/
-				}
-			/**/	else
-			/**/ {
-			/**/		EGraphicCore::batch->setcolor_alpha(EColor::COLOR_DARK_GRAY, 0.95f);
-			/**/
-				}
-			/**/
-			/**/	//EGraphicCore::batch->draw_gabarite(*massive->position_x, *massive->position_y, *massive->size_x, *massive->size_y, EGraphicCore::gabarite_wood_button_bg);
-			/**/
-			/**/	EGraphicCore::batch->setcolor(EColor::COLOR_DARK_RED);
-			/**/	EGraphicCore::batch->draw_rama(*massive->position_x, *massive->position_y, *massive->size_x, *massive->size_y, 2.0f, EGraphicCore::gabarite_small_wood_button_bg);
-
-				if
-				(
-					(!EWindow::list_of_massive_style.empty())
-					&&
-					(EWindow::list_of_massive_style.at(*massive->selected_style) != NULL)
-					&&
-					(EWindow::list_of_massive_style.at(*massive->selected_style)->background != NULL)
-				)
-				{
-					EGraphicCore::batch->setcolor(EColor::COLOR_WHITE);
-					EGraphicCore::batch->draw_with_custom_uv
-					(
-						*massive->position_x,
-						*massive->position_y,
-						
-						*massive->size_x,
-						*massive->size_y,
-						
-						*EWindow::list_of_massive_style.at(*massive->selected_style)->background->x + *massive->position_x / EWindow::default_texture_atlas->size_x,
-						*EWindow::list_of_massive_style.at(*massive->selected_style)->background->y + *massive->position_y / EWindow::default_texture_atlas->size_y,
-
-						*EWindow::list_of_massive_style.at(*massive->selected_style)->background->x + (*massive->position_x + *massive->size_x) / EWindow::default_texture_atlas->size_x,
-						*EWindow::list_of_massive_style.at(*massive->selected_style)->background->y + (*massive->position_y + *massive->size_y) / EWindow::default_texture_atlas->size_y
-					);
-				}
-			/**/
-			///////////////////////////////////////////////////////////////////////////////////////
-
-			for (button_array_horizontal_collection* horizontal : massive->button_array_horizontal_collection_list)
+			for (EButton* but : bg->button_list)
 			{
+				but->default_draw(EGraphicCore::batch, _d);
+				but->additional_draw(EGraphicCore::batch, _d);
+				but->text_pass(EGraphicCore::batch);
 
-
-
-
-				for (EButton* b : horizontal->tab_button_list)
-				{
-					b->default_draw(EGraphicCore::batch, _d);
-					b->additional_draw(EGraphicCore::batch, _d);
-				}
-
-				total_rama_offset_x = *massive->position_x;
-				total_rama_offset_y = *massive->position_y;
-				EGraphicCore::batch->setcolor(EColor::COLOR_DARK_GREEN);
-				EGraphicCore::batch->draw_rama(*horizontal->position_x + total_rama_offset_x, *horizontal->position_y + total_rama_offset_y, *horizontal->size_x, *horizontal->size_y, 2.0f, EGraphicCore::gabarite_white_pixel);
-
-				for (button_array_vertical_collection* vertical : horizontal->button_array_vertical_collection_list)
-					if (*horizontal->selected_tab == *vertical->tab_id)
-					{
-
-						total_rama_offset_x = *massive->position_x + *horizontal->position_x;
-						total_rama_offset_y = *massive->position_y + *horizontal->position_y;
-						EGraphicCore::batch->setcolor(EColor::COLOR_DARK_BLUE);
-						EGraphicCore::batch->draw_rama(*vertical->position_x + total_rama_offset_x, *vertical->position_y + total_rama_offset_y, *vertical->size_x, *vertical->size_y, 2.0f, EGraphicCore::gabarite_white_pixel);
-
-
-
-						for (button_array* array : vertical->button_array_list)
-						{
-
-
-
-							for (EButton* b : array->button_list)
-							{
-								if (b->is_active)
-								{
-									//b->update(_d);
-									b->default_draw(EGraphicCore::batch, _d);
-									b->additional_draw(EGraphicCore::batch, _d);
-								}
-							}
-
-							total_rama_offset_x = *massive->position_x + *horizontal->position_x + *vertical->position_x;
-							total_rama_offset_y = *massive->position_y + *horizontal->position_y + *vertical->position_y;
-
-
-							EGraphicCore::batch->setcolor_alpha(EColor::COLOR_BLACK, 0.2f);
-							EGraphicCore::batch->draw_rama(*array->position_x + total_rama_offset_x, *array->position_y + total_rama_offset_y, *array->size_x, *array->size_y, 1.0f, EGraphicCore::gabarite_white_pixel);
-
-							//EGraphicCore::batch->setcolor(EColor::COLOR_RED);
-							//EFont::active_font->draw(EGraphicCore::batch, std::to_string(*array->size_x), *array->position_x + total_rama_offset_x, *array->position_y + total_rama_offset_y);
-						}
-
-					}
-			}
-
-
-			for (EButton* b : massive->service_button)
-			{
-				b->default_draw(EGraphicCore::batch, _d);
-				b->additional_draw(EGraphicCore::batch, _d);
 			}
 		}
-	}
-
-
-	for (button_array_collection_massive* massive : button_array_collection_massive_list)
-	if (*massive->is_active)
-	{
-			for (button_array_horizontal_collection* horizontal : massive->button_array_horizontal_collection_list)
-			{
-				for (EButton* b : horizontal->tab_button_list)
-				{
-					b->text_pass(EGraphicCore::batch);
-				}
-
-				for (button_array_vertical_collection* vertical : horizontal->button_array_vertical_collection_list)
-					if (*horizontal->selected_tab == *vertical->tab_id)
-						for (button_array* array : vertical->button_array_list)
-							for (EButton* b : array->button_list)
-								if (b->is_active)
-								{
-									b->text_pass(EGraphicCore::batch);
-								}
-			}
-
-			for (EButton* b : massive->service_button)
-			{
-				b->text_pass(EGraphicCore::batch);
-			}
 	}
 
 	//draw graphic for button group
@@ -1790,6 +1544,11 @@ bool EWindow::is_overlap(EWindow* _w)
 	}
 
 	return false;
+}
+
+EButton::button_group* EWindow::get_button_group_by_name(EWindow* _w, std::string _super_group_name, std::string _group_name)
+{
+	return nullptr;
 }
 
 

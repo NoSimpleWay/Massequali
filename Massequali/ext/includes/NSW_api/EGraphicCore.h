@@ -57,4 +57,16 @@ public:
 
 	EGraphicCore();
 	~EGraphicCore();
+
+	struct ESprite
+	{
+		EGabarite* texture_gabarite = NULL;
+
+		float*	 offset_x = new float(0.0f);
+		float*	 offset_y = new float(0.0f);
+		float*	 offset_z = new float(0.0f);
+
+		float*	 fragment_x = new float(0.0f);
+		float*	 fragment_y = new float(0.0f);
+	};
 };
