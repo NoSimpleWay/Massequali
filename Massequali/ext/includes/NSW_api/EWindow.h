@@ -48,6 +48,15 @@ public:
 		CHANGER_ACTIVATION_TYPE_SLIDER_DRAG
 	};
 
+	enum ButtonSimpleChangerMathematic
+	{
+		BUTTON_SIMPLE_VALUE_MANIPULATOR_MATHEMATIC_SET_VALUE,
+		BUTTON_SIMPLE_VALUE_MANIPULATOR_MATHEMATIC_ADD_VALUE,
+		BUTTON_SIMPLE_VALUE_MANIPULATOR_MATHEMATIC_SUBSTRACT_VALUE,
+		BUTTON_SIMPLE_VALUE_MANIPULATOR_MATHEMATIC_DIVIDE_VALUE,
+		BUTTON_SIMPLE_VALUE_MANIPULATOR_MATHEMATIC_MULTIPLY_VALUE
+	};
+
 //////////////////////////////
 	struct SimpleFloatChanger
 	{
@@ -60,6 +69,12 @@ public:
 		};
 
 		int* float_changer_type = new int(0);
+
+		int* selected_activation_type = new int(0);
+		int* selected_mathematic_type = new int(0);
+
+
+		float* pre_correction_value = new float(0.0f);
 	};
 	std::vector <SimpleFloatChanger*> simple_float_changer_list;
 //////////////////////////////
@@ -89,7 +104,7 @@ public:
 	BUTTON_ACTION action_on_input;
 	BUTTON_ACTION action_on_input_finish;
 
-	BUTTON_ACTION action_on_slider_drag;
+	std::vector<BUTTON_ACTION> action_on_slider_drag;
 	BUTTON_ACTION action_on_drop_list_select_element;
 
 	//std::vector < DefaultButtonActions::SimpleValueChanger* > simple_value_changer_list;
@@ -318,7 +333,19 @@ public:
 
 		bool* can_be_stretched_x = new bool(true);
 		bool* can_be_stretched_y = new bool(true);
+
+		float* button_y_scroll = new float(0.0f);
 	};
+
+	struct SimpleButtonSearchDeactivator
+	{
+		button_group* target_button_group;
+
+		bool* is_search_by_name = new bool(false);
+		bool* is_search_by_description = new bool(false);
+		bool* is_search_by_data_string = new bool(false);
+	};
+
 
 	struct button_super_group
 	{

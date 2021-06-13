@@ -536,9 +536,12 @@ void EButton::update(float _d)
 
 		slider_drag_event();
 
-		if (action_on_slider_drag != NULL)
+		if (!action_on_slider_drag.empty())
 		{
-			action_on_slider_drag(this, _d);
+			for (BUTTON_ACTION ba : action_on_slider_drag)
+			{
+				ba(this, _d);
+			}
 		}
 		//if (master_block != NULL) { StaticData::window_filter_block->unsave_change = true; }
 	}
@@ -550,9 +553,49 @@ void EButton::update(float _d)
 
 		slider_drag_event();
 
-		if (action_on_slider_drag != NULL)
+		if (!action_on_slider_drag.empty())
 		{
-			action_on_slider_drag(this, _d);
+			for (BUTTON_ACTION ba : action_on_slider_drag)
+			{
+				ba(this, _d);
+			}
+		}
+
+		for (SimpleFloatChanger* sfcl : simple_float_changer_list)
+		if ((sfcl != NULL) && (sfcl->target_float_pointer != NULL) && (*sfcl->selected_activation_type == ButtonSimpleChangerActivationType::CHANGER_ACTIVATION_TYPE_SLIDER_DRAG))
+		{
+			if (*sfcl->float_changer_type == SimpleFloatChanger::SimpleFloatChangerType::SIMPLE_FLOAT_CHANGER_BUTTON_VALUE)
+			{
+				float result_value = slider_value + *sfcl->pre_correction_value;
+
+				if (*sfcl->selected_mathematic_type == BUTTON_SIMPLE_VALUE_MANIPULATOR_MATHEMATIC_SET_VALUE)
+				{*sfcl->target_float_pointer = result_value;}
+
+				if (*sfcl->selected_mathematic_type == BUTTON_SIMPLE_VALUE_MANIPULATOR_MATHEMATIC_ADD_VALUE)
+				{*sfcl->target_float_pointer += result_value;}
+
+				if (*sfcl->selected_mathematic_type == BUTTON_SIMPLE_VALUE_MANIPULATOR_MATHEMATIC_SUBSTRACT_VALUE)
+				{*sfcl->target_float_pointer -= result_value;}
+
+				if ((*sfcl->selected_mathematic_type == BUTTON_SIMPLE_VALUE_MANIPULATOR_MATHEMATIC_DIVIDE_VALUE) & (result_value != 0.0f))
+				{*sfcl->target_float_pointer /= result_value;}
+
+				if ((*sfcl->selected_mathematic_type == BUTTON_SIMPLE_VALUE_MANIPULATOR_MATHEMATIC_MULTIPLY_VALUE) & (result_value != 0.0f))
+				{*sfcl->target_float_pointer *= result_value;}
+			}
+
+			if (*sfcl->float_changer_type == SimpleFloatChanger::SimpleFloatChangerType::SIMPLE_FLOAT_CHANGER_CONSTANT)
+			{
+				*sfcl->target_float_pointer = *sfcl->float_value;
+
+				//std::cout << "target value is [" << std::to_string(*sfcl->float_value) << std::endl;
+			}
+
+		}
+		else
+		{
+			if (sfcl == NULL) { std::cout << "ERROR: sfcl is NULL" << std::endl; }
+			if (sfcl->target_float_pointer == NULL) { std::cout << "ERROR: sfcl target value is NULL" << std::endl; }
 		}
 		//if (master_block != NULL) { StaticData::window_filter_block->unsave_change = true; }
 	}
@@ -1191,7 +1234,7 @@ void EWindow::default_update(float _d)
 					else
 					{
 						b->button_x_offset = *bsg->position_x + *bg->position_x + 5.0f + base_x;
-						b->button_y_offset = *bsg->position_y + *bg->position_y + 5.0f + base_y;
+						b->button_y_offset = *bsg->position_y + *bg->position_y + 5.0f + base_y + *bg->button_y_scroll * 20.0f;
 					}
 
 
@@ -1247,27 +1290,41 @@ void EWindow::default_update(float _d)
 
 					}
 
+					//autostretch group size
 					if ((*bg->can_be_stretched_x) & (b->button_x_offset + b->button_size_x - *bg->position_x - *bsg->position_x + 5.0f > * bg->size_x)) { *bg->size_x = b->button_x_offset + b->button_size_x - *bg->position_x - *bsg->position_x + 5.0f; }
-					if (b->button_y_offset + b->button_size_y - *bg->position_y - *bsg->position_y + 5.0f > * bg->size_y) { *bg->size_y = b->button_y_offset + b->button_size_y - *bg->position_y - *bsg->position_y + 5.0f; }
+					if ((*bg->can_be_stretched_y) & (b->button_y_offset + b->button_size_y - *bg->position_y - *bsg->position_y + 5.0f > * bg->size_y)) { *bg->size_y = b->button_y_offset + b->button_size_y - *bg->position_y - *bsg->position_y + 5.0f; }
 
-					
+					//calculate position to next button
+					if (*b->selected_auto_align_mode != EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_FREE)
+					{
+						previvous_button_position_x = b->button_x_offset;
+						previvous_button_position_y = b->button_y_offset;
 
-					previvous_button_position_x = b->button_x_offset;
-					previvous_button_position_y = b->button_y_offset;
+						previvous_button_size_x = b->button_size_x;
+						previvous_button_size_y = b->button_size_y;
+					}
 
-					previvous_button_size_x = b->button_size_x;
-					previvous_button_size_y = b->button_size_y;
-
+					//push next group
 					if (*bg->size_x > previvous_group_size_x) { previvous_group_size_x = *bg->size_x; }
 					if (*bg->size_y > previvous_group_size_y) { previvous_group_size_y = *bg->size_y; }
 
+					//main supergroup autostretch
 					if (*bg->position_x + *bg->size_x > * bsg->size_x) { *bsg->size_x = *bg->position_x + *bg->size_x + 5.0f; }
 					if (*bg->position_y + *bg->size_y > * bsg->size_y) { *bsg->size_y = *bg->position_y + *bg->size_y + 5.0f; }
 
 					//b->text = EString::float_to_string(*b->selected_auto_align_mode);
 
-					b->update(_d);
-					b->update_additional(_d);
+					//if buttons not leave group, update it
+					if
+					(
+						(b->button_y_offset + b->button_size_y <= *bg->size_y + *bg->position_y + *bsg->position_y)
+						&
+						(b->button_y_offset >= *bg->position_y + *bsg->position_y)
+					)
+					{
+						b->update(_d);
+						b->update_additional(_d);
+					}
 
 				}
 
@@ -1443,11 +1500,27 @@ void EWindow::default_draw_interface(float _d)
 			EGraphicCore::batch->draw_gabarite(*bsg->position_x + *bg->position_x, *bsg->position_y + *bg->position_y, *bg->size_x, *bg->size_y, EGraphicCore::gabarite_white_pixel);
 
 			for (EButton* but : bg->button_list)
+			if
+			(
+				(but->button_y_offset + but->button_size_y <= *bg->size_y + *bg->position_y + *bsg->position_y)
+				&
+				(but->button_y_offset >= *bg->position_y + *bsg->position_y)
+			)
 			{
 				but->default_draw(EGraphicCore::batch, _d);
 				but->additional_draw(EGraphicCore::batch, _d);
-				but->text_pass(EGraphicCore::batch);
+			}
 
+			for (EButton* but : bg->button_list)
+			if
+			(
+				(but->button_y_offset + but->button_size_y <= *bg->size_y + *bg->position_y + *bsg->position_y)
+				&
+				(but->button_y_offset >= *bg->position_y + *bsg->position_y)
+			)
+			{
+
+				but->text_pass(EGraphicCore::batch);
 			}
 		}
 	}

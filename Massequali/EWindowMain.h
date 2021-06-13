@@ -12,4 +12,6 @@ public:
 	EButton::button_super_group* super_group_texture_collection_link;
 	EButton::button_group* group_texture_collection_link;
 
+	EButton* textures_selector_slider;
+
 };

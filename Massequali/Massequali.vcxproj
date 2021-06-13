@@ -144,6 +144,7 @@
   <ItemGroup>
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EWindowMain.cpp" />
+    <ClCompile Include="ExternalButtonAction.cpp" />
     <ClCompile Include="ext\includes\glad\glad.c" />
     <ClCompile Include="ext\includes\NSW_api\Batcher.cpp" />
     <ClCompile Include="ext\includes\NSW_api\EColor.cpp" />
@@ -160,6 +161,7 @@
   <ItemGroup>
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EWindowMain.h" />
+    <ClInclude Include="ExternalButtonAction.h" />
     <ClInclude Include="ext\includes\NSW_api\Batcher.h" />
     <ClInclude Include="ext\includes\NSW_api\EColor.h" />
     <ClInclude Include="ext\includes\NSW_api\EColorCollection.h" />
