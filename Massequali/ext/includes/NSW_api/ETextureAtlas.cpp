@@ -125,10 +125,19 @@ EGabarite* ETextureAtlas::put_texture_to_atlas(std::string _name, ETextureAtlas*
 
 		EGraphicCore::batch->setcolor(EColor::COLOR_WHITE);
 			glBlendEquation(GL_MAX);
-				EGraphicCore::batch->draw_rect(place_x - 1.0f, place_y, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
-				EGraphicCore::batch->draw_rect(place_x + 1.0f, place_y, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
-				EGraphicCore::batch->draw_rect(place_x, place_y - 1.0f, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
-				EGraphicCore::batch->draw_rect(place_x, place_y + 1.0f, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
+
+				EGraphicCore::batch->draw_rect(place_x - 1.0f, place_y - 1.0f, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
+				EGraphicCore::batch->draw_rect(place_x - 0.0f, place_y - 1.0f, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
+				EGraphicCore::batch->draw_rect(place_x + 1.0f, place_y - 1.0f, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
+
+				EGraphicCore::batch->draw_rect(place_x - 1.0f, place_y - 0.0f, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
+				EGraphicCore::batch->draw_rect(place_x - 0.0f, place_y - 0.0f, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
+				EGraphicCore::batch->draw_rect(place_x + 1.0f, place_y - 0.0f, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
+
+				EGraphicCore::batch->draw_rect(place_x - 1.0f, place_y + 1.0f, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
+				EGraphicCore::batch->draw_rect(place_x - 0.0f, place_y + 1.0f, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
+				EGraphicCore::batch->draw_rect(place_x + 1.0f, place_y + 1.0f, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
+
 			EGraphicCore::batch->reinit();
 			EGraphicCore::batch->draw_call();
 			EGraphicCore::batch->reset();
@@ -273,8 +282,8 @@ ETextureAtlas::ETextureAtlas(int _x, int _y)
 	glBindTexture(GL_TEXTURE_2D, colorbuffer);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _x, _y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);//texture filtering
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);//
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorbuffer, 0);
 	// create a renderbuffer object for depth and stencil attachment (we won't be sampling these)	glGenRenderbuffers(1, &rbo);

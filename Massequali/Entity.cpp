@@ -19,3 +19,11 @@ void Entity::reset_sprite_data(EGraphicCore::ESprite* _sprite)
 
 	_sprite->texture_gabarite = NULL;
 }
+
+ECamera::ECamera()
+{
+}
+
+ECamera::~ECamera()
+{
+}

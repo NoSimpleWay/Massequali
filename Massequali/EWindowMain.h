@@ -13,5 +13,12 @@ public:
 	EButton::button_group* group_texture_collection_link;
 
 	EButton* textures_selector_slider;
+	virtual void draw(float _d);
+	virtual void update(float _d);
 
+	void reset_render();
+
+	std::vector<Entity*> entity_list;
+
+	ECamera* main_camera = new ECamera();
 };

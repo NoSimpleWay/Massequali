@@ -58,6 +58,8 @@ public:
 	EGraphicCore();
 	~EGraphicCore();
 
+	
+
 	struct ESprite
 	{
 		EGabarite* texture_gabarite = NULL;
@@ -69,4 +71,16 @@ public:
 		float*	 fragment_x = new float(0.0f);
 		float*	 fragment_y = new float(0.0f);
 	};
+
+	struct sprite_array
+	{
+		std::vector <ESprite*> sprite_list;
+
+		//Entity* master_entity;
+		//EButton* master_button;
+	};
+
+	static void draw_sprite_regular(sprite_array* _sprite_array, Batcher* _batch, float _offset_x, float _offset_y, float _offset_z);
+	
+	
 };

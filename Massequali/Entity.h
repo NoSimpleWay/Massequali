@@ -25,6 +25,8 @@ public:
 
 	static void reset_sprite_data(EGraphicCore::ESprite* _sprite);
 
+	EGraphicCore::sprite_array* entity_sprite_array;
+
 };
 
 class ECluster
@@ -35,4 +37,17 @@ public:
 	static const int CLUSTER_SIZE_X = 200;
 	static const int CLUSTER_SIZE_Y = 200;
 	
+};
+
+class ECamera
+{
+public:
+	float* position_x	=	new float(0.0f);
+	float* position_y	=	new float(0.0f);
+
+	float* speed_x		=	new float(0.0f);
+	float* speed_y		=	new float(0.0f);
+
+		ECamera();
+		~ECamera();
 };

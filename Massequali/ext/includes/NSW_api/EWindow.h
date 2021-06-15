@@ -151,6 +151,11 @@ public:
 	bool is_active = true;
 	bool icon_adaptation = true;
 
+	float icon_size_multiplier = 1;
+
+	float mul_method_vertical = 0.0f;
+	float mul_method_horizontal = 0.0f;
+
 	float bound_size_left = 0;
 	float bound_size_right = 0;
 	float bound_size_up = 0;
@@ -174,13 +179,19 @@ public:
 	bool have_icon = false;
 	EColor* icon_color = new EColor(1.0f, 1.0f, 1.0f, 1.0f);
 
-	int position_mode_x = Enums::PositionMode::LEFT;
-	int position_mode_y = Enums::PositionMode::DOWN;
+	int position_by_window_mode_x = Enums::PositionMode::LEFT;
+	int position_by_window_mode_y = Enums::PositionMode::DOWN;
+
+	int position_by_group_mode_x = Enums::PositionMode::LEFT;
+	int position_by_group_mode_y = Enums::PositionMode::DOWN;
+
+	bool* auto_stretch_button_y_size = new bool(false);
 
 	int text_align_x = Enums::PositionMode::LEFT;
 
 	EWindow* master_window;
 	EButton* master_button;
+	
 
 
 	float master_position_x = 0;
@@ -319,6 +330,10 @@ public:
 	bool* is_checkbox = new bool(false);
 	bool* is_checked = new bool(false);
 
+	bool* can_be_hidden_by_search_deactivator = new bool(true);
+
+
+
 	struct button_group
 	{
 		std::vector<EButton*> button_list;
@@ -335,6 +350,13 @@ public:
 		bool* can_be_stretched_y = new bool(true);
 
 		float* button_y_scroll = new float(0.0f);
+
+		bool* right_side_catched = new bool(false);
+		bool* left_side_catched = new bool(false);
+		bool* up_side_catched = new bool(false);
+		bool* down_side_catched = new bool(false);
+
+		float* additional_right_side_bound_for_autostretch = new float(20.0f);
 	};
 
 	struct SimpleButtonSearchDeactivator
@@ -342,9 +364,12 @@ public:
 		button_group* target_button_group;
 
 		bool* is_search_by_name = new bool(false);
+		bool* is_search_by_text = new bool(false);
 		bool* is_search_by_description = new bool(false);
 		bool* is_search_by_data_string = new bool(false);
 	};
+
+	std::vector < SimpleButtonSearchDeactivator* > simple_button_search_deactivator_list;
 
 
 	struct button_super_group
@@ -374,11 +399,52 @@ public:
 	};
 
 	int* selected_auto_align_mode = new int(0);
+
+	static bool is_not_outside_of_group(EButton* _b, button_super_group* _bsg, button_group* _bg);
+
+	button_group*			master_group;
+	button_super_group*		master_super_group;
+
+	struct EGridRegion
+	{
+		float* position_x = new float(0.0f);
+		float* position_y = new float(0.0f);
+
+		float* size_x = new float(0.0f);
+		float* size_y = new float(0.0f);
+
+		int* subdivision_x = new int(0);
+		int* subdivision_y = new int(0);
+
+
+
+		bool* cathed_right_side = new bool(false);
+		bool* cathed_left_side = new bool(false);
+
+		bool* cathed_up_side = new bool(false);
+		bool* cathed_down_side = new bool(false);
+
+		bool* locked_left_side = new bool(false);
+		bool* locked_right_side = new bool(false);
+
+		bool* locked_up_side = new bool(false);
+		bool* locked_down_side = new bool(false);
+	};
+
+	std::vector<EGridRegion*> grid_region_list;
+
+	bool* can_edit_grid_region = new bool(false);
 };
 class EWindow
 {
 public:
 	void default_update(float _d);
+
+	static void catch_right_side		(EButton::button_group* bg, EButton::button_super_group* bsg);
+	static void catch_left_side			(EButton::button_group* bg, EButton::button_super_group* bsg);
+	static void catch_up_side			(EButton::button_group* bg, EButton::button_super_group* bsg);
+	static void catch_down_side			(EButton::button_group* bg, EButton::button_super_group* bsg);
+
 	virtual void update(float _d);
 
 	void default_draw(float _d);

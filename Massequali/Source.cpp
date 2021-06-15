@@ -1,10 +1,10 @@
 #pragma once
 
-#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS 
 #define STB_IMAGE_IMPLEMENTATION
 
 
-#include <ctime>
+#include <ctime> 
 
 #include "NSW_api/EWindow.h"
 
@@ -115,6 +115,7 @@ int main()
 	glfwSwapInterval(1);
 
 	glEnable(GL_BLEND);
+	
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glViewport(0, 0, EGraphicCore::SCR_WIDTH, EGraphicCore::SCR_HEIGHT);
@@ -199,11 +200,11 @@ int main()
 
 	EGraphicCore::gabarite_white_pixel = ETextureAtlas::put_texture_to_atlas("data/textures/white_pixel.png", EWindow::default_texture_atlas);
 
-	*EGraphicCore::gabarite_white_pixel->x += 1.0f / 4096.0f / 2.0f;
+	/**EGraphicCore::gabarite_white_pixel->x += 1.0f / 4096.0f / 2.0f;
 	*EGraphicCore::gabarite_white_pixel->y += 1.0f / 4096.0f / 2.0f;
 
 	*EGraphicCore::gabarite_white_pixel->x2 -= 1.0f / 4096.0f / 2.0f;
-	*EGraphicCore::gabarite_white_pixel->y2 -= 1.0f / 4096.0f / 2.0f;
+	*EGraphicCore::gabarite_white_pixel->y2 -= 1.0f / 4096.0f / 2.0f;*/
 
 	//EGraphicCore::gabarite_full_atlas = //ETextureAtlas::put_texture_to_atlas("data/textures/white_pixel.png", EWindow::default_texture_atlas);
 	EGabarite* gab = new EGabarite("full atlas");
@@ -411,8 +412,10 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {//
 	//width = round(width / 2.0f) * 2;
 	//height = round(height / 2.0f) * 2;
+	//glScissor(0, 0, 500, 500);
 	glfwSetWindowSize(EWindow::main_window, width, height);
 
+	
 	glViewport(0, 0, width, height);
 	glfwGetWindowSize(window, &EGraphicCore::SCR_WIDTH, &EGraphicCore::SCR_HEIGHT);
 
@@ -420,6 +423,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	std::cout << "Resize event width:" << EGraphicCore::SCR_WIDTH << " height: " << EGraphicCore::SCR_HEIGHT << std::endl;
 
 	recalculate_correction();
+
+
 }
 
 void recalculate_correction()

@@ -64,7 +64,7 @@
       <Filter>External</Filter>
     </ClCompile>
     <ClCompile Include="ExternalButtonAction.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>External</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
