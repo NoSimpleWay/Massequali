@@ -25,8 +25,10 @@ public:
 
 	static void reset_sprite_data(EGraphicCore::ESprite* _sprite);
 
-	EGraphicCore::sprite_array* entity_sprite_array;
+	static void draw_entity(Entity* _e, Batcher* _b, float _d);
 
+	EGraphicCore::sprite_array* entity_sprite_array;
+	bool* is_selected = new bool(false);
 };
 
 class ECluster
@@ -48,6 +50,10 @@ public:
 	float* speed_x		=	new float(0.0f);
 	float* speed_y		=	new float(0.0f);
 
+	float* zoom			= new float(1.0f);
+
 		ECamera();
 		~ECamera();
+
+		
 };

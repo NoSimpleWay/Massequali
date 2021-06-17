@@ -19,6 +19,7 @@ int EMath::clamp_value_int(int _v, int _min, int _max)
 
 float EMath::to_float(std::string _text)
 {
+	if (_text == "") { return 0.0f; }
 	int dot_count = 0;
 	//bool too_many_dots = false;
 	//bool no_number_after_dot = true;

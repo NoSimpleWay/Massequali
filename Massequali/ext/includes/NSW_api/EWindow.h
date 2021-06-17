@@ -101,7 +101,7 @@ public:
 
 	BUTTON_ACTION action_on_right_click;
 
-	BUTTON_ACTION action_on_input;
+	std::vector<BUTTON_ACTION> action_on_input;
 	BUTTON_ACTION action_on_input_finish;
 
 	std::vector<BUTTON_ACTION> action_on_slider_drag;
@@ -238,6 +238,7 @@ public:
 
 	bool outclick_protection = false;
 
+	bool* can_be_selected = new bool(false);
 	virtual void click_event();
 	virtual void right_click_event();
 	virtual void input_event();
@@ -333,6 +334,14 @@ public:
 	bool* can_be_hidden_by_search_deactivator = new bool(true);
 
 
+	enum GroupPushMethod
+	{
+		GROUP_PUSH_METHOD_ADD_Y,
+		GROUP_PUSH_METHOD_ADD_X,
+
+		GROUP_PUSH_METHOD_RESET_Y_ADD_X,
+		GROUP_PUSH_METHOD_RESET_X_ADD_Y
+	};
 
 	struct button_group
 	{
@@ -357,6 +366,14 @@ public:
 		bool* down_side_catched = new bool(false);
 
 		float* additional_right_side_bound_for_autostretch = new float(20.0f);
+
+		bool* can_be_moved_by_user = new bool(true);
+
+
+
+		int* selected_push_method = new int(0);
+
+		EButton* selected_button;
 	};
 
 	struct SimpleButtonSearchDeactivator
@@ -385,6 +402,8 @@ public:
 		bool* is_active = new bool(true);
 
 		std::string* name = new std::string("");
+
+		bool* is_catched = new bool(false);
 	};
 
 	enum ButtonAutoAlign
@@ -435,6 +454,8 @@ public:
 
 	bool* can_edit_grid_region = new bool(false);
 };
+
+
 class EWindow
 {
 public:
