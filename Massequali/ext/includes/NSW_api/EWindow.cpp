@@ -244,6 +244,56 @@ bool EButton::is_right_click()
 	return false;
 }
 
+void EButton::simple_float_changer_input(EButton* _b)
+{
+	for (SimpleFloatChanger* sfcl : _b->simple_float_changer_list)
+		if ((sfcl != NULL) && (sfcl->target_float_pointer != NULL) && (*sfcl->selected_activation_type == ButtonSimpleChangerActivationType::CHANGER_ACTIVATION_TYPE_INPUT))
+		{
+			if (*sfcl->float_changer_type == SimpleFloatChanger::SimpleFloatChangerType::SIMPLE_FLOAT_CHANGER_BUTTON_VALUE)
+			{
+				float result_value = EMath::to_float(_b->text) + *sfcl->pre_correction_value;
+
+				if (*sfcl->selected_mathematic_type == BUTTON_SIMPLE_VALUE_MANIPULATOR_MATHEMATIC_SET_VALUE)
+				{
+					*sfcl->target_float_pointer = result_value;
+				}
+
+				if (*sfcl->selected_mathematic_type == BUTTON_SIMPLE_VALUE_MANIPULATOR_MATHEMATIC_ADD_VALUE)
+				{
+					*sfcl->target_float_pointer += result_value;
+				}
+
+				if (*sfcl->selected_mathematic_type == BUTTON_SIMPLE_VALUE_MANIPULATOR_MATHEMATIC_SUBSTRACT_VALUE)
+				{
+					*sfcl->target_float_pointer -= result_value;
+				}
+
+				if ((*sfcl->selected_mathematic_type == BUTTON_SIMPLE_VALUE_MANIPULATOR_MATHEMATIC_DIVIDE_VALUE) & (result_value != 0.0f))
+				{
+					*sfcl->target_float_pointer /= result_value;
+				}
+
+				if ((*sfcl->selected_mathematic_type == BUTTON_SIMPLE_VALUE_MANIPULATOR_MATHEMATIC_MULTIPLY_VALUE) & (result_value != 0.0f))
+				{
+					*sfcl->target_float_pointer *= result_value;
+				}
+			}
+
+			if (*sfcl->float_changer_type == SimpleFloatChanger::SimpleFloatChangerType::SIMPLE_FLOAT_CHANGER_CONSTANT)
+			{
+				*sfcl->target_float_pointer = *sfcl->float_value;
+
+				//std::cout << "target value is [" << std::to_string(*sfcl->float_value) << std::endl;
+			}
+
+		}
+		else
+		{
+			if (sfcl == NULL) { std::cout << "ERROR: sfcl is NULL" << std::endl; }
+			if (sfcl->target_float_pointer == NULL) { std::cout << "ERROR: sfcl target value is NULL" << std::endl; }
+		}
+}
+
 void EButton::update(float _d)
 {
 
@@ -290,12 +340,13 @@ void EButton::update(float _d)
 		text = EString::float_to_string(EMath::to_float(text) + EWindow::scroll);
 		input_finish_event();
 
+		simple_float_changer_input(this);
 		if (!action_on_input.empty())
 		{
 			for (BUTTON_ACTION b : action_on_input) { b(this, _d); }
 		}
 
-		 
+		
 		if ((action_on_input_finish != NULL)&(!is_input_mode_active)) { action_on_input_finish(this, _d); }
 	}
 
@@ -339,7 +390,7 @@ void EButton::update(float _d)
 		if (is_input_mode_active)
 		{
 			input_event();
-
+			simple_float_changer_input(this);
 			if (!action_on_input.empty())
 			{
 				for (BUTTON_ACTION b : action_on_input)	{b(this, _d);}
@@ -464,7 +515,7 @@ void EButton::update(float _d)
 
 			//if (master_block != NULL) { StaticData::window_filter_block->unsave_change = true; }
 			input_event();
-
+			simple_float_changer_input(this);
 			if (!action_on_input.empty())
 			{
 				for (BUTTON_ACTION b : action_on_input) { b(this, _d); }
@@ -479,7 +530,7 @@ void EButton::update(float _d)
 			text = "";
 
 			input_event();
-
+			simple_float_changer_input(this);
 			if (!action_on_input.empty())
 			{
 				for (BUTTON_ACTION b : action_on_input) { b(this, _d); }
@@ -512,6 +563,7 @@ void EButton::update(float _d)
 				//if (master_block != NULL) { StaticData::window_filter_block->unsave_change = true; }
 			}
 
+			simple_float_changer_input(this);
 			if (!action_on_input.empty())
 			{
 				for (BUTTON_ACTION b : action_on_input) { b(this, _d); }
@@ -591,9 +643,12 @@ void EButton::update(float _d)
 			//if (master_block != NULL) { StaticData::window_filter_block->unsave_change = true; }
 		}
 
-		if (action_on_right_click != NULL)
+		if (!action_on_right_click.empty())
 		{
-			action_on_right_click(this, _d);
+			for (BUTTON_ACTION ba : action_on_right_click)
+			{
+				ba(this, _d);
+			}
 		}
 	}
 
@@ -674,9 +729,12 @@ void EButton::update(float _d)
 
 		if (*click_timer > 0.0f)
 		{
-			if (action_on_left_double_click != NULL)
+			if (!action_on_left_double_click.empty())
 			{
-				action_on_left_double_click(this, _d);
+				for (BUTTON_ACTION ba : action_on_left_double_click)
+				{
+					ba(this, _d);
+				}
 			}
 
 			*click_timer = -1.0f;
@@ -1372,6 +1430,42 @@ EButton* EButton::clone_button(EButton* _b, float _x, float _y, float _sx, float
 	return but;
 }
 
+void EButton::update_data_id_for_buttons(button_group* _bg)
+{
+	int id = 0;
+	EButton* last_button = NULL;
+	for (int i = 0; i < _bg->button_list.size(); i++)
+	{
+		//if (*_bg->button_list.at(i)->can_be_selected) { last_button = _bg->button_list.at(i); }
+
+		if ((i + 1 < _bg->button_list.size()) && (*_bg->button_list.at(i + 1)->can_be_selected) && (!_bg->button_list.at(i)->is_active))
+		{
+			_bg->button_list.at(i)->gabarite = _bg->button_list.at(i + 1)->gabarite;
+			_bg->button_list.at(i)->is_active = _bg->button_list.at(i + 1)->is_active;
+
+			_bg->button_list.at(i)->update(0.1f);
+
+			_bg->button_list.at(i + 1)->is_active = false;
+		}
+	}
+
+	//last_button->is_active = false;
+	//_bg->button_list.at(_bg->button_list.size() - 1)->is_active = 0;
+
+
+
+	for (int i = 0; i < _bg->button_list.size(); i++)
+	{
+		if ((*_bg->button_list.at(i)->can_be_selected) & (_bg->button_list.at(i)->is_active))
+		{
+			_bg->button_list.at(i)->data_id = id;
+			
+			_bg->button_list.at(i)->text = std::to_string(id);
+			id++;
+		}
+	}
+}
+
 bool EButton::is_not_outside_of_group(EButton* _b, button_super_group* _bsg, button_group* _bg)
 {
 	if
@@ -1460,6 +1554,8 @@ void EWindow::default_update(float _d)
 	float maximum_button_group_size_x = 0.0f;
 	float maximum_button_group_size_y = 0.0f;
 
+	float group_baseline_y = 0.0f;
+
 	//update buttons on button group and update button group
 	for (EButton::button_super_group* bsg : button_group_list)
 	if (*bsg->is_active)
@@ -1502,6 +1598,14 @@ void EWindow::default_update(float _d)
 			{
 				//*bg->position_y
 				if (*bg->can_be_stretched_x) { *bg->size_x *= 0.95f; }
+				if (*bg->can_be_stretched_y) { *bg->size_y *= 0.95f; }
+
+				if (*bg->selected_push_method == EButton::GroupPushMethod::GROUP_PUSH_METHOD_ADD_X)
+				{
+					//*bg->position_x = 0.0f;
+					*bg->position_x = round(*bg->position_x);
+					if (*bg->position_x < 0.0f) { *bg->position_x = 0.0f; }
+				}
 
 				//stretch by mouse right
 				if (*bg->can_be_moved_by_user)
@@ -1537,7 +1641,15 @@ void EWindow::default_update(float _d)
 				if (*bg->selected_push_method == EButton::GroupPushMethod::GROUP_PUSH_METHOD_ADD_X)
 				{
 					//if (*bg->size_x < maximum_button_group_size_x) { *bg->size_x = previvous_group_push_x; }
-					if (*bg->position_x < previvous_group_push_x + 5.0f) { *bg->position_x = previvous_group_push_x + 5.0f; }
+					/*if (*bg->position_x < previvous_group_push_x + 5.0f)*/ { *bg->position_x = previvous_group_push_x + 5.0f; }
+				}
+
+				if (*bg->selected_push_method == EButton::GroupPushMethod::GROUP_PUSH_METHOD_RESET_X_ADD_Y)
+				{
+					//if (*bg->size_x < maximum_button_group_size_x) { *bg->size_x = previvous_group_push_x; }
+					{ *bg->position_y = maximum_button_group_size_y + 5.0f; }
+
+					maximum_button_group_size_y = *bg->size_y;
 				}
 
 				
@@ -1672,8 +1784,7 @@ void EWindow::default_update(float _d)
 					{ previvous_group_push_x = *bg->size_x + *bg->position_x; }
 					{ previvous_group_push_y = *bg->size_y + *bg->position_y; }
 
-					if (*bg->size_x > maximum_button_group_size_x) { maximum_button_group_size_x = *bg->size_x; }
-					if (*bg->size_y > maximum_button_group_size_y) { maximum_button_group_size_y = *bg->size_y; }
+					
 
 	
 					
@@ -1708,6 +1819,9 @@ void EWindow::default_update(float _d)
 					
 					
 				}
+
+				if (*bg->position_x + *bg->size_x > maximum_button_group_size_x) { maximum_button_group_size_x = *bg->position_x + *bg->size_x; }
+				if (*bg->position_y + *bg->size_y > maximum_button_group_size_y) { maximum_button_group_size_y = *bg->position_y + *bg->size_y; }
 
 				*bsg->size_x *= 0.99f;
 				*bsg->size_y *= 0.99f;
@@ -2075,25 +2189,30 @@ void EWindow::default_draw_interface(float _d)
 			EGraphicCore::batch->draw_call();
 			EGraphicCore::batch->reset();
 
-			for (EButton* but : bg->button_list)
-			if
-			(
-				(EButton::is_not_outside_of_group(but, bsg, bg))
-				&
-				(but->is_active)
-			)
-			{
-
-				but->text_pass(EGraphicCore::batch);
-			}
-
-			//text pass without scissors
-			glDisable(GL_SCISSOR_TEST);
-			EGraphicCore::batch->reinit();
-			EGraphicCore::batch->draw_call();
-			EGraphicCore::batch->reset();
+			
 
 		}
+
+		
+		for (EButton::button_group* bg : bsg->button_group_list)
+		{
+			for (EButton* but : bg->button_list)
+				if
+					(
+						(EButton::is_not_outside_of_group(but, bsg, bg))
+						&
+						(but->is_active)
+					)
+				{
+					but->text_pass(EGraphicCore::batch);
+				}
+			//text pass without scissors
+		}
+
+		glDisable(GL_SCISSOR_TEST);
+		EGraphicCore::batch->reinit();
+		EGraphicCore::batch->draw_call();
+		EGraphicCore::batch->reset();
 	}
 
 	//draw graphic for button group	

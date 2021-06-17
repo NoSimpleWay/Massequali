@@ -20,6 +20,9 @@ public:
 	void draw_gabarite_screen_space(float _start_x, float _start_y, float _size_x, float _size_y, EGabarite* _g);
 
 	void draw_gabarite(float _x, float _y, float _w, float _h, EGabarite* _g);
+
+	void draw_sprite(float _x, float _y, float _w, float _h, float _left, float _right, float _down, float _up, EGabarite* _g);
+
 	void draw_gabarite(float _x, float _y, EGabarite* _g);
 
 	void draw_terrain(float _x, float _y, EGabarite* _g);

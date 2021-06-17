@@ -45,7 +45,9 @@ public:
 		CHANGER_ACTIVATION_TYPE_DOUBLE_LEFT_CLICK,
 		CHANGER_ACTIVATION_TYPE_DROP_LIST_EXPAND,
 		CHANGER_ACTIVATION_TYPE_DROP_LIST_SELECT_ELEMENT,
-		CHANGER_ACTIVATION_TYPE_SLIDER_DRAG
+		CHANGER_ACTIVATION_TYPE_SLIDER_DRAG,
+		CHANGER_ACTIVATION_TYPE_INPUT
+
 	};
 
 	enum ButtonSimpleChangerMathematic
@@ -96,10 +98,10 @@ public:
 
 	//std::vector <float*> simple_float_changer;
 
-	BUTTON_ACTION action_on_left_double_click;
+	std::vector<BUTTON_ACTION> action_on_left_double_click;
 	float* click_timer = new float(0.0f);
 
-	BUTTON_ACTION action_on_right_click;
+	std::vector<BUTTON_ACTION> action_on_right_click;
 
 	std::vector<BUTTON_ACTION> action_on_input;
 	BUTTON_ACTION action_on_input_finish;
@@ -219,6 +221,9 @@ public:
 	bool is_click();
 	bool is_outclick();
 	bool is_right_click();
+
+	static void simple_float_changer_input(EButton* _b);
+
 	bool have_bg = true;
 	void update(float _d);
 	virtual void update_additional(float _d);
@@ -374,7 +379,11 @@ public:
 		int* selected_push_method = new int(0);
 
 		EButton* selected_button;
+
+		
 	};
+
+	static void update_data_id_for_buttons(button_group* _bg);
 
 	struct SimpleButtonSearchDeactivator
 	{

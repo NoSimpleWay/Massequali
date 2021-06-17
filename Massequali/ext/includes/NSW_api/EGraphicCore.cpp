@@ -44,6 +44,23 @@ EGabarite* EGraphicCore::gabarite_radial_button_dot;
 EGabarite* EGraphicCore::gabarite_supermap_placeholder;
 EGabarite* EGraphicCore::gabarite_full_atlas;
 
+void EGraphicCore::reset_sprite_data(EGraphicCore::ESprite* _sprite)
+{
+	*_sprite->fragment_x = 1.0f;
+	*_sprite->fragment_y = 1.0f;
+
+	*_sprite->offset_x = 0.0f;
+	*_sprite->offset_y = 0.0f;
+	*_sprite->offset_z = 0.0f;
+
+	*_sprite->fragment_down = 0.0f;
+	*_sprite->fragment_up = 0.0f;
+	*_sprite->fragment_left = 0.0f;
+	*_sprite->fragment_right = 0.0f;
+
+	_sprite->texture_gabarite = NULL;
+}
+
 void EGraphicCore::load_texture(char const* _path, int _id)
 {
 	glGenTextures(_id, &texture[_id]);
@@ -110,9 +127,25 @@ void EGraphicCore::draw_sprite_regular(sprite_array* _sprite_array, Batcher* _ba
 	if (_sprite_array != NULL)
 	{
 		for (ESprite* spr : _sprite_array->sprite_list)
+		if ((spr != NULL) && (spr->texture_gabarite != NULL))
 		{
 			_batch->setcolor(EColor::COLOR_WHITE);
-			_batch->draw_gabarite(_offset_x + *spr->offset_x, _offset_y + *spr->offset_y + _offset_z + *spr->offset_z, spr->texture_gabarite);
+			_batch->draw_sprite
+			(
+				_offset_x + *spr->offset_x,
+				_offset_y + *spr->offset_y + _offset_z + *spr->offset_z,
+
+				*spr->size_x,
+				*spr->size_y,
+
+				*spr->fragment_left,
+				*spr->fragment_right,
+				*spr->fragment_down,
+				*spr->fragment_up,
+
+				spr->texture_gabarite
+			);
+			//_batch->draw_gabarite(_offset_x + *spr->offset_x, _offset_y + *spr->offset_y + _offset_z + *spr->offset_z, spr->texture_gabarite);
 		}
 	}
 }

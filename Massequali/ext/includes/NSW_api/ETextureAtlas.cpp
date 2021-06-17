@@ -28,34 +28,7 @@ EGabarite* ETextureAtlas::put_texture_to_atlas(std::string _name, ETextureAtlas*
 
 
 
-	glViewport(0, 0, _ta->size_x, _ta->size_y);
-	glBindFramebuffer(GL_FRAMEBUFFER, _ta->framebuffer);
-
-	//glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-	//glClear(GL_COLOR_BUFFER_BIT);
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-
-	//set correct zoom
-	EGraphicCore::matrix_transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-	EGraphicCore::matrix_transform = glm::translate(EGraphicCore::matrix_transform, glm::vec3(-1, -1, 0.0f));
-	EGraphicCore::matrix_transform = glm::scale(EGraphicCore::matrix_transform, glm::vec3(1.0f / _ta->size_x * 2.0f, 1.0f / _ta->size_y * 2.0f, 1));
-
-	//use shader
-	EGraphicCore::ourShader->use();
-
-	unsigned int transformLoc = glGetUniformLocation(EGraphicCore::ourShader->ID, "transform");
-	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(EGraphicCore::matrix_transform));
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, EGraphicCore::texture[0]);
-	EGraphicCore::ourShader->setInt("texture1", 0);
-	EGraphicCore::batch->setcolor(EColor::COLOR_WHITE);
-
-
-	EGraphicCore::load_texture(_name.c_str(), 0);
+	
 
 	
 
@@ -73,7 +46,34 @@ EGabarite* ETextureAtlas::put_texture_to_atlas(std::string _name, ETextureAtlas*
 	EGabarite* new_gabarite = NULL;
 	if (duplicate_gabarite == NULL)
 	{
+		glViewport(0, 0, _ta->size_x, _ta->size_y);
+		glBindFramebuffer(GL_FRAMEBUFFER, _ta->framebuffer);
 
+		//glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		//glClear(GL_COLOR_BUFFER_BIT);
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+
+		//set correct zoom
+		EGraphicCore::matrix_transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+		EGraphicCore::matrix_transform = glm::translate(EGraphicCore::matrix_transform, glm::vec3(-1, -1, 0.0f));
+		EGraphicCore::matrix_transform = glm::scale(EGraphicCore::matrix_transform, glm::vec3(1.0f / _ta->size_x * 2.0f, 1.0f / _ta->size_y * 2.0f, 1));
+
+		//use shader
+		EGraphicCore::ourShader->use();
+
+		unsigned int transformLoc = glGetUniformLocation(EGraphicCore::ourShader->ID, "transform");
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(EGraphicCore::matrix_transform));
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, EGraphicCore::texture[0]);
+		EGraphicCore::ourShader->setInt("texture1", 0);
+		EGraphicCore::batch->setcolor(EColor::COLOR_WHITE);
+
+
+		EGraphicCore::load_texture(_name.c_str(), 0);
 		//std::cout << "no dublicates with <" << _name << ">" << std::endl;
 
 		int place_x = 0;

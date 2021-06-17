@@ -14,13 +14,21 @@ public:
 
 	static EButton::button_super_group* super_group_grid_region_link;
 
-	static EButton::button_group* group_grid_region_link;
+	static EButton::button_group* group_grid_region_edit_link;
 	static EButton::button_group* group_grid_region_second_layer_link;
 	static EButton::button_group* group_grid_entity_list_link;
+	static EButton::button_group* group_grid_all_autobuilding_regions_link;
 
-	static EButton* grid_region_button_link;
+	static EButton::button_group* group_grid_autobuilding_group_texture_container;
+	static EButton::button_group* group_grid_autobuilding_group_selector;
+	static EButton::button_group* group_grid_autobuilding_draw_order;
+
+	static EButton* grid_region_edit_button_link;
 
 	static std::vector<EButton*> auto_size_region_button;
+
+	static EButton* space_between_sprites_x_button;
+	static EButton* space_between_sprites_y_button;
 
 	static std::vector<Entity*> selected_entities;
 
@@ -43,6 +51,9 @@ public:
 	static float get_real_world_position_y_by_mouse(ECamera* _camera);
 
 	static void update_selected_entity_list();
+	static void import_data_from_entity_to_autobuilding_interface(Entity* _e);
+
+	static void generate_building(Entity* _e);
 
 	enum GridRegionNameByOrder
 	{
