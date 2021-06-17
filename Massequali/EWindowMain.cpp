@@ -437,21 +437,37 @@ EWindowMain::EWindowMain()
 			but->action_on_left_click.push_back(&ExternalButtonAction::external_button_action_set_grid_region_auto_size);
 			//but->text = "0";
 
-		but = new EButton(140.0f + 0.0f, 70.0f - 30.0f, 50.0f, 20.0f);
+		but = new EButton(190.0f + 0.0f, 70.0f - 30.0f, 50.0f, 20.0f);
+			space_between_sprites_x_button = but;
 			but->master_window = this;
 			but->master_super_group = super_group_grid_region_link;
 			but->master_group = group_grid_region_second_layer_link;
 			*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_FREE;
 			group_grid_region_second_layer_link->button_list.push_back(but);
 			but->text = "0";
+			but->have_input_mode = true;
 			but->action_on_left_click.push_back(&ExternalButtonAction::external_button_action_set_grid_region_auto_size);
-				EButton::SimpleFloatChanger* just_created_SFC = new EButton::SimpleFloatChanger();
+				just_created_SFC = new EButton::SimpleFloatChanger();
 				*just_created_SFC->float_changer_type = EButton::SimpleFloatChanger::SimpleFloatChangerType::SIMPLE_FLOAT_CHANGER_BUTTON_VALUE;
 				*just_created_SFC->selected_activation_type = EButton::ButtonSimpleChangerActivationType::CHANGER_ACTIVATION_TYPE_INPUT;
-				//just_created_SFC->target_float_pointer = just_created_button_group->button_y_scroll;
-				//*just_created_SFC->pre_correction_value = -0.5f;
 				*just_created_SFC->selected_mathematic_type = EButton::ButtonSimpleChangerMathematic::BUTTON_SIMPLE_VALUE_MANIPULATOR_MATHEMATIC_SET_VALUE;
 				but->simple_float_changer_list.push_back(just_created_SFC);
+
+			but = new EButton(190.0f + 0.0f, 70.0f - 55.0f, 50.0f, 20.0f);
+				space_between_sprites_y_button = but;
+				but->master_window = this;
+				but->master_super_group = super_group_grid_region_link;
+				but->master_group = group_grid_region_second_layer_link;
+				*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_FREE;
+				group_grid_region_second_layer_link->button_list.push_back(but);
+				but->text = "0";
+				but->have_input_mode = true;
+				but->action_on_left_click.push_back(&ExternalButtonAction::external_button_action_set_grid_region_auto_size);
+					just_created_SFC = new EButton::SimpleFloatChanger();
+					*just_created_SFC->float_changer_type = EButton::SimpleFloatChanger::SimpleFloatChangerType::SIMPLE_FLOAT_CHANGER_BUTTON_VALUE;
+					*just_created_SFC->selected_activation_type = EButton::ButtonSimpleChangerActivationType::CHANGER_ACTIVATION_TYPE_INPUT;
+					*just_created_SFC->selected_mathematic_type = EButton::ButtonSimpleChangerMathematic::BUTTON_SIMPLE_VALUE_MANIPULATOR_MATHEMATIC_SET_VALUE;
+					but->simple_float_changer_list.push_back(just_created_SFC);
 
 			//but->text = "0";
 
@@ -967,7 +983,7 @@ void EWindowMain::generate_building(Entity* _e)
 
 			wall_full_size_x
 			=
-			*a_element->autobuilding_texture_region->main_texture->size_x
+			(*a_element->autobuilding_texture_region->main_texture->size_x)
 			-
 			*a_element->autobuilding_texture_region->texture_region_list.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_LEFT)->size_x
 			-
@@ -975,7 +991,7 @@ void EWindowMain::generate_building(Entity* _e)
 
 			wall_full_size_y
 				=
-				*a_element->autobuilding_texture_region->main_texture->size_y
+				(*a_element->autobuilding_texture_region->main_texture->size_y)
 				-
 				*a_element->autobuilding_texture_region->texture_region_list.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_UP)->size_y
 				-
@@ -989,7 +1005,7 @@ void EWindowMain::generate_building(Entity* _e)
 				*a_element->autobuilding_texture_region->texture_region_list.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_LEFT)->size_x
 				-
 				*a_element->autobuilding_texture_region->texture_region_list.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_RIGHT)->size_x
-			) / wall_full_size_x;
+			) / (wall_full_size_x + *a_element->autobuilding_texture_region->space_between_sprite_x);
 
 			mid_wall_copies_y
 			=
@@ -1000,7 +1016,7 @@ void EWindowMain::generate_building(Entity* _e)
 				-
 				*a_element->autobuilding_texture_region->texture_region_list.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_DOWN)->size_y
 			)
-			/ wall_full_size_y;
+			/ (wall_full_size_y + *a_element->autobuilding_texture_region->space_between_sprite_y);
 
 
 			//std::cout << "Copies x [" << std::to_string(mid_wall_copies_x) << "]" << std::endl;
@@ -1019,7 +1035,7 @@ void EWindowMain::generate_building(Entity* _e)
 				*a_element->autobuilding_texture_region->texture_region_list.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_LEFT)
 				->size_x;
 				
-				*selected_sprite->offset_x += xx * wall_full_size_x + *a_group->offset_x + *a_element->offset_x;
+				*selected_sprite->offset_x += xx * (wall_full_size_x + *a_element->autobuilding_texture_region->space_between_sprite_x) + *a_group->offset_x + *a_element->offset_x;
 
 
 				*selected_sprite->offset_y
@@ -1027,7 +1043,7 @@ void EWindowMain::generate_building(Entity* _e)
 				*a_element->autobuilding_texture_region->texture_region_list.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_DOWN)
 				->size_y;
 
-				*selected_sprite->offset_y += yy * wall_full_size_y + *a_group->offset_y + *a_element->offset_y;
+				*selected_sprite->offset_y += yy * (wall_full_size_y + *a_element->autobuilding_texture_region->space_between_sprite_y) + *a_group->offset_y + *a_element->offset_y;
 
 				*selected_sprite->fragment_left
 				=

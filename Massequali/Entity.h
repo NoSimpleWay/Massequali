@@ -36,6 +36,10 @@ public:
 	{
 		EGabarite* main_texture;
 
+
+		float* space_between_sprite_x = new float(0.0f);
+		float* space_between_sprite_y = new float(0.0f);
+
 		std::vector<EButton::EGridRegion*> texture_region_list;
 
 		AutobuildingRegionTexture();
@@ -58,8 +62,6 @@ public:
 
 		bool* catched_mid = new bool(false);
 
-		float* space_between_sprite_x = new float(0.0f);
-		float* space_between_sprite_y = new float(0.0f);
 	};
 
 	struct AutobiuldingRegionGroup

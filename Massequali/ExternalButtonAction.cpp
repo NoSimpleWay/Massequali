@@ -255,7 +255,7 @@ void ExternalButtonAction::external_button_action_select_texture_region_button(E
 	{
 		EWindowMain::grid_region_edit_button_link->gabarite
 		=
-			get_entity()->autobuilding_region_list.at(_b->data_id)->main_texture;
+		get_entity()->autobuilding_region_list.at(_b->data_id)->main_texture;
 
 		if
 		(
@@ -286,10 +286,18 @@ void ExternalButtonAction::external_button_action_select_texture_region_button(E
 
 		EWindowMain::grid_region_edit_button_link->grid_region_list
 		=
-			get_entity()->autobuilding_region_list.at(_b->data_id)->texture_region_list;
+		get_entity()->autobuilding_region_list.at(_b->data_id)->texture_region_list;
 
 
+		EWindowMain::space_between_sprites_x_button->simple_float_changer_list.at(0)->target_float_pointer
+		=
+		get_entity()->autobuilding_region_list.at(_b->data_id)->space_between_sprite_x;
+		EWindowMain::space_between_sprites_x_button->text = EString::float_to_string(*get_entity()->autobuilding_region_list.at(_b->data_id)->space_between_sprite_x);
 
+		EWindowMain::space_between_sprites_y_button->simple_float_changer_list.at(0)->target_float_pointer
+		=
+		get_entity()->autobuilding_region_list.at(_b->data_id)->space_between_sprite_y;
+		EWindowMain::space_between_sprites_y_button->text = EString::float_to_string(*get_entity()->autobuilding_region_list.at(_b->data_id)->space_between_sprite_y);
 	}
 }
 
