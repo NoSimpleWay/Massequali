@@ -149,3 +149,23 @@ void EGraphicCore::draw_sprite_regular(sprite_array* _sprite_array, Batcher* _ba
 		}
 	}
 }
+
+EGraphicCore::ESprite::~ESprite()
+{
+	delete offset_x;
+	delete offset_y;
+	delete offset_z;
+
+	delete fragment_x;
+	delete fragment_y;
+
+	delete fragment_left;
+	delete fragment_up;
+	delete fragment_right;
+	delete fragment_down;
+
+	delete size_x;
+	delete size_y;
+
+	delete texture_gabarite;
+}

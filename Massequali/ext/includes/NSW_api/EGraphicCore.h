@@ -78,6 +78,8 @@ public:
 
 		float* size_x = new float(10.0f);
 		float* size_y = new float(10.0f);
+
+		~ESprite();
 	};
 
 	struct sprite_array

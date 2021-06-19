@@ -328,6 +328,11 @@ void EButton::update(float _d)
 			selected_element = *target_address_for_int;
 		}
 
+		if ((have_input_mode) & (target_address_for_int != NULL))
+		{
+			text = std::to_string(*target_address_for_int);
+		}
+
 		if ((have_text) & (target_address_for_string != NULL))
 		{
 			text = *target_address_for_string;
@@ -1197,6 +1202,36 @@ void EButton::default_draw(Batcher* _batch, float _d)
 		_batch->setcolor_alpha(EColor::COLOR_BLUE, 0.8f);
 		_batch->draw_rama(master_position_x + *gr->position_x * icon_size_multiplier, master_position_y + *gr->position_y * icon_size_multiplier, *gr->size_x * icon_size_multiplier, *gr->size_y * icon_size_multiplier, 1.0f, EGraphicCore::gabarite_white_pixel);
 
+		_batch->setcolor_alpha(EColor::COLOR_BLUE, 0.5f);
+		
+		float subdivided_line_size = *gr->size_x / (*gr->subdivision_x + 1.0f);
+
+		if (*gr->subdivision_x > 0)
+		for (int i = 1; i <= *gr->subdivision_x; i++)
+		{
+			_batch->draw_gabarite
+			(
+				master_position_x + (*gr->position_x + subdivided_line_size * i) * icon_size_multiplier,
+				master_position_y + *gr->position_y * icon_size_multiplier,
+				1.0f,
+				*gr->size_y* icon_size_multiplier, EGraphicCore::gabarite_white_pixel
+			);
+		}
+		subdivided_line_size = *gr->size_y / (*gr->subdivision_y + 1.0f);
+		if (*gr->subdivision_y > 0)
+		for (int i = 1; i <= *gr->subdivision_y; i++)
+		{
+			_batch->draw_gabarite
+			(
+				master_position_x + *gr->position_x * icon_size_multiplier,
+				master_position_y + (*gr->position_y + subdivided_line_size * i)  * icon_size_multiplier,
+				*gr->size_x * icon_size_multiplier,
+				1.0f,
+				EGraphicCore::gabarite_white_pixel
+			);
+		}
+		
+
 		_batch->setcolor_alpha(EColor::COLOR_PINK, 0.8f);
 		if (*gr->cathed_left_side)	{ _batch->draw_gabarite(master_position_x + *gr->position_x * icon_size_multiplier - 5.0f, master_position_y + *gr->position_y * icon_size_multiplier, 5.0f, *gr->size_y * icon_size_multiplier, EGraphicCore::gabarite_white_pixel); }
 		if (*gr->cathed_right_side)	{ _batch->draw_gabarite(master_position_x + (*gr->position_x + *gr->size_x) * icon_size_multiplier, master_position_y + *gr->position_y * icon_size_multiplier, 5.0f, *gr->size_y * icon_size_multiplier, EGraphicCore::gabarite_white_pixel); }
@@ -2031,11 +2066,11 @@ void EWindow::default_draw_interface(float _d)
 	EGraphicCore::ourShader->use();
 	EGraphicCore::matrix_transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
 
-	if ((glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) != GLFW_PRESS))
-	if ((glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) != GLFW_PRESS))
+	//if ((glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) != GLFW_PRESS))
+	//if ((glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) != GLFW_PRESS))
 	{EGraphicCore::matrix_transform = glm::translate(EGraphicCore::matrix_transform, glm::vec3(-1.0f - EGraphicCore::correction_x / 2.0f, -1.0f - EGraphicCore::correction_y / 2.0f, 0.0f));}
-	else
-	{EGraphicCore::matrix_transform = glm::translate(EGraphicCore::matrix_transform, glm::vec3(-1.0f, -1.0f, -1.0f));}
+	//else
+	//{EGraphicCore::matrix_transform = glm::translate(EGraphicCore::matrix_transform, glm::vec3(-1.0f, -1.0f, -1.0f));}
 	
 	EGraphicCore::matrix_transform = glm::scale(EGraphicCore::matrix_transform, glm::vec3(EGraphicCore::correction_x, EGraphicCore::correction_y, 1.0f));
 

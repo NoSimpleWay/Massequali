@@ -40,7 +40,7 @@ float EMath::to_float(std::string _text)
 		//if ((dot_count >= 1) & (i + 1 >= _text.length())) { number_error = true; std::cout << "no number after dot" << std::endl; break; }
 
 		//wrong position of minus
-		if ((_text[i] == '-') && (i != 0)) { number_error = true; std::cout << "wrong position of '-'" << std::endl; break; }
+		if ((_text[i] == '-') && (i != 0)) { number_error = true; std::cout << "wrong position of '-'" << std::endl; return 0.0f; }
 	}
 
 	if (number_error) { return 0.0f; }
@@ -51,7 +51,10 @@ float EMath::to_float(std::string _text)
 	}
 	else
 	{
-		return std::stof(_text);
+		if (_text == "-")
+		{return 0.0f;}
+		else
+		{return std::stof(_text);}
 	}
 }
 

@@ -64,6 +64,7 @@ public:
 	{
 		float*		target_float_pointer		= NULL;
 		float*		float_value					= new float(0.0f);
+
 		enum SimpleFloatChangerType
 		{
 			SIMPLE_FLOAT_CHANGER_BUTTON_VALUE,

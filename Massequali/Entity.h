@@ -32,7 +32,7 @@ public:
 	EGraphicCore::sprite_array* entity_sprite_array;
 	bool* is_selected = new bool(false);
 
-	struct AutobuildingRegionTexture
+	struct AutobuildingBase
 	{
 		EGabarite* main_texture;
 
@@ -40,12 +40,12 @@ public:
 		float* space_between_sprite_x = new float(0.0f);
 		float* space_between_sprite_y = new float(0.0f);
 
-		std::vector<EButton::EGridRegion*> texture_region_list;
+		std::vector<EButton::EGridRegion*> grid_region;
 
-		AutobuildingRegionTexture();
+		AutobuildingBase();
 	};
 
-	struct AutobuildingRegionEntityElement
+	struct AutobuildingGroupElement
 	{
 		float* offset_x = new float(0.0f);
 		float* offset_y = new float(0.0f);
@@ -53,7 +53,7 @@ public:
 		float* size_x = new float(300.0f);
 		float* size_y = new float(100.0f);
 
-		AutobuildingRegionTexture* autobuilding_texture_region;
+		AutobuildingBase* autobuilding_base;
 
 		bool* catched_left_side = new bool(false);
 		bool* catched_right_side = new bool(false);
@@ -64,7 +64,7 @@ public:
 
 	};
 
-	struct AutobiuldingRegionGroup
+	struct AutobiuldingGroup
 	{
 		float* offset_x = new float(0.0f);
 		float* offset_y = new float(0.0f);
@@ -72,11 +72,11 @@ public:
 		float* size_x = new float(0.0f);
 		float* size_y = new float(0.0f);
 
-		std::vector<AutobuildingRegionEntityElement*> AB_entity_region_element_list;
+		std::vector<AutobuildingGroupElement*> autobuilding_group_element_list;
 	};
 
-	std::vector<AutobuildingRegionTexture*> autobuilding_region_list;
-	std::vector<AutobiuldingRegionGroup*> autobuilding_region_group_list;
+	std::vector<AutobuildingBase*> autobuilding_base_list;
+	std::vector<AutobiuldingGroup*> autobuilding_group_list;
 	//EButton::EGridRegion* autobuilding
 };
 
