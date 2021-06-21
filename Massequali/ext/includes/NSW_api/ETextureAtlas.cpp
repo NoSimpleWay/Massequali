@@ -4,33 +4,25 @@
 bool ETextureAtlas::can_place_here(int _x, int _y, int _w, int _h)
 {
 	for (int j = _x; j <= _x + _w; j++)
-	for (int i = _y; i <= _y + _h; i++)
-	{
-		if ((j >= 1024) || (i >= 1024))
+		for (int i = _y; i <= _y + _h; i++)
 		{
-			return false;
-		}
+			if ((j >= 1024) || (i >= 1024))
+			{
+				return false;
+			}
 
-		if (!free_space[j][i]) { return false; }
-	}
+			if (!free_space[j][i]) { return false; }
+		}
 
 	return true;
 }
 
 EGabarite* ETextureAtlas::put_texture_to_atlas(std::string _name, ETextureAtlas* _ta)
 {
-
-
 	for (int i = 0; i < _name.length(); i++)
 	{
 		if (_name[i] == '\\') { _name[i] = '/'; }
 	}
-
-
-
-	
-
-	
 
 	EGabarite* duplicate_gabarite = NULL;
 
@@ -55,7 +47,6 @@ EGabarite* ETextureAtlas::put_texture_to_atlas(std::string _name, ETextureAtlas*
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-
 		//set correct zoom
 		EGraphicCore::matrix_transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
 		EGraphicCore::matrix_transform = glm::translate(EGraphicCore::matrix_transform, glm::vec3(-1, -1, 0.0f));
@@ -72,35 +63,33 @@ EGabarite* ETextureAtlas::put_texture_to_atlas(std::string _name, ETextureAtlas*
 		EGraphicCore::ourShader->setInt("texture1", 0);
 		EGraphicCore::batch->setcolor(EColor::COLOR_WHITE);
 
-
 		EGraphicCore::load_texture(_name.c_str(), 0);
 		//std::cout << "no dublicates with <" << _name << ">" << std::endl;
 
 		int place_x = 0;
 		int place_y = 0;
 		for (int x = 0; x < 1024; x++)
-		for (int y = 0; y < 1024; y++)
-		{
-			if (_ta->can_place_here(x, y, ceil(EGraphicCore::last_texture_w / 4.0f), ceil(EGraphicCore::last_texture_h / 4.0f)))
+			for (int y = 0; y < 1024; y++)
 			{
-				place_x = x * 4;
-				place_y = y * 4;
+				if (_ta->can_place_here(x, y, ceil(EGraphicCore::last_texture_w / 4.0f), ceil(EGraphicCore::last_texture_h / 4.0f)))
+				{
+					place_x = x * 4;
+					place_y = y * 4;
 
-				x = 99999;
-				y = 99999;
+					x = 99999;
+					y = 99999;
+				}
 			}
-		}
 
 		for (int x = (ceil)(place_x / 4.0f) - 2; x < (ceil)((place_x + EGraphicCore::last_texture_w) / 4.0f) + 2; x++)
-		for (int y = (ceil)(place_y / 4.0f) - 2; y < (ceil)((place_y + EGraphicCore::last_texture_h) / 4.0f) + 2; y++)
-		if ((x < 1024) & (y < 1024) & (x >= 0) & (y >= 0))
-		{
-			_ta->free_space[x][y] = false;
-		}
+			for (int y = (ceil)(place_y / 4.0f) - 2; y < (ceil)((place_y + EGraphicCore::last_texture_h) / 4.0f) + 2; y++)
+				if ((x < 1024) & (y < 1024) & (x >= 0) & (y >= 0))
+				{
+					_ta->free_space[x][y] = false;
+				}
 
 		EGraphicCore::batch->reset();
 
-		
 		/*glBlendEquation(GL_MAX);
 		EGraphicCore::batch->draw_rect(place_x - 1, place_y + 1, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
 		EGraphicCore::batch->draw_rect(place_x + 0, place_y + 1, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
@@ -124,46 +113,42 @@ EGabarite* ETextureAtlas::put_texture_to_atlas(std::string _name, ETextureAtlas*
 		EGraphicCore::batch->reset();*/
 
 		EGraphicCore::batch->setcolor(EColor::COLOR_WHITE);
-			glBlendEquation(GL_MAX);
+		glBlendEquation(GL_MAX);
 
-				EGraphicCore::batch->draw_rect(place_x - 1.0f, place_y - 1.0f, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
-				EGraphicCore::batch->draw_rect(place_x - 0.0f, place_y - 1.0f, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
-				EGraphicCore::batch->draw_rect(place_x + 1.0f, place_y - 1.0f, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
+		EGraphicCore::batch->draw_rect(place_x - 1.0f, place_y - 1.0f, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
+		EGraphicCore::batch->draw_rect(place_x - 0.0f, place_y - 1.0f, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
+		EGraphicCore::batch->draw_rect(place_x + 1.0f, place_y - 1.0f, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
 
-				EGraphicCore::batch->draw_rect(place_x - 1.0f, place_y - 0.0f, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
-				EGraphicCore::batch->draw_rect(place_x - 0.0f, place_y - 0.0f, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
-				EGraphicCore::batch->draw_rect(place_x + 1.0f, place_y - 0.0f, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
+		EGraphicCore::batch->draw_rect(place_x - 1.0f, place_y - 0.0f, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
+		EGraphicCore::batch->draw_rect(place_x - 0.0f, place_y - 0.0f, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
+		EGraphicCore::batch->draw_rect(place_x + 1.0f, place_y - 0.0f, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
 
-				EGraphicCore::batch->draw_rect(place_x - 1.0f, place_y + 1.0f, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
-				EGraphicCore::batch->draw_rect(place_x - 0.0f, place_y + 1.0f, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
-				EGraphicCore::batch->draw_rect(place_x + 1.0f, place_y + 1.0f, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
+		EGraphicCore::batch->draw_rect(place_x - 1.0f, place_y + 1.0f, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
+		EGraphicCore::batch->draw_rect(place_x - 0.0f, place_y + 1.0f, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
+		EGraphicCore::batch->draw_rect(place_x + 1.0f, place_y + 1.0f, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
 
-			EGraphicCore::batch->reinit();
-			EGraphicCore::batch->draw_call();
-			EGraphicCore::batch->reset();
+		EGraphicCore::batch->reinit();
+		EGraphicCore::batch->draw_call();
+		EGraphicCore::batch->reset();
 
 		glBlendEquation(GL_MIN);
-			EGraphicCore::batch->setcolor_alpha (EColor::COLOR_BLACK, 0.0f);
-			EGraphicCore::batch->draw_rect(place_x, place_y, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
+		EGraphicCore::batch->setcolor_alpha(EColor::COLOR_BLACK, 0.0f);
+		EGraphicCore::batch->draw_rect(place_x, place_y, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
 		EGraphicCore::batch->reinit();
 		EGraphicCore::batch->draw_call();
 		EGraphicCore::batch->reset();
 
 		glBlendEquation(GL_MAX);
 		EGraphicCore::batch->setcolor(EColor::COLOR_WHITE);
-			EGraphicCore::batch->draw_rect(place_x, place_y, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
+		EGraphicCore::batch->draw_rect(place_x, place_y, EGraphicCore::last_texture_w, EGraphicCore::last_texture_h);
 		EGraphicCore::batch->reinit();
 		EGraphicCore::batch->draw_call();
 		EGraphicCore::batch->reset();
 
-
-
-
-
 		//std::cout << "draw to x=" << place_x << " y=" << place_y << std::endl;
 
 		new_gabarite = new EGabarite(_name, place_x / _ta->size_x, place_y / _ta->size_y, EGraphicCore::last_texture_w / _ta->size_x, EGraphicCore::last_texture_h / _ta->size_y);
-		
+
 		EGraphicCore::gabarite_list.push_back(new_gabarite);
 	}
 	else
@@ -173,7 +158,6 @@ EGabarite* ETextureAtlas::put_texture_to_atlas(std::string _name, ETextureAtlas*
 	}
 
 	//load_texture(_path, 0);
-	
 
 	//set atlas texture is active
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -181,7 +165,6 @@ EGabarite* ETextureAtlas::put_texture_to_atlas(std::string _name, ETextureAtlas*
 	//return normal blend mode
 	glDisable(GL_DEPTH_TEST);
 	glBlendEquation(GL_FUNC_ADD);
-	
 
 	//--------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------
@@ -195,7 +178,7 @@ EGabarite* ETextureAtlas::put_texture_to_atlas(std::string _name, ETextureAtlas*
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, _ta->colorbuffer);
-	
+
 	//glActiveTexture(GL_TEXTURE1);
 	//glBindTexture(GL_TEXTURE_2D, _ta->colorbuffer);
 
@@ -211,13 +194,13 @@ void ETextureAtlas::active_this_texture_atlas(ETextureAtlas* _ta, ETextureAtlas*
 {
 	glViewport(0, 0, _ta->size_x, _ta->size_y);
 	glBindFramebuffer(GL_FRAMEBUFFER, _ta->framebuffer);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);//texture filtering
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);//
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, _ta2->colorbuffer);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);//texture filtering
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);//
 
 	EGraphicCore::ourShader->setInt("texture1", 0);
 }
@@ -226,20 +209,20 @@ void ETextureAtlas::active_this_texture_atlas(ETextureAtlas* _ta, ETextureAtlas*
 {
 	glViewport(0, 0, _ta->size_x, _ta->size_y);
 	glBindFramebuffer(GL_FRAMEBUFFER, _ta->framebuffer);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);//texture filtering
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);//
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, _ta2->colorbuffer);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);//texture filtering
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);//
 
 	EGraphicCore::ourShader->setInt("texture1", 0);
 
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, _ta3->colorbuffer);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);//texture filtering
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);//
 
 	EGraphicCore::ourShader->setInt("texture2", 1);
 }
@@ -251,7 +234,6 @@ void ETextureAtlas::return_to_this_texture_atlas(ETextureAtlas* _ta)
 	//return normal blend mode
 	glDisable(GL_DEPTH_TEST);
 	glBlendEquation(GL_FUNC_ADD);
-
 
 	glViewport(0, 0, EGraphicCore::SCR_WIDTH, EGraphicCore::SCR_HEIGHT);
 
@@ -268,11 +250,12 @@ ETextureAtlas::ETextureAtlas(int _x, int _y)
 	size_y = _y;
 
 	for (int j = 0; j < 1024; j++)
-	for (int i = 0; i < 1024; i++)
-	{free_space[j][i] = true;}
+		for (int i = 0; i < 1024; i++)
+		{
+			free_space[j][i] = true;
+		}
 
 	//glGenTextures(1, &ETexture::texture[1]);
-
 
 	//////////////////////////////
 	glGenFramebuffers(1, &framebuffer);
@@ -282,8 +265,8 @@ ETextureAtlas::ETextureAtlas(int _x, int _y)
 	glBindTexture(GL_TEXTURE_2D, colorbuffer);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _x, _y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);//texture filtering
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);//
 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorbuffer, 0);
 	// create a renderbuffer object for depth and stencil attachment (we won't be sampling these)	glGenRenderbuffers(1, &rbo);
@@ -291,7 +274,7 @@ ETextureAtlas::ETextureAtlas(int _x, int _y)
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, _x, _y); // use a single renderbuffer object for both a depth AND stencil buffer.
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo); // now actually attach it
 	// now that we actually created the framebuffer and added all attachments we want to check if it is actually complete now
-	
+
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 	{
 		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
@@ -306,7 +289,6 @@ ETextureAtlas::ETextureAtlas(int _x, int _y)
 	glBindTexture(GL_TEXTURE_2D, EGraphicCore::texture[0]);
 	EGraphicCore::ourShader->setInt("texture1", 0);
 	EGraphicCore::batch->setcolor(EColor::COLOR_WHITE);
-
 }
 
 ETextureAtlas::~ETextureAtlas()

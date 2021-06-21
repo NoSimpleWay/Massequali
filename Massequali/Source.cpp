@@ -1,10 +1,9 @@
 #pragma once
 
-#define _CRT_SECURE_NO_WARNINGS 
+#define _CRT_SECURE_NO_WARNINGS
 #define STB_IMAGE_IMPLEMENTATION
 
-
-#include <ctime> 
+#include <ctime>
 
 #include "NSW_api/EWindow.h"
 
@@ -13,33 +12,16 @@
 #include "NSW_api/EGraphicCore.h"
 //#include "ETextureAtlas.h"
 
-
 #include "NSW_api/Enums.h"
 #include "NSW_api/EFont.h"
 
 #include <windows.h>
 #include "EWindowMain.h"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 static unsigned int transformLoc;
 
 float delta_time;
 float saved_time_for_delta;
-
-
 
 void recalculate_correction();
 void processInput(GLFWwindow* window);
@@ -56,9 +38,6 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 int main()
 {
-
-
-
 	//EDataWatcher::data_watcher_struct* just_created_float_struct = new EDataWatcher::data_watcher_struct;
 
 	srand(time(NULL));
@@ -115,7 +94,7 @@ int main()
 	glfwSwapInterval(1);
 
 	glEnable(GL_BLEND);
-	
+
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glViewport(0, 0, EGraphicCore::SCR_WIDTH, EGraphicCore::SCR_HEIGHT);
@@ -132,7 +111,6 @@ int main()
 		EGraphicCore::batch->fill_indices();
 		//EGraphicCore::batch_shadowmap->fill_indices();
 		//EGraphicCore::batch_terrain->fill_indices();
-
 	}
 
 	EGraphicCore::batch->init();
@@ -168,8 +146,6 @@ int main()
 
 	EGraphicCore::ourShader->setInt("texture1", EGraphicCore::texture[0]);
 
-
-
 	EWindowMain* wg = new EWindowMain();
 	//EWindow::window_game = wg;
 	EWindow::window_list.push_back(wg);
@@ -181,10 +157,7 @@ int main()
 	wg->id = 0;
 	wg->always_fullscreen = true;
 
-
-
 	//wg->init();
-
 
 	//loading font
 
@@ -194,9 +167,6 @@ int main()
 	}
 
 	std::cout << "game window created" << std::endl;
-
-
-
 
 	EGraphicCore::gabarite_white_pixel = ETextureAtlas::put_texture_to_atlas("data/textures/white_pixel.png", EWindow::default_texture_atlas);
 
@@ -218,7 +188,6 @@ int main()
 	*gab->size_y = 4096.0f;
 	EGraphicCore::gabarite_list.push_back(gab);
 	EGraphicCore::gabarite_full_atlas = gab;
-
 
 	*EGraphicCore::gabarite_white_pixel->y2 -= 1.0f / 4096.0f / 2.0f;
 
@@ -274,7 +243,6 @@ int main()
 
 		if (delta_time > 0.5f) { delta_time = 0.5f; }
 
-
 		POINT cursorPos;
 		GetCursorPos(&cursorPos);
 
@@ -287,24 +255,13 @@ int main()
 		EWindow::prev_mouse_x = cursorPos.x;
 		EWindow::prev_mouse_y = cursorPos.y;
 
-
-
-
-
-
-
-
 		//очищаем графический буфер и подготавливаем трансформацию
 		//glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 		glClearColor(0.4f, 0.5f, 0.6f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-
 		//сброс батчера
 		EGraphicCore::batch->reset();
-
-
 
 		EButton::top_window_id = -1;
 
@@ -326,7 +283,6 @@ int main()
 			EWindow::button_backspace_released = true;
 
 			EWindow::delete_button_hold_time = 0;
-
 		}
 
 		if
@@ -380,12 +336,13 @@ int main()
 				w->draw_interface(delta_time);
 			}
 
+		if ((EButton::dragged_button != NULL) & (!EWindow::LMB))
+		{
+			EButton::dragged_button = NULL;
+		}
 
 		EGraphicCore::batch->reinit();
 		EGraphicCore::batch->draw_call();
-
-
-
 
 		/*EGraphicCore::batch->reset();
 			EGraphicCore::batch->setcolor(EColor::COLOR_WHITE);
@@ -394,8 +351,6 @@ int main()
 		EGraphicCore::batch->draw_call();*/
 
 		glfwSwapBuffers(EWindow::main_window);
-
-
 
 		processInput(EWindow::main_window);
 
@@ -415,23 +370,18 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	//glScissor(0, 0, 500, 500);
 	glfwSetWindowSize(EWindow::main_window, width, height);
 
-	
 	glViewport(0, 0, width, height);
 	glfwGetWindowSize(window, &EGraphicCore::SCR_WIDTH, &EGraphicCore::SCR_HEIGHT);
-
 
 	std::cout << "Resize event width:" << EGraphicCore::SCR_WIDTH << " height: " << EGraphicCore::SCR_HEIGHT << std::endl;
 
 	recalculate_correction();
-
-
 }
 
 void recalculate_correction()
 {
 	if ((EGraphicCore::SCR_WIDTH > 100) && (EGraphicCore::SCR_HEIGHT > 100))
 	{
-
 		EGraphicCore::correction_x = 1.0f / EGraphicCore::SCR_WIDTH * 2.0f;
 		EGraphicCore::correction_y = 1.0f / EGraphicCore::SCR_HEIGHT * 2.0f;
 
@@ -476,20 +426,13 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 
 void mouse_position_callback(GLFWwindow* window, double _x, double _y)
 {
-
-
 	EWindow::mouse_x = _x;
 	EWindow::mouse_y = EGraphicCore::SCR_HEIGHT - _y;
-
-
-
 }
 
 void char_input_callback(GLFWwindow* window, unsigned int _char)
 {
-
 	int inputed_c = (int)_char;
-
 
 	if (inputed_c == 1025) { inputed_c = 168; }
 	else
@@ -506,9 +449,6 @@ void char_input_callback(GLFWwindow* window, unsigned int _char)
 
 void processInput(GLFWwindow* window)
 {
-
-
-
 	/*
 	if ((glfwGetKey(window, GLFW_KEY_F1) == GLFW_PRESS))
 	{
@@ -525,7 +465,6 @@ void processInput(GLFWwindow* window)
 		for (int i = 0; i < PATH_MATRIX_ARRAY_SIZE; i++)
 		for (int j = 0; j < PATH_MATRIX_ARRAY_SIZE; j++)
 			{
-
 				if (rand() % 5 == 0)
 				{
 					EWindow::window_game->unwalk_matrix[j][i][0] = true;
@@ -545,6 +484,3 @@ void processInput(GLFWwindow* window)
 			}
 	}*/
 }
-
-
-

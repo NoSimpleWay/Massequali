@@ -25,7 +25,7 @@ void Entity::draw_entity(Entity* _e, Batcher* _b, float _d)
 	}
 
 	if (!_e->autobuilding_group_list.empty())
-	for (AutobiuldingGroup* _group:_e->autobuilding_group_list)
+	for (AutobuildingGroup* _group:_e->autobuilding_group_list)
 	for (AutobuildingGroupElement* _element : _group->autobuilding_group_element_list)
 	{
 

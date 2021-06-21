@@ -1,7 +1,5 @@
 #include "EGraphicCore.h"
 
-
-
 unsigned int EGraphicCore::texture[32];
 unsigned char* EGraphicCore::data1;
 
@@ -79,7 +77,6 @@ void EGraphicCore::load_texture(char const* _path, int _id)
 	data1 = stbi_load(_path, &width, &height, &nrChannels, STBI_rgb_alpha);
 	if (data1)
 	{
-
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data1);
 		//glGenerateMipmap(GL_TEXTURE_2D);
 
@@ -127,26 +124,26 @@ void EGraphicCore::draw_sprite_regular(sprite_array* _sprite_array, Batcher* _ba
 	if (_sprite_array != NULL)
 	{
 		for (ESprite* spr : _sprite_array->sprite_list)
-		if ((spr != NULL) && (spr->texture_gabarite != NULL))
-		{
-			_batch->setcolor(EColor::COLOR_WHITE);
-			_batch->draw_sprite
-			(
-				_offset_x + *spr->offset_x,
-				_offset_y + *spr->offset_y + _offset_z + *spr->offset_z,
+			if ((spr != NULL) && (spr->texture_gabarite != NULL))
+			{
+				_batch->setcolor(EColor::COLOR_WHITE);
+				_batch->draw_sprite
+				(
+					_offset_x + *spr->offset_x,
+					_offset_y + *spr->offset_y + _offset_z + *spr->offset_z,
 
-				*spr->size_x,
-				*spr->size_y,
+					*spr->size_x,
+					*spr->size_y,
 
-				*spr->fragment_left,
-				*spr->fragment_right,
-				*spr->fragment_down,
-				*spr->fragment_up,
+					*spr->fragment_left,
+					*spr->fragment_right,
+					*spr->fragment_down,
+					*spr->fragment_up,
 
-				spr->texture_gabarite
-			);
-			//_batch->draw_gabarite(_offset_x + *spr->offset_x, _offset_y + *spr->offset_y + _offset_z + *spr->offset_z, spr->texture_gabarite);
-		}
+					spr->texture_gabarite
+				);
+				//_batch->draw_gabarite(_offset_x + *spr->offset_x, _offset_y + *spr->offset_y + _offset_z + *spr->offset_z, spr->texture_gabarite);
+			}
 	}
 }
 

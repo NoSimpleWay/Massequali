@@ -18,7 +18,7 @@ ETextureAtlas* EWindow::screen_FBO;
 
 
 
-
+EButton* EButton::dragged_button;
 
 
 
@@ -630,13 +630,171 @@ void EButton::update(float _d)
 		}
 	}
 
+
+	if (is_overlap())
+	{
+		any_overlap = true;
+
+		if ((EButton::dragged_button == NULL) & (EWindow::LMB))
+		{
+			dragged_button = this;
+		}
+
+		if ((EButton::dragged_button != NULL) && (!EWindow::LMB) && (dragged_button->master_group == master_group))
+		{
+			EButton* swap_button = NULL;
+
+			//if (EWindow::mouse_x < master_position + button_size_x / 2.0f)
+			
+				EButton* button_swap = NULL;
+				if
+					(
+						(data_id >= 0)
+						&
+						(*can_be_selected)
+						&
+						(EWindow::mouse_x < master_position_x + button_size_x / 2.0f)
+						&
+						(dragged_button != this)
+						&
+						(master_group != NULL)
+					)
+				{
+					*dragged_button->drag_is_positive = false;
+
+					if (data_id < dragged_button->data_id)
+					{
+						
+
+						
+
+						for (int i = dragged_button->data_id; i >= data_id; i--)
+						{
+							button_swap = master_group->button_list.at(i - 1);
+							master_group->button_list.at(i - 1) = master_group->button_list.at(i);
+							master_group->button_list.at(i) = button_swap;
+
+							for (BUTTON_ACTION ba : action_on_drag)
+							{ba(dragged_button, _d);}
+
+							update_data_id_for_buttons(master_group);
+						}
+						
+						
+					}
+					else
+					{
+						for (int i = dragged_button->data_id; i <data_id - 1 ; i++)
+						{
+							button_swap = master_group->button_list.at(i + 1);
+							master_group->button_list.at(i + 1) = master_group->button_list.at(i);
+							master_group->button_list.at(i) = button_swap;
+							
+							for (BUTTON_ACTION ba : action_on_drag)
+							{ba(this, _d);}
+
+							update_data_id_for_buttons(master_group);
+						}
+						
+						
+					}
+
+					//master_group->button_list.erase(master_group->button_list.begin() + dragged_button->data_id);
+					
+				}
+
+
+				if
+					(
+						(master_group != NULL)
+						&&
+						(data_id < master_group->button_list.size() - 1)
+						&&
+						(*can_be_selected)
+						&&
+						(EWindow::mouse_x > master_position_x + button_size_x / 2.0f)
+						&&
+						(dragged_button != this)
+						&&
+						(master_group != NULL)
+					)
+				{
+					*dragged_button->drag_is_positive = true;
+
+					if (data_id < dragged_button->data_id)
+					{
+						for (int i = dragged_button->data_id; i > data_id; i--)
+						{
+							button_swap = master_group->button_list.at(i - 1);
+							master_group->button_list.at(i - 1) = master_group->button_list.at(i);
+							master_group->button_list.at(i) = button_swap;
+
+							//text = "NO";
+
+						
+							for (BUTTON_ACTION ba : action_on_drag)
+							{ba(dragged_button, _d);}
+
+							update_data_id_for_buttons(master_group);
+						}
+
+						
+					}
+					else
+					{
+						for (int i = dragged_button->data_id; i < data_id; i++)
+						{
+							button_swap = master_group->button_list.at(i + 1);
+							master_group->button_list.at(i + 1) = master_group->button_list.at(i);
+							master_group->button_list.at(i) = button_swap;
+
+							//text = "NO";
+
+							
+							for (BUTTON_ACTION ba : action_on_drag)
+							{ba(dragged_button, _d);}
+
+							update_data_id_for_buttons(master_group);
+						}
+
+						
+					}
+
+					//master_group->button_list.erase(master_group->button_list.begin() + dragged_button->data_id);
+
+				}
+
+				/*if (EWindow::LMB)
+				{text = "YES";}
+				else
+				{
+					text = "NO";
+
+					dragged_button = NULL;
+				}*/
+
+				
+		}
+
+		/*if ((EButton::dragged_button != NULL) & (EWindow::LMB))
+		{
+			text = "LMB";
+		}*/
+
+		
+	}
+
 	if (!EWindow::LMB)
 	{
 		outclick_protection = false;
+		//dragged_button = NULL;
 	}
 
+	
 	if (is_right_click())
 	{
+
+
 		right_click_event();
 
 
@@ -656,6 +814,34 @@ void EButton::update(float _d)
 			}
 		}
 	}
+
+
+	/*if
+	(
+		(master_group != NULL)
+		&
+		(*start_drag)
+		&
+		(*can_be_selected)		
+	)
+	{
+		EButton* swap_button = NULL;
+		if
+		(
+			(data_id > 0)
+			&
+			(*master_group->button_list.at(data_id - 1)->can_be_selected)
+			&
+			(EWindow::mouse_x < master_position_x - 5.0f)
+		)
+		{
+			swap_button = master_group->button_list.at(data_id - 1);
+			master_group->button_list.at(data_id - 1) = swap_button;
+			master_group->button_list.at(data_id) = swap_button;
+
+			*start_drag = false;
+		}
+	}*/
 
 	if ((is_overlap()) & (is_drop_list) & (is_expanded))
 	{
@@ -876,10 +1062,7 @@ void EButton::update(float _d)
 		//text = "-";
 	}
 
-	if (is_overlap())
-	{
-		any_overlap = true;
-	}
+	
 
 	if (!grid_region_list.empty())
 	for (EGridRegion* gr : grid_region_list)
@@ -1109,7 +1292,11 @@ void EButton::default_draw(Batcher* _batch, float _d)
 
 	if (have_rama)
 	{
-		_batch->setcolor(rama_color);
+		if (dragged_button == this)
+		{_batch->setcolor(EColor::COLOR_RED);}
+		else
+		{_batch->setcolor(rama_color);}
+
 		_batch->draw_rama(master_position_x, master_position_y, button_size_x, button_size_y, rama_thikness, EGraphicCore::gabarite_small_wood_button_bg);
 	}
 
@@ -1141,6 +1328,19 @@ void EButton::default_draw(Batcher* _batch, float _d)
 	{
 		_batch->setcolor_alpha(EColor::COLOR_GREEN, 0.25f);
 		_batch->draw_gabarite(master_position_x - 3.0f, master_position_y - 3.0f, button_size_x + 6.0f, button_size_y + 6.0f, EGraphicCore::gabarite_white_pixel);
+
+		_batch->setcolor_alpha(EColor::COLOR_GREEN, 1.0f);
+		if ((dragged_button != NULL) & (flash_line_active))
+		{ 
+			if (EWindow::mouse_x < master_position_x + button_size_x / 2.0f)
+			{
+				_batch->draw_gabarite(master_position_x - 3.0f, master_position_y, 3.0f, button_size_y, EGraphicCore::gabarite_white_pixel);
+			}
+			else
+			{
+				_batch->draw_gabarite(master_position_x + button_size_x, master_position_y, 3.0f, button_size_y, EGraphicCore::gabarite_white_pixel);
+			}
+		}
 	}
 
 	if (*is_radial_button)
@@ -1238,6 +1438,8 @@ void EButton::default_draw(Batcher* _batch, float _d)
 		if (*gr->cathed_up_side)	{ _batch->draw_gabarite(master_position_x + *gr->position_x * icon_size_multiplier, master_position_y + (*gr->position_y + *gr->size_y) * icon_size_multiplier, *gr->size_x * icon_size_multiplier, 5.0f, EGraphicCore::gabarite_white_pixel); }
 		if (*gr->cathed_down_side)	{ _batch->draw_gabarite(master_position_x + *gr->position_x * icon_size_multiplier, master_position_y + *gr->position_y * icon_size_multiplier, *gr->size_x * icon_size_multiplier, 5.0f, EGraphicCore::gabarite_white_pixel); }
 	}
+
+
 }
 
 void EButton::additional_draw(Batcher* _batch, float _d)
@@ -1499,6 +1701,27 @@ void EButton::update_data_id_for_buttons(button_group* _bg)
 			id++;
 		}
 	}
+}
+
+EButton::EButton(float _x, float _y, float _sx, float _sy, EWindow* _w, button_super_group* _bsg, button_group* _bg)
+{
+	button_x_offset =		_x;
+	button_y_offset =		_y;
+
+	button_base_x =			_x;
+	button_base_y =			_y;
+
+	button_size_x =			_sx;
+	button_size_y =			_sy;
+
+	button_min_size_x =		_sx;
+	button_min_size_y =		_sy;
+
+	master_window =			_w;
+	master_super_group =	_bsg;
+	master_group =			_bg;
+
+	update_localisation();
 }
 
 bool EButton::is_not_outside_of_group(EButton* _b, button_super_group* _bsg, button_group* _bg)
@@ -2068,7 +2291,7 @@ void EWindow::default_draw_interface(float _d)
 
 	//if ((glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) != GLFW_PRESS))
 	//if ((glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) != GLFW_PRESS))
-	{EGraphicCore::matrix_transform = glm::translate(EGraphicCore::matrix_transform, glm::vec3(-1.0f - EGraphicCore::correction_x / 2.0f, -1.0f - EGraphicCore::correction_y / 2.0f, 0.0f));}
+	{EGraphicCore::matrix_transform = glm::translate(EGraphicCore::matrix_transform, glm::vec3(-1.0f - EGraphicCore::correction_x / 2.0f * 0.0f, -1.0f - EGraphicCore::correction_y / 2.0f * 0.0f, 0.0f));}
 	//else
 	//{EGraphicCore::matrix_transform = glm::translate(EGraphicCore::matrix_transform, glm::vec3(-1.0f, -1.0f, -1.0f));}
 	
@@ -2252,7 +2475,70 @@ void EWindow::default_draw_interface(float _d)
 
 	//draw graphic for button group	
 
+	//if (time_process_active)
+	{
+		float time_process_h = 0.0f;
+		float time_process_summ = 0.0f;
 
+		float offset_y = 0.0f;
+
+
+		for (time_process_struct* str : tps_list)
+		{
+			//time_process_summ += str->time_process_value.at(time_process_rota_id);
+
+
+			//EFont::active_font->draw(EGraphicCore::batch, EString::float_to_string(round(str->time_process_value.at(time_process_rota_id) * 100.0f) / 100.0f), 205.0f, EGraphicCore::SCR_HEIGHT - 52.0f - offset_y + 3.0f);
+
+			float time_process_average = 0.0f;
+			float min_value = 100.0f;
+			float max_value = 0.0f;
+			for (int i = 0; i < 30; i++)
+			{
+				float current = str->time_process_value.at(i);
+				time_process_average += current;
+
+				if (current < min_value) { min_value = current; }
+				if (current > max_value) { max_value = current; }
+			}
+
+			time_process_average /= 30.0f;
+			time_process_summ += time_process_average;
+
+			if (glfwGetKey(EWindow::main_window, GLFW_KEY_TAB) == GLFW_PRESS)
+			{
+				EGraphicCore::batch->setcolor_alpha(EColor::COLOR_BLACK, 0.9f);
+				EGraphicCore::batch->draw_gabarite(0.0f, EGraphicCore::SCR_HEIGHT - 52.0f - offset_y, 300.0f, 20.0f, EGraphicCore::gabarite_white_pixel);
+
+				EGraphicCore::batch->setcolor_alpha(EColor::COLOR_WHITE, 0.9f);
+				EFont::active_font->draw(EGraphicCore::batch, str->time_process_name, 5.0f, EGraphicCore::SCR_HEIGHT - 52.0f - offset_y + 3.0f);
+
+				EGraphicCore::batch->setcolor_alpha(EColor::COLOR_WHITE, 0.9f);
+				EFont::active_font->draw(EGraphicCore::batch, EString::float_to_string(round(time_process_average * 100.0f) / 100.0f), 205.0f, EGraphicCore::SCR_HEIGHT - 52.0f - offset_y + 3.0f);
+
+				EGraphicCore::batch->setcolor_alpha(EColor::COLOR_DARK_GREEN, 0.9f);
+				EFont::active_font->draw(EGraphicCore::batch, EString::float_to_string(min_value), 255.0f, EGraphicCore::SCR_HEIGHT - 52.0f - offset_y + 3.0f);
+
+				EGraphicCore::batch->setcolor_alpha(EColor::COLOR_DARK_RED, 0.9f);
+				EFont::active_font->draw(EGraphicCore::batch, EString::float_to_string(max_value), 305.0f, EGraphicCore::SCR_HEIGHT - 52.0f - offset_y + 3.0f);
+			}
+			offset_y += 25.0f;
+		}
+
+		EGraphicCore::batch->setcolor_alpha(EColor::COLOR_BLACK, 0.9f);
+		EGraphicCore::batch->draw_gabarite(0.0f, EGraphicCore::SCR_HEIGHT - 32.0f, 300.0f, 20.0f, EGraphicCore::gabarite_white_pixel);
+
+		EGraphicCore::batch->setcolor_alpha(EColor::COLOR_PINK, 0.9f);
+		EFont::active_font->draw(EGraphicCore::batch, "summ", 5.0f, EGraphicCore::SCR_HEIGHT - 32.0f + 3.0f);
+		EFont::active_font->draw(EGraphicCore::batch, std::to_string(time_process_summ), 205.0f, EGraphicCore::SCR_HEIGHT - 32.0f + 3.0f);
+
+		time_process_rota_id++;
+
+		if (time_process_rota_id >= 30)
+		{
+			time_process_rota_id = 0;
+		}
+	}
 }
 
 void EWindow::draw_interface(float _d)

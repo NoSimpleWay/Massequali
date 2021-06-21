@@ -1,20 +1,13 @@
 #pragma once
 
-
-
-
-
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
 
 //glm::mat4 matrix_transform;
 
 #include "NSW_api/Batcher.h"
 #include <vector>
 #include "NSW_api/EFont.h"
-
-
 
 #include <iostream>
 #include <chrono>
@@ -37,6 +30,9 @@ public:
 	typedef void (*BUTTON_ACTION)(EButton* _b, float _d);
 
 	std::vector<BUTTON_ACTION> action_on_left_click;
+	std::vector<BUTTON_ACTION> action_on_drag;
+
+	bool* drag_is_positive = new bool(false);
 
 	enum ButtonSimpleChangerActivationType
 	{
@@ -47,7 +43,6 @@ public:
 		CHANGER_ACTIVATION_TYPE_DROP_LIST_SELECT_ELEMENT,
 		CHANGER_ACTIVATION_TYPE_SLIDER_DRAG,
 		CHANGER_ACTIVATION_TYPE_INPUT
-
 	};
 
 	enum ButtonSimpleChangerMathematic
@@ -59,11 +54,11 @@ public:
 		BUTTON_SIMPLE_VALUE_MANIPULATOR_MATHEMATIC_MULTIPLY_VALUE
 	};
 
-//////////////////////////////
+	//////////////////////////////
 	struct SimpleFloatChanger
 	{
-		float*		target_float_pointer		= NULL;
-		float*		float_value					= new float(0.0f);
+		float* target_float_pointer = NULL;
+		float* float_value = new float(0.0f);
 
 		enum SimpleFloatChangerType
 		{
@@ -76,15 +71,14 @@ public:
 		int* selected_activation_type = new int(0);
 		int* selected_mathematic_type = new int(0);
 
-
 		float* pre_correction_value = new float(0.0f);
 	};
 	std::vector <SimpleFloatChanger*> simple_float_changer_list;
-//////////////////////////////
+	//////////////////////////////
 	struct SimpleTextureChanger
 	{
-		EGabarite**		target_texture_pointer	= NULL;
-		EGabarite*		texture_value			= NULL;
+		EGabarite** target_texture_pointer = NULL;
+		EGabarite* texture_value = NULL;
 		enum SimpleTextureChangerType
 		{
 			SIMPLE_TEXTURE_CHANGER_BUTTON_VALUE,
@@ -93,7 +87,6 @@ public:
 
 		int* texture_changer_type = new int(0);
 	};
-
 
 	std::vector <SimpleTextureChanger*> simple_texture_changer_list;
 
@@ -111,12 +104,12 @@ public:
 	BUTTON_ACTION action_on_drop_list_select_element;
 
 	//std::vector < DefaultButtonActions::SimpleValueChanger* > simple_value_changer_list;
-	
-	int * target_address_for_int;
+
+	int* target_address_for_int;
 	int* target_value_for_int = new int(0);
 
-	float * target_address_for_float;
-	float * target_value_for_float = new float (0.0f);
+	float* target_address_for_float;
+	float* target_value_for_float = new float(0.0f);
 
 	bool* target_address_for_bool;
 	bool* target_value_for_bool = new bool(false);
@@ -194,14 +187,13 @@ public:
 
 	EWindow* master_window;
 	EButton* master_button;
-	
-
 
 	float master_position_x = 0;
 	float master_position_y = 0;
 
 	EButton();
 	EButton(float _x, float _y, float _sx, float _sy);
+
 	//EButton(float _x, float _y, float _sx, float _sy, Enums::ButtonType _type);
 
 	bool have_description = true;
@@ -211,8 +203,6 @@ public:
 	bool have_text = true;
 
 	string input_hint;
-
-
 
 	~EButton();
 
@@ -238,7 +228,6 @@ public:
 	virtual void additional_draw(Batcher* _batch, float _d);
 	void default_draw(Batcher* _batch, float _d);
 
-
 	void text_pass(Batcher* _batch);
 	//virtual void incoming_data(FilterBlock* _block);
 
@@ -252,7 +241,6 @@ public:
 	virtual void drop_list_select_event();
 
 	virtual void slider_drag_event();
-
 
 	static int top_window_id;
 
@@ -297,8 +285,6 @@ public:
 
 	virtual void update_localisation();
 
-
-
 	bool input_auto_clear_text = false;
 
 	EFont* force_font;
@@ -317,28 +303,24 @@ public:
 	EButtonAction* button_action_input_finish;
 	EButtonAction* button_action_outclick;*/
 
-
 	//bool& link_to_boolean;
-
-	
 
 	static EButton* clone_button(EButton* _b, float _x, float _y, float _sx, float _sy);
 
-	bool* double_click_started = new bool (false);
-	bool* is_double_click = new bool (false);
+	bool* double_click_started = new bool(false);
+	bool* is_double_click = new bool(false);
 
 	static bool any_input;
 	static bool any_overlap;
 
 	bool* is_consumable = new bool(false);
 	bool* is_radial_button = new bool(false);
-	float* maximum_value = new float (1.0f);
+	float* maximum_value = new float(1.0f);
 
 	bool* is_checkbox = new bool(false);
 	bool* is_checked = new bool(false);
 
 	bool* can_be_hidden_by_search_deactivator = new bool(true);
-
 
 	enum GroupPushMethod
 	{
@@ -375,13 +357,9 @@ public:
 
 		bool* can_be_moved_by_user = new bool(true);
 
-
-
 		int* selected_push_method = new int(0);
 
 		EButton* selected_button;
-
-		
 	};
 
 	static void update_data_id_for_buttons(button_group* _bg);
@@ -397,7 +375,6 @@ public:
 	};
 
 	std::vector < SimpleButtonSearchDeactivator* > simple_button_search_deactivator_list;
-
 
 	struct button_super_group
 	{
@@ -416,6 +393,8 @@ public:
 		bool* is_catched = new bool(false);
 	};
 
+	EButton(float _x, float _y, float _sx, float _sy, EWindow* _w, button_super_group* _bsg, button_group* _bg);
+
 	enum ButtonAutoAlign
 	{
 		BUTTON_AUTO_ALIGN_ADD_Y,
@@ -424,15 +403,14 @@ public:
 		BUTTON_AUTO_ALIGN_RESET_Y_AND_ADD_X,
 		BUTTON_AUTO_ALIGN_FREE,
 		BUTTON_AUTO_ALIGN_NONE
-
 	};
 
 	int* selected_auto_align_mode = new int(0);
 
 	static bool is_not_outside_of_group(EButton* _b, button_super_group* _bsg, button_group* _bg);
 
-	button_group*			master_group;
-	button_super_group*		master_super_group;
+	button_group* master_group;
+	button_super_group* master_super_group;
 
 	struct EGridRegion
 	{
@@ -444,8 +422,6 @@ public:
 
 		int* subdivision_x = new int(0);
 		int* subdivision_y = new int(0);
-
-
 
 		bool* cathed_right_side = new bool(false);
 		bool* cathed_left_side = new bool(false);
@@ -463,18 +439,20 @@ public:
 	std::vector<EGridRegion*> grid_region_list;
 
 	bool* can_edit_grid_region = new bool(false);
-};
 
+	bool* start_drag = new bool(false);
+	static EButton* dragged_button;
+};
 
 class EWindow
 {
 public:
 	void default_update(float _d);
 
-	static void catch_right_side		(EButton::button_group* bg, EButton::button_super_group* bsg);
-	static void catch_left_side			(EButton::button_group* bg, EButton::button_super_group* bsg);
-	static void catch_up_side			(EButton::button_group* bg, EButton::button_super_group* bsg);
-	static void catch_down_side			(EButton::button_group* bg, EButton::button_super_group* bsg);
+	static void catch_right_side(EButton::button_group* bg, EButton::button_super_group* bsg);
+	static void catch_left_side(EButton::button_group* bg, EButton::button_super_group* bsg);
+	static void catch_up_side(EButton::button_group* bg, EButton::button_super_group* bsg);
+	static void catch_down_side(EButton::button_group* bg, EButton::button_super_group* bsg);
 
 	virtual void update(float _d);
 
@@ -482,7 +460,6 @@ public:
 	virtual void draw(float _d);
 
 	void default_resize_event();
-
 
 	virtual void draw_interface(float _d);
 	void default_draw_interface(float _d);
@@ -498,13 +475,13 @@ public:
 
 	float position_x = 0;
 	float position_y = 0;
-	
+
 	float window_size_x = 100.0f;
 	float window_size_y = 100.0f;
 
 	static double mouse_x;
 	static double mouse_y;
-	
+
 	static int prev_mouse_x;
 	static int prev_mouse_y;
 
@@ -595,8 +572,6 @@ public:
 
 		float* size_x = new float(0.0f);
 		float* size_y = new float(0.0f);
-
-
 	};
 
 	struct button_array_vertical_collection
@@ -637,15 +612,11 @@ public:
 
 		static void update_button_position()
 		{
-
 		}
-
-
 	};
 
 	struct button_array_horizontal_collection
 	{
-
 		button_array_horizontal_collection(float _x, float _y, float _sx, float _sy)
 		{
 			*position_x = _x;
@@ -656,15 +627,14 @@ public:
 		}
 
 		int* selected_tab = new int(0);
-		
+
 		struct test
 		{
-
 		};
 
 		float* position_x = new float(0.0f);
 		float* position_y = new float(0.0f);
-		
+
 		float* size_x = new float(0.0f);
 		float* size_y = new float(0.0f);
 
@@ -673,7 +643,6 @@ public:
 		std::vector <EButton*> tab_button_list;
 
 		int* push_method = new int(ARRAY_PUSH_METHOD::APM_PUSH_Y);
-		
 	};
 
 	enum ARRAY_PUSH_METHOD
@@ -689,7 +658,7 @@ public:
 		bool* catch_highlight = new bool(false);
 		button_array_collection_massive(EWindow* _w);
 
-		bool* is_active = new bool (true);
+		bool* is_active = new bool(true);
 
 		std::vector < button_array_horizontal_collection* > button_array_horizontal_collection_list;
 
@@ -720,29 +689,24 @@ public:
 	};
 	struct massive_style
 	{
-		EGabarite* left_corner		= NULL;
-		EGabarite* right_corner		= NULL;
-		EGabarite* up_corner		= NULL;
-		EGabarite* down_corner		= NULL;
+		EGabarite* left_corner = NULL;
+		EGabarite* right_corner = NULL;
+		EGabarite* up_corner = NULL;
+		EGabarite* down_corner = NULL;
 
-		EGabarite* LU_corner		= NULL;
-		EGabarite* RU_corner		= NULL;
-		EGabarite* LD_corner		= NULL;
-		EGabarite* LR_corner		= NULL;
+		EGabarite* LU_corner = NULL;
+		EGabarite* RU_corner = NULL;
+		EGabarite* LD_corner = NULL;
+		EGabarite* LR_corner = NULL;
 
-		EGabarite* background		= NULL;
+		EGabarite* background = NULL;
 
-		int background_mode			= GabariteBackgroundMode::GBM_SCREEN_SPACE;
-
-
-		
-
+		int background_mode = GabariteBackgroundMode::GBM_SCREEN_SPACE;
 	};
 
 	static std::vector <massive_style*> list_of_massive_style;
 
 	std::vector<button_array_collection_massive*> button_array_collection_massive_list;
-
 
 	//void draw_lightmap();
 	std::vector< EButton::button_super_group* > button_group_list;
@@ -759,7 +723,6 @@ public:
 
 	/*struct SimpleValueChanger
 	{
-
 		enum StringValueChangerType
 		{
 			StringValueChangerType_CONTANT,
@@ -770,17 +733,11 @@ public:
 		std::string*	string_value				= new string("");
 		int*			string_value_changer_type	= new int(StringValueChangerType::StringValueChangerType_CONTANT);
 	};*/
-
-
 };
-
-
 
 class EButtonGroup
 {
 public:
-
-	
 };
 
 /*
@@ -799,6 +756,4 @@ public:
 		int* data_value = new int(0);
 		std::string name;
 	};
-
 };*/
-

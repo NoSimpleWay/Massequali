@@ -46,7 +46,7 @@ public:
 
 	void reset_render();
 
-	std::vector<Entity*> entity_list;
+	static std::vector<Entity*> entity_list;
 
 	ECamera* main_camera = new ECamera();
 
@@ -56,13 +56,16 @@ public:
 	static void update_selected_entity_list();
 	static void import_data_from_entity_to_autobuilding_interface(Entity* _e);
 
-	EGraphicCore::ESprite* create_new_sprite_if_need(int selected_sprite_id, Entity* _e);
+	EGraphicCore::ESprite* create_new_sprite_if_need(int selected_sprite_id, Entity* _e, std::string _text);
 
-	static void add_new_sprite_if_need(int _i, Entity* _e);
+	static void add_new_sprite_if_need(int _i, Entity* _e, std::string _text);
 
 	static void generate_building(Entity* _e);
 
 	static void convert_size_to_fragment(EGabarite* _g, float _offset_x, float _offset_y, float _size_x, float _size_y, float* _left_side, float* _right_side, float* _down_side, float* _up_side);
+
+	static void save_map(std::string _name);
+	static void load_map(std::string _name);
 
 	enum GridRegionNameByOrder
 	{

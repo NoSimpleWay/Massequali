@@ -6,8 +6,6 @@ float EMath::clamp_value_float(float _v, float _min, float _max)
 	if (_v < _min) { return _min; }
 	if (_v > _max) { return _max; }
 	return _v;
-
-
 }
 
 int EMath::clamp_value_int(int _v, int _min, int _max)
@@ -35,7 +33,7 @@ float EMath::to_float(std::string _text)
 			//too many dots
 			if (dot_count > 1) { number_error = true; std::cout << "too many dots" << std::endl; break; }
 		}
-		
+
 		////have no numbers after dot
 		//if ((dot_count >= 1) & (i + 1 >= _text.length())) { number_error = true; std::cout << "no number after dot" << std::endl; break; }
 
@@ -52,20 +50,21 @@ float EMath::to_float(std::string _text)
 	else
 	{
 		if (_text == "-")
-		{return 0.0f;}
+		{
+			return 0.0f;
+		}
 		else
-		{return std::stof(_text);}
+		{
+			return std::stof(_text);
+		}
 	}
 }
 
-
-std::string*EFile::data_array = new std::string[1];
+std::string* EFile::data_array = new std::string[1];
 int EFile::array_size = 0;
 
 void EFile::data_parser(std::string _s)
 {
-
-	
 	array_size = 1;
 	std::string subdata = "";
 	int dim = 0;
@@ -94,7 +93,6 @@ void EFile::data_parser(std::string _s)
 			}
 			else
 			{
-
 				subdata += _s.at(i);
 
 				//std::cout << "SUBATA:" << subdata << std::endl;
@@ -105,13 +103,12 @@ void EFile::data_parser(std::string _s)
 
 int EFile::find_data_array_id(std::string _s)
 {
-
 	return 0;
 }
 
 bool EString::is_contain(std::string _text_source, std::string _text_value)
 {
-	if (_text_source.find(_text_value) != std::string::npos) {return true;}
+	if (_text_source.find(_text_value) != std::string::npos) { return true; }
 
 	return false;
 }
@@ -130,7 +127,6 @@ std::string EString::float_to_string(float _f)
 
 	int numbers_before_dot = 0;
 	int numbers_after_dot = 0;
-	
 
 	std::string subdata = "";
 
@@ -139,7 +135,7 @@ std::string EString::float_to_string(float _f)
 		subdata += t.at(i);
 
 		//non-zero numbers after dot
-		if ((!dot_is_found) &(t.at(i) != '.'))
+		if ((!dot_is_found) & (t.at(i) != '.'))
 		{
 			numbers_before_dot++;
 		}
@@ -157,8 +153,6 @@ std::string EString::float_to_string(float _f)
 
 		if ((t.at(i) == '0') & (dot_is_found))
 		{
-
-
 			if (numbers_after_dot == 0)
 			{
 				if (numbers_before_dot <= 0)
@@ -178,11 +172,7 @@ std::string EString::float_to_string(float _f)
 		{
 			dot_is_found = true;
 		}
-
 	}
-
-
-	
 
 	return subdata;
 }
