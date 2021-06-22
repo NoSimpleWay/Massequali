@@ -3,8 +3,6 @@
 #include "EGabarite.h"
 class Batcher
 {
-
-
 public:
 	Batcher();
 
@@ -35,8 +33,7 @@ public:
 	void draw_gabarite_shadowmap_fragment(float _x, float _y, float _w, float _h, EGabarite* _g, EGabarite* _supermap, float _z, float _fx, float _fy);
 	void draw_gabarite_shadowmap_fragment_mirrored(float _x, float _y, float _w, float _h, EGabarite* _g, EGabarite* _supermap, float _z, float _fx, float _fy);
 
-
-	void draw_gabarite_with_offset(float _x, float _y, float _w, float _h, float _offset_x, float _offset_y, float _offset_end_x, float _offset_end_y,  EGabarite* _g);
+	void draw_gabarite_with_offset(float _x, float _y, float _w, float _h, float _offset_x, float _offset_y, float _offset_end_x, float _offset_end_y, EGabarite* _g);
 
 	void fill_indices();
 
@@ -59,8 +56,8 @@ public:
 	unsigned int indices_id = 0;
 	unsigned int indices_order = 0;
 
-	float vertices[5000*32];
-	unsigned int indices[5000*6];
+	float vertices[5000 * 32];
+	unsigned int indices[5000 * 6];
 
 	void draw_call();
 	void draw_call_terrain();

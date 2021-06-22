@@ -20,7 +20,7 @@ class EDataWatcher
 public:
 
 	template<typename T>
-	
+
 	struct data_watcher_struct
 	{
 		std::string name;
@@ -29,7 +29,6 @@ public:
 
 		std::vector <T> watcher_address;
 		data_watcher_struct(std::string _name, T _address);
-
 	};
 
 	template<typename T>
@@ -38,13 +37,9 @@ public:
 	//template<typename T>
 	//static void set_name_and_data(data_watcher_struct<T*>* _struct, std::string _name, T* _address);
 
-
-
 	template<typename T, typename T2>
 	void vectorizator(std::vector<T> _vector, data_watcher_struct<T2>* _struct);
-
 };
-
 
 template<typename T>
 inline void EDataWatcher::add_new_vector_element(std::vector<T> _vector)
@@ -59,9 +54,7 @@ inline void EDataWatcher::set_name_and_data(data_watcher_struct<T*>* _struct, st
 	_struct->watcher_address.push_back(&_address);
 
 	std::cout << "pointer data with name [" << _name << "] have address [" << _address << "] and value <" << std::to_string(*_address) << ">" << std::endl;
-
 }*/
-
 
 template<typename T, typename T2>
 inline void EDataWatcher::vectorizator(std::vector<T> _vector, data_watcher_struct<T2>* _struct)
@@ -75,15 +68,6 @@ inline void EDataWatcher::vectorizator(std::vector<T> _vector, data_watcher_stru
 	}
 }
 
-
-
-
-
-
-
-
-
-
 template<typename T>
 inline EDataWatcher::data_watcher_struct<T>::data_watcher_struct()
 {
@@ -95,8 +79,7 @@ inline EDataWatcher::data_watcher_struct<T>::data_watcher_struct(std::string _na
 	name = _name;
 	watcher_address.push_back(_address);
 
-
-		//std::cout << "pointer data with name [" << _name << "] have address [" << _address << "] and value <" << std::to_string(*_address) << ">" << std::endl;
+	//std::cout << "pointer data with name [" << _name << "] have address [" << _address << "] and value <" << std::to_string(*_address) << ">" << std::endl;
 }
 
 /*template<typename T>

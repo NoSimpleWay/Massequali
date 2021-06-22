@@ -54,7 +54,7 @@ public:
 	static float get_real_world_position_y_by_mouse(ECamera* _camera);
 
 	static void update_selected_entity_list();
-	static void import_data_from_entity_to_autobuilding_interface(Entity* _e);
+	static void create_new_elements_of_autobuilding_if_need(Entity* _e);
 
 	EGraphicCore::ESprite* create_new_sprite_if_need(int selected_sprite_id, Entity* _e, std::string _text);
 

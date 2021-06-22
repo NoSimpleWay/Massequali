@@ -196,13 +196,8 @@ int main()
 	EGraphicCore::gabarite_radial_button_dot = ETextureAtlas::put_texture_to_atlas("data/textures/radial_button_dot.png", EWindow::default_texture_atlas);
 
 	EGraphicCore::gabarite_small_wood_button_bg = ETextureAtlas::put_texture_to_atlas("data/textures/button_bg.png", EWindow::default_texture_atlas);
-	*EGraphicCore::gabarite_small_wood_button_bg->x += 1 / 4096.0f;
-	*EGraphicCore::gabarite_small_wood_button_bg->y += 1 / 4096.0f;
 
-	*EGraphicCore::gabarite_small_wood_button_bg->x2 -= 1 / 4096.0f;
-	*EGraphicCore::gabarite_small_wood_button_bg->y2 -= 1 / 4096.0f;
-
-	EGraphicCore::gabarite_wood_button_bg = ETextureAtlas::put_texture_to_atlas("data/textures/wood_bg.png", EWindow::default_texture_atlas);
+	//EGraphicCore::gabarite_wood_button_bg = ETextureAtlas::put_texture_to_atlas("data/textures/wood_bg.png", EWindow::default_texture_atlas);
 	//EGraphicCore::gabarite_supermap_placeholder = ETextureAtlas::put_texture_to_atlas("data/textures/supermap_placeholder.png", EWindow::default_texture_atlas);
 
 	EFont* new_font = NULL;

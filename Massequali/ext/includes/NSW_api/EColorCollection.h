@@ -10,5 +10,4 @@ public:
 	EColorCollection();
 	EColorCollection(float _r, float _g, float _b, float _a);
 	~EColorCollection();
-
 };

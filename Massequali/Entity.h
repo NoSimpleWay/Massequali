@@ -58,6 +58,8 @@ public:
 		bool* catched_down_side = new bool(false);
 
 		bool* catched_mid = new bool(false);
+
+		float* highlight_time = new float(0.0f);
 	};
 
 	struct AutobuildingGroup

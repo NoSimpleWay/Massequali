@@ -570,7 +570,7 @@ EWindowMain::EWindowMain()
 		but->data_id = i;
 		*but->can_be_selected = true;
 		but->have_rama = true;
-		//but->action_on_left_click.push_back(&ExternalButtonAction::external_button_action_import_region_data_to_grid_region_editor);
+		but->action_on_left_click.push_back(&ExternalButtonAction::external_button_action_select_autobuilding_group_element);
 		//but->action_on_left_double_click.push_back(&ExternalButtonAction::external_button_action_open_select_texture_window_for_autobuilding_region);
 		but->action_on_right_click.push_back(&ExternalButtonAction::external_button_action_remove_autobuilding_group_element);
 		but->action_on_drag.push_back(&ExternalButtonAction::external_button_action_drag_autobuilding_group_element);
@@ -602,6 +602,7 @@ EWindowMain::EWindowMain()
 		but->action_on_left_click.push_back(&ExternalButtonAction::external_button_action_select_autobuilding_group);
 		but->text = "Group #" + std::to_string(i);
 		but->action_on_drag.push_back(&ExternalButtonAction::external_button_action_drag_autobuilding_group);
+		//but->data_id = i;
 	}
 
 	but = new EButton(0.0f, 0.0f, 200.0f, 20.0f);
@@ -721,6 +722,18 @@ void EWindowMain::draw(float _d)
 	if (is_entity_selection_started)
 	{
 		EGraphicCore::batch->draw_rama(*entity_selection_region->position_x, *entity_selection_region->position_y, *entity_selection_region->size_x, *entity_selection_region->size_y, 2.0f, EGraphicCore::gabarite_white_pixel);
+	}
+
+	if ((glfwGetKey(EWindow::main_window, GLFW_KEY_TAB) == GLFW_PRESS))
+	{
+
+
+		EGraphicCore::batch->reset();
+		EGraphicCore::batch->setcolor(EColor::COLOR_WHITE);
+		EGraphicCore::batch->draw_gabarite(0.0f, 0.0f, EGraphicCore::gabarite_full_atlas);
+
+		EGraphicCore::batch->draw_rama(0.0f, 0.0f, 4096.0f, 4096.0f, 3.0f, EGraphicCore::gabarite_white_pixel);
+
 	}
 }
 
@@ -1026,13 +1039,17 @@ void EWindowMain::update_selected_entity_list()
 	}
 }
 
-void EWindowMain::import_data_from_entity_to_autobuilding_interface(Entity* _e)
+void EWindowMain::create_new_elements_of_autobuilding_if_need(Entity* _e)
 {
 	Entity::AutobuildingBase* just_created_autobuilding_region;
 	EButton::EGridRegion* just_created_grid_region;
 
-
-	if (_e->autobuilding_base_list.empty())
+	if
+		(
+			(_e->autobuilding_base_list.empty())
+			&
+			(glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
+			)
 	{
 		just_created_autobuilding_region = new Entity::AutobuildingBase();
 		_e->autobuilding_base_list.push_back(just_created_autobuilding_region);
@@ -1052,7 +1069,12 @@ void EWindowMain::import_data_from_entity_to_autobuilding_interface(Entity* _e)
 		button_group_autobuilding_base->selected_button = button_group_autobuilding_base->button_list.at(0);
 	}
 
-	if (_e->autobuilding_group_list.empty())
+	if
+		(
+			(_e->autobuilding_group_list.empty())
+			&
+			(glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
+			)
 	{
 		Entity::AutobuildingGroup* just_created_autobuilding_group = new Entity::AutobuildingGroup();
 		Entity::AutobuildingGroupElement* just_created_autobuilding_group_element = new Entity::AutobuildingGroupElement();
@@ -1063,15 +1085,16 @@ void EWindowMain::import_data_from_entity_to_autobuilding_interface(Entity* _e)
 
 		button_group_autobuilding_group->selected_button = button_group_autobuilding_group->button_list.at(0);
 		button_group_autobuilding_group_element->selected_button = button_group_autobuilding_group_element->button_list.at(0);
+
+		EWindowMain::grid_region_edit_button_link->grid_region_list.clear();
+		for (int i = 0; i < _e->autobuilding_base_list.at(0)->grid_region.size(); i++)
+		{
+			EWindowMain::grid_region_edit_button_link->grid_region_list.push_back(_e->autobuilding_base_list.at(0)->grid_region.at(i));
+		}
+
+		EWindowMain::grid_region_edit_button_link->gabarite = _e->autobuilding_base_list.at(0)->main_texture;
 	}
 
-	/*EWindowMain::grid_region_edit_button_link->grid_region_list.clear();
-	for (int i = 0; i < _e->autobuilding_base_list.at(0)->grid_region.size(); i++)
-	{
-		EWindowMain::grid_region_edit_button_link->grid_region_list.push_back(_e->autobuilding_base_list.at(0)->grid_region.at(i));
-	}*/
-
-	EWindowMain::grid_region_edit_button_link->gabarite = _e->autobuilding_base_list.at(0)->main_texture;
 	//if (_e->)
 }
 
@@ -1106,7 +1129,6 @@ void EWindowMain::save_map(std::string _name)
 		w_string += '\t';
 		w_string += EString::float_to_string(*e->position_z);
 		w_string += '\n';
-
 
 		for (Entity::AutobuildingBase* a_base : e->autobuilding_base_list)
 		{
@@ -1149,7 +1171,6 @@ void EWindowMain::save_map(std::string _name)
 				w_string += '\n';
 			}
 		}
-		
 
 		for (Entity::AutobuildingGroup* a_group : e->autobuilding_group_list)
 		{
@@ -1168,38 +1189,38 @@ void EWindowMain::save_map(std::string _name)
 			w_string += EString::float_to_string(*a_group->size_y);
 			w_string += '\n';
 
-				for (Entity::AutobuildingGroupElement* a_element : a_group->autobuilding_group_element_list)
+			for (Entity::AutobuildingGroupElement* a_element : a_group->autobuilding_group_element_list)
+			{
+				w_string += "CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT";
+				w_string += '\n';
+
+				w_string += "autobuilding_group_element_offset_and_size";
+				w_string += '\t';
+				w_string += EString::float_to_string(*a_element->offset_x);
+				w_string += '\t';
+				w_string += EString::float_to_string(*a_element->offset_y);
+				w_string += '\t';
+				w_string += EString::float_to_string(*a_element->offset_z);
+				w_string += '\t';
+				w_string += EString::float_to_string(*a_element->size_x);
+				w_string += '\t';
+				w_string += EString::float_to_string(*a_element->size_y);
+				w_string += '\n';
+
+				int math_id = 0;
+				for (Entity::AutobuildingBase* a_base : e->autobuilding_base_list)
 				{
-					w_string += "CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT";
-					w_string += '\n';
-
-					w_string += "autobuilding_group_element_offset_and_size";
-					w_string += '\t';
-					w_string += EString::float_to_string(*a_element->offset_x);
-					w_string += '\t';
-					w_string += EString::float_to_string(*a_element->offset_y);
-					w_string += '\t';
-					w_string += EString::float_to_string(*a_element->offset_z);
-					w_string += '\t';
-					w_string += EString::float_to_string(*a_element->size_x);
-					w_string += '\t';
-					w_string += EString::float_to_string(*a_element->size_y);
-					w_string += '\n';
-
-					int math_id = 0;
-					for (Entity::AutobuildingBase* a_base : e->autobuilding_base_list)
+					if (a_base == a_element->autobuilding_base)
 					{
-						if (a_base == a_element->autobuilding_base)
-						{
-							w_string += "autobuilding_group_element_base_id";
-							w_string += '\t';
-							w_string += std::to_string(math_id);
-							w_string += '\n';
-						}
-
-						math_id++;
+						w_string += "autobuilding_group_element_base_id";
+						w_string += '\t';
+						w_string += std::to_string(math_id);
+						w_string += '\n';
 					}
+
+					math_id++;
 				}
+			}
 		}
 
 		w_string += "PUT_ENTITY_TO_MAP";
@@ -1279,12 +1300,10 @@ void EWindowMain::load_map(std::string _name)
 
 			if ((EFile::data_array[i] == "grid_region_position_and_size") & (jc_grid_region != NULL))
 			{
-				i++; *jc_grid_region->position_x = EMath::to_float(EFile::data_array[i]);	std::cout << "#_____set grid pos x [" << std::to_string (*jc_grid_region->position_x) << "]" << endl;
-				i++; *jc_grid_region->position_y = EMath::to_float(EFile::data_array[i]);	std::cout << "#_____set grid pos y [" << std::to_string (*jc_grid_region->position_y) << "]" << endl;
+				i++; *jc_grid_region->position_x = EMath::to_float(EFile::data_array[i]);	std::cout << "#_____set grid pos x [" << std::to_string(*jc_grid_region->position_x) << "]" << endl;
+				i++; *jc_grid_region->position_y = EMath::to_float(EFile::data_array[i]);	std::cout << "#_____set grid pos y [" << std::to_string(*jc_grid_region->position_y) << "]" << endl;
 				i++; *jc_grid_region->size_x = EMath::to_float(EFile::data_array[i]);		std::cout << "#_____set grid size x [" << std::to_string(*jc_grid_region->size_x) << "]" << endl;
 				i++; *jc_grid_region->size_y = EMath::to_float(EFile::data_array[i]);		std::cout << "#_____set grid size y [" << std::to_string(*jc_grid_region->size_y) << "]" << endl;
-
-
 			}
 
 			if ((EFile::data_array[i] == "grid_region_subdivision") & (jc_grid_region != NULL))
@@ -1333,17 +1352,17 @@ void EWindowMain::load_map(std::string _name)
 			{
 				i++;
 				if
-				(
-					(std::stoi(EFile::data_array[i]) >= 0)
-					&&
-					(std::stoi(EFile::data_array[i]) < jc_entity->autobuilding_base_list.size())
-					&&
-					(jc_entity->autobuilding_base_list.at(std::stoi(EFile::data_array[i])) != NULL)
-				)
-				{jc_group_element->autobuilding_base = jc_entity->autobuilding_base_list.at(std::stoi(EFile::data_array[i]));}
+					(
+						(std::stoi(EFile::data_array[i]) >= 0)
+						&&
+						(std::stoi(EFile::data_array[i]) < jc_entity->autobuilding_base_list.size())
+						&&
+						(jc_entity->autobuilding_base_list.at(std::stoi(EFile::data_array[i])) != NULL)
+						)
+				{
+					jc_group_element->autobuilding_base = jc_entity->autobuilding_base_list.at(std::stoi(EFile::data_array[i]));
+				}
 			}
-
-			
 
 			if ((EFile::data_array[i] == "PUT_ENTITY_TO_MAP") & (jc_entity != NULL))
 			{
@@ -1390,7 +1409,7 @@ void EWindowMain::generate_building(Entity* _e)
 		_e->entity_sprite_array = new EGraphicCore::sprite_array();
 	}
 	//std::cout << "ebanye dauny 00" << std::endl;
-	
+
 	//std::cout << "ebanye dauny 01" << std::endl;
 
 	float mid_wall_copies_x = 0.0f;
@@ -2116,8 +2135,6 @@ void EWindowMain::generate_building(Entity* _e)
 						selected_sprite_id++;
 					}
 			}
-
-			
 
 			/*std::cout
 				<<

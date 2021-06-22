@@ -16,8 +16,6 @@ EFont* EFont::active_font = NULL;
 bool comma_is_open = true;
 int font_array_id = 31;
 
-
-
 bool show_console_info = false;
 
 //EGabarite* EFont::gabarite;
@@ -43,7 +41,6 @@ EFont::~EFont()
 /*
 int get_size()
 {
-
 }
 */
 float EFont::get_float_from_sub_data(string _s)
@@ -56,7 +53,6 @@ float EFont::get_float_from_sub_data(string _s)
 
 	for (int j = 0; j < _s.length(); j++)
 	{
-
 		if (_s.at(j) == '"')
 		{
 			if (!comma_is_open)
@@ -86,7 +82,6 @@ int EFont::get_int_from_sub_data(string _s)
 
 	for (int j = 0; j < _s.length(); j++)
 	{
-
 		if (_s.at(j) == '"')
 		{
 			if (!comma_is_open)
@@ -120,7 +115,6 @@ bool compare_with_key(string _data, string _key)
 
 void EFont::final_draw(Batcher* _batcher, string _s, float _x, float _y)
 {
-
 	if (align_x == Enums::PositionMode::MID) { _x -= get_width(this, _s) / 2.0f; }
 	if (align_x == Enums::PositionMode::RIGHT) { _x -= get_width(this, _s); }
 
@@ -128,7 +122,6 @@ void EFont::final_draw(Batcher* _batcher, string _s, float _x, float _y)
 
 	for (int sym = 0; sym < _s.length(); sym++)
 	{
-
 		float a = 0.5f;
 		int target_symbol = (int)_s.at(sym);
 		if (target_symbol < 0) { target_symbol += 256; }
@@ -141,8 +134,6 @@ void EFont::final_draw(Batcher* _batcher, string _s, float _x, float _y)
 			y_adding += 17.0f;
 
 			sym += 1;
-
-
 		}
 		else
 		{
@@ -164,8 +155,6 @@ void EFont::final_draw(Batcher* _batcher, string _s, float _x, float _y)
 			x_adding += (advance[target_symbol]) * scale;
 			//y_adding += 17.0 * scale;
 		}
-
-
 	}
 
 	if (align_only_once)
@@ -220,11 +209,8 @@ void EFont::load_font(string _path)
 			if (font_array_id > 31)
 				for (int i = 0; i < line.length(); i++)
 				{
-
-
 					if ((line.at(i) == ' ') || (i + 1 >= line.length()))
 					{
-
 						//if (show_console_info)cout << "subdata | " << sub_data << " |" << endl;
 						if (compare_with_key(sub_data, "text="))
 						{
@@ -263,11 +249,8 @@ void EFont::load_font(string _path)
 
 						if (compare_with_key(sub_data, "origin-y="))
 						{
-
 							offset_y[font_array_id] = size_y[font_array_id] - get_float_from_sub_data(sub_data);
 							if (show_console_info) cout << "y offset | size_y=" << size_y[font_array_id] << " offset=" << get_float_from_sub_data(sub_data) << " result=" << offset_y[font_array_id] << " |" << endl;
-
-
 						}
 
 						if (compare_with_key(sub_data, "advance="))
@@ -275,18 +258,12 @@ void EFont::load_font(string _path)
 							if (show_console_info) cout << "advance | " << get_float_from_sub_data(sub_data) << " |" << endl;
 							advance[font_array_id] = get_float_from_sub_data(sub_data);
 
-
 							size_x[font_array_id] = size_x[font_array_id] / 4096.0f;
 							size_y[font_array_id] = size_y[font_array_id] / 4096.0f;
 
-
 							x[font_array_id] = *gabarite->x + x[font_array_id] / 4096.0f;
 							y[font_array_id] = *gabarite->y + *gabarite->uv_size_y - y[font_array_id] / 4096.0f;
-
 						}
-
-
-
 
 						/*
 						if (data_order == 1) { cout << "y pos | " << sub_data << " |" << endl; y[font_array_id] = std::stof(sub_data)/128.0;}
@@ -300,11 +277,6 @@ void EFont::load_font(string _path)
 
 						//if (data_order == 6) { cout << "advance | " << sub_data << " |" << endl; }
 						sub_data = "";
-
-
-
-
-
 
 						data_order++;
 					}
@@ -323,7 +295,6 @@ void EFont::load_font(string _path)
 	else
 	{
 		cout << "Unable to open file";
-
 	}
 }
 
@@ -365,15 +336,11 @@ void EFont::load_font_littera(string _path)
 			//cout << "line #" << font_array_id;
 			for (int i = 0; i < line.length(); i++)
 			{
-
 				if ((line.at(i) == ' ') || (i + 1 >= line.length()))
 				{
-
 					//if (show_console_info)cout << "subdata | " << sub_data << " |" << endl;
 					if (compare_with_key(sub_data, "id="))
 					{
-
-
 						font_array_id = get_int_from_sub_data(sub_data);
 
 						if (font_array_id == 1025) { font_array_id = 168; }
@@ -417,11 +384,8 @@ void EFont::load_font_littera(string _path)
 
 					if (compare_with_key(sub_data, "yoffset="))
 					{
-
 						offset_y[font_array_id] = get_float_from_sub_data(sub_data);
 						if (show_console_info) cout << "y offset | size_y=" << size_y[font_array_id] << " offset=" << get_float_from_sub_data(sub_data) << " result=" << offset_y[font_array_id] << " |" << endl;
-
-
 					}
 
 					if (compare_with_key(sub_data, "xadvance="))
@@ -438,9 +402,6 @@ void EFont::load_font_littera(string _path)
 						y[font_array_id] = *gabarite->y + *gabarite->uv_size_y - y[font_array_id] / 4096.0f;
 					}
 
-
-
-
 					/*
 					if (data_order == 1) { cout << "y pos | " << sub_data << " |" << endl; y[font_array_id] = std::stof(sub_data)/128.0;}
 
@@ -453,11 +414,6 @@ void EFont::load_font_littera(string _path)
 
 					//if (data_order == 6) { cout << "advance | " << sub_data << " |" << endl; }
 					sub_data = "";
-
-
-
-
-
 
 					data_order++;
 				}
@@ -476,13 +432,11 @@ void EFont::load_font_littera(string _path)
 	else
 	{
 		cout << "Unable to open file";
-
 	}
 }
 
 void EFont::draw(string _s, Batcher _batch)
 {
-
 }
 
 float EFont::get_width(EFont* _font, string _text)
@@ -527,7 +481,6 @@ float EFont::get_width(EFont* _font, string _text)
 				zzz = "";
 
 				max_w = temp_w;
-
 			}
 
 			temp_w = 0;
@@ -551,7 +504,6 @@ float EFont::get_height(EFont* _font, string _text)
 	{
 		int target_symbol = (int)_text.at(sym);
 		if (target_symbol < 0) { target_symbol += 256; }
-
 
 		if ((target_symbol == '\\') && (sym + 2 < _text.length()) && (_text.at(sym + 1) == 'n'))
 		{

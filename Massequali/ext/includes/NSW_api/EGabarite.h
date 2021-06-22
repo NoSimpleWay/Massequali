@@ -3,8 +3,8 @@
 class EGabarite
 {
 public:
-	float* x = new float (0.0f);
-	float* y = new float (0.0f);
+	float* x = new float(0.0f);
+	float* y = new float(0.0f);
 
 	float* x2 = new float(0.0f);
 	float* y2 = new float(0.0f);
@@ -14,8 +14,6 @@ public:
 
 	float* uv_size_x = new float(0.0f);
 	float* uv_size_y = new float(0.0f);
-
-
 
 	std::string name;
 

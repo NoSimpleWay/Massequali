@@ -97,8 +97,9 @@ void ExternalButtonAction::external_button_action_select_entity_from_list(EButto
 	if (valid_entity_select())
 	{
 		en = get_entity();
-		EWindowMain::import_data_from_entity_to_autobuilding_interface(en);
+		EWindowMain::create_new_elements_of_autobuilding_if_need(en);
 
+		//hide or show base button
 		for (int i = 0; i < EWindowMain::button_group_autobuilding_base->button_list.size(); i++)
 			if (*EWindowMain::button_group_autobuilding_base->button_list.at(i)->can_be_selected)
 			{
@@ -113,6 +114,7 @@ void ExternalButtonAction::external_button_action_select_entity_from_list(EButto
 				}
 			}
 
+		//hide or show group element
 		for (int i = 0; i < EWindowMain::button_group_autobuilding_group_element->button_list.size(); i++)
 			if (*EWindowMain::button_group_autobuilding_group_element->button_list.at(i)->can_be_selected)
 			{
@@ -140,6 +142,7 @@ void ExternalButtonAction::external_button_action_select_entity_from_list(EButto
 				}
 			}
 
+		//hide or show group
 		for (int i = 0; i < EWindowMain::button_group_autobuilding_group->button_list.size(); i++)
 			if (*EWindowMain::button_group_autobuilding_group->button_list.at(i)->can_be_selected)
 			{
@@ -161,6 +164,45 @@ void ExternalButtonAction::external_button_action_select_entity_from_list(EButto
 				}
 			}
 
+		if (!en->autobuilding_group_list.empty())
+		{
+			EWindowMain::button_group_autobuilding_group->selected_button = EWindowMain::button_group_autobuilding_group->button_list.at(0);
+		}
+		else
+		{
+			EWindowMain::button_group_autobuilding_group->selected_button = NULL;
+		}
+
+		if
+			((!en->autobuilding_group_list.empty())
+				&&
+				(en->autobuilding_group_list.at(0) != NULL)
+				&&
+				(!en->autobuilding_group_list.at(0)->autobuilding_group_element_list.empty())
+				)
+		{
+			EWindowMain::button_group_autobuilding_group_element->selected_button = EWindowMain::button_group_autobuilding_group_element->button_list.at(0);
+		}
+		else
+		{
+			EWindowMain::button_group_autobuilding_group_element->selected_button = NULL;
+		}
+
+		//EWindowMain::button_group_autobuilding_group_element->selected_button = EWindowMain::button_group_autobuilding_group_element->button_list.at(0);
+
+		if (!en->autobuilding_base_list.empty())
+		{
+			EWindowMain::button_group_autobuilding_base->selected_button = EWindowMain::button_group_autobuilding_base->button_list.at(0);
+		}
+		else
+		{
+			EWindowMain::button_group_autobuilding_base->selected_button = NULL;
+		}
+
+		EButton::update_data_id_for_buttons(EWindowMain::button_group_autobuilding_group_element);
+		EButton::update_data_id_for_buttons(EWindowMain::button_group_autobuilding_group);
+		EButton::update_data_id_for_buttons(EWindowMain::button_group_autobuilding_base);
+
 		if (EWindowMain::button_group_autobuilding_base->selected_button != NULL)
 		{
 			external_button_action_select_autobuilding_base(EWindowMain::button_group_autobuilding_base->selected_button, 0.0f);
@@ -176,7 +218,13 @@ void ExternalButtonAction::external_button_action_select_entity_from_list(EButto
 			external_button_action_select_autobuilding_group(EWindowMain::button_group_autobuilding_group->selected_button, 0.0f);
 		}
 
-		external_button_action_set_grid_region_auto_size(NULL, 0.1f);
+		for (Entity::AutobuildingGroup* a_group : en->autobuilding_group_list)
+			for (Entity::AutobuildingGroupElement* a_element : a_group->autobuilding_group_element_list)
+			{
+				*a_element->highlight_time = 0.5f;
+			}
+
+		//external_button_action_set_grid_region_auto_size(NULL, 0.1f);
 	}
 }
 
@@ -304,6 +352,21 @@ void ExternalButtonAction::external_button_action_select_autobuilding_base(EButt
 		EWindowMain::link_button_subdivision_mid_y->target_address_for_int
 			=
 			get_entity()->autobuilding_base_list.at(_b->data_id)->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_MID)->subdivision_y;
+
+		EButton::EGridRegion* target_grid_region;
+		EButton*
+			target_button = EWindowMain::auto_size_region_button.at(EWindowMain::AutoGridSizeButtonByOrder::AUTO_GRID_SIZE_BUTTON_BY_ORDER_LEFT);
+		target_button->text = EString::float_to_string(*EWindowMain::grid_region_edit_button_link->grid_region_list.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_LEFT)->size_x);
+
+		target_button = EWindowMain::auto_size_region_button.at(EWindowMain::AutoGridSizeButtonByOrder::AUTO_GRID_SIZE_BUTTON_BY_ORDER_RIGT);
+		target_button->text = EString::float_to_string(*EWindowMain::grid_region_edit_button_link->grid_region_list.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_RIGHT)->size_x);
+
+		target_button = EWindowMain::auto_size_region_button.at(EWindowMain::AutoGridSizeButtonByOrder::AUTO_GRID_SIZE_BUTTON_BY_ORDER_DOWN);
+		target_button->text = EString::float_to_string(*EWindowMain::grid_region_edit_button_link->grid_region_list.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_DOWN)->size_y);
+
+		target_button = EWindowMain::auto_size_region_button.at(EWindowMain::AutoGridSizeButtonByOrder::AUTO_GRID_SIZE_BUTTON_BY_ORDER_UP);
+		target_button->text = EString::float_to_string(*EWindowMain::grid_region_edit_button_link->grid_region_list.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_UP)->size_y);
+
 		//EWindowMain::link_button_subdivision_mid_x->text = std::to_string(*get_entity()->autobuilding_base_list.at(_b->data_id)->texture_region_list.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_MID)->subdivision_x);
 		//EWindowMain::link_button_subdivision_mid_y->text = std::to_string(*get_entity()->autobuilding_base_list.at(_b->data_id)->texture_region_list.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_MID)->subdivision_x);
 	}
@@ -477,6 +540,26 @@ void ExternalButtonAction::external_button_action_select_autobuilding_group(EBut
 					EWindowMain::button_group_autobuilding_group_element->button_list.at(i)->is_active = false;
 				}
 			}
+
+		if (get_selected_autobuilding_group(get_entity()) != NULL)
+		{
+			for (Entity::AutobuildingGroupElement* a_element : get_selected_autobuilding_group(get_entity())->autobuilding_group_element_list)
+			{
+				*a_element->highlight_time = 0.5f;
+			}
+			//get_entity()->autobuilding_group_list;
+		}
+	}
+}
+
+void ExternalButtonAction::external_button_action_select_autobuilding_group_element(EButton* _b, float _f)
+{
+	if (valid_entity_select())
+	{
+		if (get_selected_autobuilding_group_element(get_entity()) != NULL)
+		{
+			*get_selected_autobuilding_group_element(get_entity())->highlight_time = 0.5f;
+		}
 	}
 }
 
@@ -627,6 +710,7 @@ int ExternalButtonAction::get_autobuilding_group_id()
 {
 	if (EWindowMain::button_group_autobuilding_group->selected_button != NULL)
 	{
+		//std::cout << "selected group ID [" << std::to_string(EWindowMain::button_group_autobuilding_group->selected_button->data_id) << "]" << std::endl;
 		return EWindowMain::button_group_autobuilding_group->selected_button->data_id;
 	}
 	else

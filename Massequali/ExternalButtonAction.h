@@ -10,16 +10,22 @@ public:
 	static void external_button_action_select_entity_from_list(EButton* _b, float _f);
 
 	static void external_button_action_add_new_autobuilding_base(EButton* _b, float _f);
-	static void external_button_action_remove_autobuilding_base(EButton* _b, float _f);
-	static void external_button_action_select_autobuilding_base(EButton* _b, float _f);
 
 	static void external_button_action_open_select_texture_window_for_autobuilding_base(EButton* _b, float _f);
 	static void external_button_action_select_texture_for_autobuilding_region(EButton* _b, float _f);
 	static void external_button_action_add_selected_region_to_autobuilding_group(EButton* _b, float _f);
 	static void external_button_action_add_new_group_for_autobuilding(EButton* _b, float _f);
-	static void external_button_action_select_autobuilding_group(EButton* _b, float _f);
 
+	//select
+	static void external_button_action_select_autobuilding_group(EButton* _b, float _f);
+	static void external_button_action_select_autobuilding_group_element(EButton* _b, float _f);
+	static void external_button_action_select_autobuilding_base(EButton* _b, float _f);
+
+	//remove
+	//////////////////////
 	static void external_button_action_remove_autobuilding_group_element(EButton* _b, float _f);
+	static void external_button_action_remove_autobuilding_base(EButton* _b, float _f);
+
 	static void external_button_action_close_master_button_super_group(EButton* _b, float _f);
 
 	static void external_button_action_set_button_value(EButton* _b, float _f);

@@ -53,6 +53,4 @@ public:
 	static EColorCollection* COLOR_SHADOW_TIME_SUNSET;
 
 	static EColorCollection* COLOR_LIME;
-
-
 };

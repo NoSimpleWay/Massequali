@@ -1,7 +1,49 @@
 CREATE_NEW_ENTITY
+entity_position	200	700	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/terrain_asphalt_002_v1.png
+autobuilding_base_space_between_sprites	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	45	5	5
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	5	45	39	5
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	44	45	6	5
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	5	5	40
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	5	5	39	40
+grid_region_subdivision	1	1
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	44	5	6	40
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	5	5
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	5	0	39	5
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	44	0	6	5
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_GROUP
+autobuilding_group_offset_and_size	0	0	0	0	0
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	-111	-509	0	389	259
+autobuilding_group_element_base_id	0
+CREATE_NEW_AUTOBUILDING_GROUP
+autobuilding_group_offset_and_size	0	0	0	0	0
+CREATE_NEW_AUTOBUILDING_GROUP
+autobuilding_group_offset_and_size	0	0	0	0	0
+PUT_ENTITY_TO_MAP
+CREATE_NEW_ENTITY
 entity_position	100	200	0
 CREATE_NEW_AUTOBUILDING_BASE
-autobuilding_base_main_texture	data/textures/beton_bright.png
+autobuilding_base_main_texture	data/textures/beton_bright_more_lighten[2].png
 autobuilding_base_space_between_sprites	0	0
 CREATE_NEW_GRID_REGION
 grid_region_position_and_size	0	155	15	15
@@ -31,34 +73,34 @@ CREATE_NEW_GRID_REGION
 grid_region_position_and_size	125	0	15	45
 grid_region_subdivision	0	0
 CREATE_NEW_AUTOBUILDING_BASE
-autobuilding_base_main_texture	data/textures/window_plant_001.png
+autobuilding_base_main_texture	data/textures/window_plant_001_lighten.png
 autobuilding_base_space_between_sprites	17	9
 CREATE_NEW_GRID_REGION
 grid_region_position_and_size	0	100	0	0
 grid_region_subdivision	0	0
 CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	100	98	0
+grid_region_position_and_size	0	100	100	0
 grid_region_subdivision	0	0
 CREATE_NEW_GRID_REGION
-grid_region_position_and_size	98	100	0	0
+grid_region_position_and_size	100	100	0	0
 grid_region_subdivision	0	0
 CREATE_NEW_GRID_REGION
 grid_region_position_and_size	0	0	0	100
 grid_region_subdivision	0	0
 CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	0	98	100
+grid_region_position_and_size	0	0	100	100
 grid_region_subdivision	1	1
 CREATE_NEW_GRID_REGION
-grid_region_position_and_size	98	0	0	100
+grid_region_position_and_size	100	0	0	100
 grid_region_subdivision	0	0
 CREATE_NEW_GRID_REGION
 grid_region_position_and_size	0	0	0	0
 grid_region_subdivision	0	0
 CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	0	98	0
+grid_region_position_and_size	0	0	100	0
 grid_region_subdivision	0	0
 CREATE_NEW_GRID_REGION
-grid_region_position_and_size	98	0	0	0
+grid_region_position_and_size	100	0	0	0
 grid_region_subdivision	0	0
 CREATE_NEW_AUTOBUILDING_BASE
 autobuilding_base_main_texture	data/textures/roof.png
@@ -123,26 +165,96 @@ grid_region_subdivision	0	0
 CREATE_NEW_AUTOBUILDING_GROUP
 autobuilding_group_offset_and_size	0	0	0	0	0
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	271	96	0	157	487
+autobuilding_group_element_offset_and_size	210	44	0	154	487
 autobuilding_group_element_base_id	0
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	281	569	0	156	327
+autobuilding_group_element_offset_and_size	209	524	0	165	327
 autobuilding_group_element_base_id	2
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	290	147	0	118	407
+autobuilding_group_element_offset_and_size	226	95	0	118	407
 autobuilding_group_element_base_id	1
 CREATE_NEW_AUTOBUILDING_GROUP
 autobuilding_group_offset_and_size	0	0	0	0	0
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	1	9	0	282	645
+autobuilding_group_element_offset_and_size	1	9	0	215	645
 autobuilding_group_element_base_id	0
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	18	50	0	251	585
+autobuilding_group_element_offset_and_size	18	50	0	193	585
 autobuilding_group_element_base_id	1
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	-7	626	0	296	320
+autobuilding_group_element_offset_and_size	-7	626	0	225	320
 autobuilding_group_element_base_id	2
 PUT_ENTITY_TO_MAP
 CREATE_NEW_ENTITY
-entity_position	200	700	0
+entity_position	700	700	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/bricked_wall.png
+autobuilding_base_space_between_sprites	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	114	14	14
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	14	114	120	14
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	134	114	14	14
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	19	14	95
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	14	19	120	95
+grid_region_subdivision	1	1
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	134	19	14	95
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	14	19
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	14	0	120	19
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	134	0	14	19
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/roof.png
+autobuilding_base_space_between_sprites	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	80	2	3
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	2	80	87	3
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	89	80	1	3
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	22	2	58
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	2	22	87	58
+grid_region_subdivision	2	1
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	89	22	1	58
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	2	22
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	2	0	87	22
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	89	0	1	22
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_GROUP
+autobuilding_group_offset_and_size	0	0	0	0	0
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	-139	-412	0	93	84
+autobuilding_group_element_base_id	0
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	-146	-332	0	106.5	106
+autobuilding_group_element_base_id	1
+CREATE_NEW_AUTOBUILDING_GROUP
+autobuilding_group_offset_and_size	0	0	0	0	0
 PUT_ENTITY_TO_MAP

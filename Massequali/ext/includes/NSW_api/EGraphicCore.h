@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -58,23 +57,21 @@ public:
 	EGraphicCore();
 	~EGraphicCore();
 
-	
-
 	struct ESprite
 	{
 		EGabarite* texture_gabarite = NULL;
 
-		float*	 offset_x = new float(0.0f);
-		float*	 offset_y = new float(0.0f);
-		float*	 offset_z = new float(0.0f);
+		float* offset_x = new float(0.0f);
+		float* offset_y = new float(0.0f);
+		float* offset_z = new float(0.0f);
 
-		float*	 fragment_x = new float(0.0f);
-		float*	 fragment_y = new float(0.0f);
+		float* fragment_x = new float(0.0f);
+		float* fragment_y = new float(0.0f);
 
-		float*	 fragment_left = new float(0.0f);
-		float*	 fragment_right = new float(0.0f);
-		float*	 fragment_down = new float(0.0f);
-		float*	 fragment_up = new float(0.0f);
+		float* fragment_left = new float(0.0f);
+		float* fragment_right = new float(0.0f);
+		float* fragment_down = new float(0.0f);
+		float* fragment_up = new float(0.0f);
 
 		float* size_x = new float(10.0f);
 		float* size_y = new float(10.0f);
@@ -92,5 +89,4 @@ public:
 
 	static void draw_sprite_regular(sprite_array* _sprite_array, Batcher* _batch, float _offset_x, float _offset_y, float _offset_z);
 	static void reset_sprite_data(EGraphicCore::ESprite* _sprite);
-	
 };
