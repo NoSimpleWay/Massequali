@@ -162,6 +162,7 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EWindowMain.h" />
     <ClInclude Include="ExternalButtonAction.h" />
+    <ClInclude Include="ExternalEnums.h" />
     <ClInclude Include="ext\includes\NSW_api\Batcher.h" />
     <ClInclude Include="ext\includes\NSW_api\EColor.h" />
     <ClInclude Include="ext\includes\NSW_api\EColorCollection.h" />

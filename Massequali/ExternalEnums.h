@@ -1,0 +1,13 @@
+#pragma once
+
+enum EntityClusterMode
+{
+	ENTITY_CLUSTER_MODE_STATIC,
+	ENTITY_CLUSTER_MODE_NON_STATIC
+};
+
+enum AutobuildingSpritePushDirection
+{
+	AUTOBUILDING_SPRITE_PUSH_DIRECTION_Y,
+	AUTOBUILDING_SPRITE_PUSH_DIRECTION_Z
+};

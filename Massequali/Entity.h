@@ -2,6 +2,7 @@
 
 #include "NSW_api/EGraphicCore.h"
 #include "NSW_api/EWindow.h"
+#include "ExternalEnums.h"
 
 class Entity
 {
@@ -25,6 +26,8 @@ public:
 	~Entity();
 
 	static void draw_entity(Entity* _e, Batcher* _b, float _d);
+	
+	static void draw_entity_autobuilging_helping(Entity* _e, Batcher* _b, float _d);
 
 	EGraphicCore::sprite_array* entity_sprite_array;
 	bool* is_selected = new bool(false);
@@ -58,6 +61,7 @@ public:
 		bool* catched_down_side = new bool(false);
 
 		bool* catched_mid = new bool(false);
+		bool* catched_z = new bool(false);
 
 		float* highlight_time = new float(0.0f);
 	};
@@ -71,12 +75,22 @@ public:
 		float* size_x = new float(0.0f);
 		float* size_y = new float(0.0f);
 
+		float* bottom_offset	= new float(0.0f);
+		float* up_offset		= new float(0.0f);
+
+		int* selected_direction_of_push = new int(AutobuildingSpritePushDirection::AUTOBUILDING_SPRITE_PUSH_DIRECTION_Y);
+
+
 		std::vector<AutobuildingGroupElement*> autobuilding_group_element_list;
 	};
 
 	std::vector<AutobuildingBase*> autobuilding_base_list;
 	std::vector<AutobuildingGroup*> autobuilding_group_list;
 	//EButton::EGridRegion* autobuilding
+
+	int* selected_cluster_mode = new int(EntityClusterMode::ENTITY_CLUSTER_MODE_STATIC);
+
+	static void draw_catched_element(Entity::AutobuildingGroupElement* _element, Entity* _e, Entity::AutobuildingGroup* _group, bool _always_show);
 };
 
 class ECluster
@@ -84,8 +98,11 @@ class ECluster
 public:
 	std::vector<Entity*> entity_list;
 
-	static const int CLUSTER_SIZE_X = 200;
-	static const int CLUSTER_SIZE_Y = 200;
+	static const int CLUSTER_SIZE_X = 250;
+	static const int CLUSTER_SIZE_Y = 250;
+
+	static const int CLUSTED_DIM_X = 40;
+	static const int CLUSTED_DIM_Y = 40;
 };
 
 class ECamera

@@ -305,6 +305,7 @@ void EButton::update(float _d)
 		if ((is_drop_list) & (target_address_for_int != NULL))
 		{
 			selected_element = *target_address_for_int;
+			text = drop_text.at(selected_element);
 		}
 
 		if ((have_input_mode) & (target_address_for_int != NULL))
@@ -1592,8 +1593,10 @@ void EButton::update_data_id_for_buttons(button_group* _bg)
 	//last_button->is_active = false;
 	//_bg->button_list.at(_bg->button_list.size() - 1)->is_active = 0;
 
+	//std::cout << "size " << std::to_string(_bg->button_list.size()) << std::endl;
 	for (int i = 0; i < _bg->button_list.size(); i++)
 	{
+		//std::cout << "WUT? " << std::to_string(i) << std::endl;
 		if ((*_bg->button_list.at(i)->can_be_selected) & (_bg->button_list.at(i)->is_active))
 		{
 			_bg->button_list.at(i)->data_id = id;

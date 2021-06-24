@@ -44,6 +44,6 @@ public:
 	static int get_autobuilding_group_id();
 
 	static Entity::AutobuildingGroup* get_selected_autobuilding_group(Entity* _e);
-	static Entity::AutobuildingGroupElement* get_selected_autobuilding_group_element(Entity* _e);
+	static Entity::AutobuildingGroupElement* get_selected_autobuilding_group_element(Entity* _e, std::string _text = "");
 	static Entity::AutobuildingBase* get_selected_autobuilding_base(Entity* _e);
 };

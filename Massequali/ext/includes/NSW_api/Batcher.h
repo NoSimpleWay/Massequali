@@ -46,7 +46,7 @@ public:
 	float batch_color_b;
 	float batch_color_a;
 
-	int batch_force_draw_call = 120000;
+	int batch_force_draw_call = 12000;
 
 	void reinit();
 
@@ -56,8 +56,8 @@ public:
 	unsigned int indices_id = 0;
 	unsigned int indices_order = 0;
 
-	float vertices[5000 * 32];
-	unsigned int indices[5000 * 6];
+	float vertices[1000 * 32];
+	unsigned int indices[1000 * 6];
 
 	void draw_call();
 	void draw_call_terrain();

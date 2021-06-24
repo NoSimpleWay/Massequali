@@ -99,6 +99,47 @@ void ExternalButtonAction::external_button_action_select_entity_from_list(EButto
 		en = get_entity();
 		EWindowMain::create_new_elements_of_autobuilding_if_need(en);
 
+
+		//EWindowMain::button_group_autobuilding_group_element->selected_button = EWindowMain::button_group_autobuilding_group_element->button_list.at(0);
+
+
+
+		EButton::update_data_id_for_buttons(EWindowMain::button_group_autobuilding_group_element);
+		EButton::update_data_id_for_buttons(EWindowMain::button_group_autobuilding_group);
+		EButton::update_data_id_for_buttons(EWindowMain::button_group_autobuilding_base);
+	
+		EWindowMain::button_group_autobuilding_group->selected_button				= NULL;
+		EWindowMain::button_group_autobuilding_group_element->selected_button		= NULL;
+		EWindowMain::button_group_autobuilding_base->selected_button				= NULL;
+
+		if ((en->autobuilding_group_list.size() > 0)||(false))
+		{
+			EWindowMain::button_group_autobuilding_group->selected_button = EWindowMain::button_group_autobuilding_group->button_list.at(0);
+
+			if (en->autobuilding_group_list.at(0)->autobuilding_group_element_list.size() > 0)
+			{EWindowMain::button_group_autobuilding_group_element->selected_button = EWindowMain::button_group_autobuilding_group_element->button_list.at(0);}
+			
+		}
+		
+		if (en->autobuilding_base_list.size() > 0)
+		{ EWindowMain::button_group_autobuilding_base->selected_button = EWindowMain::button_group_autobuilding_base->button_list.at(0); }
+		
+		
+		if (EWindowMain::button_group_autobuilding_base->selected_button != NULL)
+		{
+			external_button_action_select_autobuilding_base(EWindowMain::button_group_autobuilding_base->selected_button, 0.0f);
+		}
+
+		if (EWindowMain::button_group_autobuilding_group_element->selected_button != NULL)
+		{
+			//action_select(EWindowMain::button_group_autobuilding_group_element->selected_button, 0.0f);
+		}
+
+		if (EWindowMain::button_group_autobuilding_group->selected_button != NULL)
+		{
+			external_button_action_select_autobuilding_group(EWindowMain::button_group_autobuilding_group->selected_button, 0.0f);
+		}
+
 		//hide or show base button
 		for (int i = 0; i < EWindowMain::button_group_autobuilding_base->button_list.size(); i++)
 			if (*EWindowMain::button_group_autobuilding_base->button_list.at(i)->can_be_selected)
@@ -131,14 +172,12 @@ void ExternalButtonAction::external_button_action_select_entity_from_list(EButto
 				{
 					EWindowMain::button_group_autobuilding_group_element->button_list.at(i)->is_active = true;
 					EWindowMain::button_group_autobuilding_group_element->button_list.at(i)->gabarite = en->autobuilding_base_list.at(i)->main_texture;
-					//EWindowMain::group_grid_all_autobuilding_regions_link->button_list.at(i)->icon_color->set_color(EColor::COLOR_WHITE);
-					//EWindowMain::group_grid_all_autobuilding_regions_link->button_list.at(i)->text_color->set_color(EColor::COLOR_BLACK);
+
 				}
 				else
 				{
 					EWindowMain::button_group_autobuilding_group_element->button_list.at(i)->is_active = false;
-					//EWindowMain::group_grid_all_autobuilding_regions_link->button_list.at(i)->icon_color->set_color(EColor::COLOR_RED);
-					//EWindowMain::group_grid_all_autobuilding_regions_link->button_list.at(i)->text_color->set_color(EColor::COLOR_RED);
+
 				}
 			}
 
@@ -152,15 +191,11 @@ void ExternalButtonAction::external_button_action_select_entity_from_list(EButto
 						)
 				{
 					EWindowMain::button_group_autobuilding_group->button_list.at(i)->is_active = true;
-					//EWindowMain::group_grid_autobuilding_group_selector->button_list.at(i)->gabarite = en->autobuilding_region_list.at(i)->main_texture;
-					//EWindowMain::group_grid_all_autobuilding_regions_link->button_list.at(i)->icon_color->set_color(EColor::COLOR_WHITE);
-					//EWindowMain::group_grid_all_autobuilding_regions_link->button_list.at(i)->text_color->set_color(EColor::COLOR_BLACK);
 				}
 				else
 				{
 					EWindowMain::button_group_autobuilding_group->button_list.at(i)->is_active = false;
-					//EWindowMain::group_grid_all_autobuilding_regions_link->button_list.at(i)->icon_color->set_color(EColor::COLOR_RED);
-					//EWindowMain::group_grid_all_autobuilding_regions_link->button_list.at(i)->text_color->set_color(EColor::COLOR_RED);
+
 				}
 			}
 
@@ -173,50 +208,7 @@ void ExternalButtonAction::external_button_action_select_entity_from_list(EButto
 			EWindowMain::button_group_autobuilding_group->selected_button = NULL;
 		}
 
-		if
-			((!en->autobuilding_group_list.empty())
-				&&
-				(en->autobuilding_group_list.at(0) != NULL)
-				&&
-				(!en->autobuilding_group_list.at(0)->autobuilding_group_element_list.empty())
-				)
-		{
-			EWindowMain::button_group_autobuilding_group_element->selected_button = EWindowMain::button_group_autobuilding_group_element->button_list.at(0);
-		}
-		else
-		{
-			EWindowMain::button_group_autobuilding_group_element->selected_button = NULL;
-		}
-
-		//EWindowMain::button_group_autobuilding_group_element->selected_button = EWindowMain::button_group_autobuilding_group_element->button_list.at(0);
-
-		if (!en->autobuilding_base_list.empty())
-		{
-			EWindowMain::button_group_autobuilding_base->selected_button = EWindowMain::button_group_autobuilding_base->button_list.at(0);
-		}
-		else
-		{
-			EWindowMain::button_group_autobuilding_base->selected_button = NULL;
-		}
-
-		EButton::update_data_id_for_buttons(EWindowMain::button_group_autobuilding_group_element);
-		EButton::update_data_id_for_buttons(EWindowMain::button_group_autobuilding_group);
-		EButton::update_data_id_for_buttons(EWindowMain::button_group_autobuilding_base);
-
-		if (EWindowMain::button_group_autobuilding_base->selected_button != NULL)
-		{
-			external_button_action_select_autobuilding_base(EWindowMain::button_group_autobuilding_base->selected_button, 0.0f);
-		}
-
-		if (EWindowMain::button_group_autobuilding_group_element->selected_button != NULL)
-		{
-			//action_select(EWindowMain::button_group_autobuilding_group_element->selected_button, 0.0f);
-		}
-
-		if (EWindowMain::button_group_autobuilding_group->selected_button != NULL)
-		{
-			external_button_action_select_autobuilding_group(EWindowMain::button_group_autobuilding_group->selected_button, 0.0f);
-		}
+		
 
 		for (Entity::AutobuildingGroup* a_group : en->autobuilding_group_list)
 			for (Entity::AutobuildingGroupElement* a_element : a_group->autobuilding_group_element_list)
@@ -225,6 +217,7 @@ void ExternalButtonAction::external_button_action_select_entity_from_list(EButto
 			}
 
 		//external_button_action_set_grid_region_auto_size(NULL, 0.1f);
+		
 	}
 }
 
@@ -299,7 +292,12 @@ void ExternalButtonAction::external_button_action_remove_autobuilding_base(EButt
 
 void ExternalButtonAction::external_button_action_select_autobuilding_base(EButton* _b, float _f)
 {
-	if (valid_entity_select())
+	if
+	(
+		(valid_entity_select())
+		&&
+		(get_selected_autobuilding_base(get_entity()) != NULL)
+	)
 	{
 		EWindowMain::grid_region_edit_button_link->gabarite
 			=
@@ -369,6 +367,8 @@ void ExternalButtonAction::external_button_action_select_autobuilding_base(EButt
 
 		//EWindowMain::link_button_subdivision_mid_x->text = std::to_string(*get_entity()->autobuilding_base_list.at(_b->data_id)->texture_region_list.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_MID)->subdivision_x);
 		//EWindowMain::link_button_subdivision_mid_y->text = std::to_string(*get_entity()->autobuilding_base_list.at(_b->data_id)->texture_region_list.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_MID)->subdivision_x);
+
+
 	}
 }
 
@@ -520,24 +520,47 @@ void ExternalButtonAction::external_button_action_add_new_group_for_autobuilding
 
 void ExternalButtonAction::external_button_action_select_autobuilding_group(EButton* _b, float _f)
 {
-	if (valid_entity_select())
+	if ((valid_entity_select()) & (true))
 	{
 		for (int i = 0; i < EWindowMain::button_group_autobuilding_group_element->button_list.size(); i++)
 			if (*EWindowMain::button_group_autobuilding_group_element->button_list.at(i)->can_be_selected)
 			{
-				if (i < get_entity()->autobuilding_group_list.at(_b->data_id)->autobuilding_group_element_list.size())
+				if
+				(
+					(get_selected_autobuilding_group(get_entity()) != NULL)
+					&&
+					(i < get_selected_autobuilding_group(get_entity())->autobuilding_group_element_list.size())
+				)
 				{
 					EWindowMain::button_group_autobuilding_group_element->button_list.at(i)->is_active = true;
 
-					EWindowMain::button_group_autobuilding_group_element->button_list.at(i)->gabarite
+					if
+					(
+						(get_selected_autobuilding_base(get_entity()) != NULL)
+						&&
+						(get_selected_autobuilding_base(get_entity())->main_texture != NULL)
+						&&
+						(get_selected_autobuilding_group_element(get_entity()) != NULL, "button action select autobuilding group [EBA]")
+					)
+					{
+						EWindowMain::button_group_autobuilding_group_element->button_list.at(i)->gabarite
 						=
-						get_entity()->
-						autobuilding_group_list.at(_b->data_id)->
-						autobuilding_group_element_list.at(i)->autobuilding_base->main_texture;
+						//EGraphicCore::gabarite_radial_button;
+						get_selected_autobuilding_group(get_entity())->autobuilding_group_element_list.at(i)->autobuilding_base->main_texture;
+					}
+					else
+					{
+						EWindowMain::button_group_autobuilding_group_element->button_list.at(i)->gabarite = EGraphicCore::gabarite_ERROR;
+					}
+
+					//std::cout << "LOL TAM" << std::endl;
 				}
 				else
 				{
+					//std::cout << "HUI TAM" << std::endl;
 					EWindowMain::button_group_autobuilding_group_element->button_list.at(i)->is_active = false;
+
+					EWindowMain::button_group_autobuilding_group_element->button_list.at(i)->gabarite = EGraphicCore::gabarite_white_pixel;
 				}
 			}
 
@@ -549,6 +572,11 @@ void ExternalButtonAction::external_button_action_select_autobuilding_group(EBut
 			}
 			//get_entity()->autobuilding_group_list;
 		}
+
+		if (get_selected_autobuilding_group(get_entity()) != NULL)
+		{
+			EWindowMain::link_button_sprite_push_direction->target_address_for_int = get_selected_autobuilding_group(get_entity())->selected_direction_of_push;
+		}
 	}
 }
 
@@ -556,7 +584,7 @@ void ExternalButtonAction::external_button_action_select_autobuilding_group_elem
 {
 	if (valid_entity_select())
 	{
-		if (get_selected_autobuilding_group_element(get_entity()) != NULL)
+		if (get_selected_autobuilding_group_element(get_entity()) != NULL, "external_button_action_select_autobuilding_group_element")
 		{
 			*get_selected_autobuilding_group_element(get_entity())->highlight_time = 0.5f;
 		}
@@ -595,6 +623,16 @@ void ExternalButtonAction::external_button_action_set_button_value(EButton* _b, 
 	if ((_b->target_address_for_int != NULL) & (_b->text != "") & (_b->have_input_mode) & (_b->input_only_numbers))
 	{
 		*_b->target_address_for_int = std::stoi(_b->text);
+	}
+
+	if ((_b->target_address_for_bool != NULL) & (*_b->is_checkbox))
+	{
+		*_b->target_address_for_bool = *_b->is_checked;
+	}
+
+	if ((_b->target_address_for_int != NULL) & (_b->is_drop_list))
+	{
+		*_b->target_address_for_int = _b->selected_element;
 	}
 }
 
@@ -674,7 +712,22 @@ void ExternalButtonAction::external_button_action_load_map(EButton* _b, float _f
 
 Entity* ExternalButtonAction::get_entity()
 {
-	return EWindowMain::selected_entities.at(EWindowMain::group_grid_entity_list_link->selected_button->data_id);
+	if
+	(
+		(EWindowMain::group_grid_entity_list_link->selected_button != NULL)
+		&&
+		(EWindowMain::group_grid_entity_list_link->selected_button->data_id >= 0)
+		&&
+		(EWindowMain::group_grid_entity_list_link->selected_button->data_id < EWindowMain::selected_entities.size())
+	)
+	{
+		return EWindowMain::selected_entities.at(EWindowMain::group_grid_entity_list_link->selected_button->data_id);
+	}
+	else
+	{
+		return NULL;
+	}
+	
 }
 
 bool ExternalButtonAction::valid_entity_select()
@@ -721,8 +774,12 @@ int ExternalButtonAction::get_autobuilding_group_id()
 
 Entity::AutobuildingGroup* ExternalButtonAction::get_selected_autobuilding_group(Entity* _e)
 {
-	if ((_e != NULL) & (get_autobuilding_group_id() != -1))
+	std::cout << "!@! " << std::to_string(get_autobuilding_group_id()) << std::endl;
+	std::cout << "#$# " << std::to_string(_e->autobuilding_group_list.size()) << std::endl;
+	if ((_e != NULL) && (!_e->autobuilding_group_list.empty()) && (get_autobuilding_group_id() >= 0) && (get_autobuilding_group_id()< _e->autobuilding_group_list.size()))
 	{
+		
+		//return NULL;
 		return _e->autobuilding_group_list.at(get_autobuilding_group_id());
 	}
 	else
@@ -731,39 +788,85 @@ Entity::AutobuildingGroup* ExternalButtonAction::get_selected_autobuilding_group
 	}
 }
 
-Entity::AutobuildingGroupElement* ExternalButtonAction::get_selected_autobuilding_group_element(Entity* _e)
+Entity::AutobuildingGroupElement* ExternalButtonAction::get_selected_autobuilding_group_element(Entity* _e, std::string _text)
 {
 	//have entity, selected group, select element group
 	if
 		(
 			(_e != NULL)
 			&&
-			(get_autobuilding_group_element_id() != -1)
-			&
 			(get_autobuilding_group_id() != -1)
+			&&
+			(get_autobuilding_group_element_id() != -1)
 			&&
 			(get_autobuilding_group_id() < _e->autobuilding_group_list.size())
 			&&
 			(get_autobuilding_group_element_id() < _e->autobuilding_group_list.at(get_autobuilding_group_id())->autobuilding_group_element_list.size())
-			)
+		)
 	{
 		return _e->autobuilding_group_list.at(get_autobuilding_group_id())->
 			autobuilding_group_element_list.at(get_autobuilding_group_element_id());
 	}
 	else
 	{
+		if (_text != "")
+		{
+			std::cout << "Source: " << _text << std::endl;
+			if (_e == NULL) { std::cout << "ERROR: entity is null"; }
+			else
+			{
+				if (get_autobuilding_group_id() < 0) { std::cout << "ERROR: selected group is [" << std::to_string(get_autobuilding_group_id()) << "]" << std::endl; }
+
+				int AAA = get_autobuilding_group_id();
+				int BBB = _e->autobuilding_group_list.size();
+
+				if (AAA >= BBB)
+				{
+
+
+					std::cout
+						<< "ERROR: selected group is ["
+						<< std::to_string(AAA)
+						<< "], but vector size is ["
+						<< std::to_string(BBB)
+						<< "]"
+						<< std::endl;
+				}
+
+
+			}
+		}
+
 		return NULL;
 	}
 }
 
 Entity::AutobuildingBase* ExternalButtonAction::get_selected_autobuilding_base(Entity* _e)
 {
-	if ((_e != NULL) & (get_autobuilding_base_id() != -1))
+	if ((_e != NULL) && (get_autobuilding_base_id() >= 0) && (get_autobuilding_base_id() < _e->autobuilding_base_list.size()))
 	{
 		return _e->autobuilding_base_list.at(get_autobuilding_base_id());
 	}
 	else
 	{
+		if (_e == NULL) { std::cout << "ERROR: entity is null"; }
+		else
+		{
+			if (get_autobuilding_base_id() < 0) { std::cout << "ERROR: selected base is [" << std::to_string(get_autobuilding_base_id()) << std::endl; }
+			
+			if (get_autobuilding_base_id() >= _e->autobuilding_base_list.size())
+			{ 
+				std::cout
+				<< "ERROR: selected base is ["
+				<< std::to_string(get_autobuilding_base_id())
+				<< "], but vector size is ["
+				<< std::to_string(_e->autobuilding_base_list.size())
+				<< "]"
+				<< std::endl; 
+			}
+
+		}
+		
 		return NULL;
 	}
 }

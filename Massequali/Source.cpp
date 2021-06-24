@@ -435,7 +435,7 @@ void char_input_callback(GLFWwindow* window, unsigned int _char)
 		else
 			if (inputed_c > 255) { inputed_c -= 848; }
 
-	cout << "input character: " << inputed_c << "|" << (int)_char << "[  " << (char)inputed_c << " ]" << " (" << _char << ")" << endl;
+	//cout << "input character: " << inputed_c << "|" << (int)_char << "[  " << (char)inputed_c << " ]" << " (" << _char << ")" << endl;
 
 	EWindow::last_inputed_char = (char)inputed_c;
 

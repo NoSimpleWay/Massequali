@@ -359,14 +359,14 @@ public:
 
 		int* selected_push_method = new int(0);
 
-		EButton* selected_button;
+		EButton* selected_button = NULL;
 	};
 
 	static void update_data_id_for_buttons(button_group* _bg);
 
 	struct SimpleButtonSearchDeactivator
 	{
-		button_group* target_button_group;
+		button_group* target_button_group = NULL;
 
 		bool* is_search_by_name = new bool(false);
 		bool* is_search_by_text = new bool(false);
