@@ -1,4 +1,6 @@
+#pragma once
 #include "EWindow.h"
+
 //#include "../../../EBA.h"
 
 GLFWwindow* EWindow::main_window = NULL;
@@ -1121,6 +1123,54 @@ void EButton::update(float _d)
 				}
 			}
 		}
+
+	if (polygon_massive != NULL)
+	{
+		for (Batcher::EPolygonShape* p_shape : polygon_massive->shape_list)
+		{
+			for (Batcher::EPolygonVertex* p_vertex : p_shape->vertex_list)
+			{
+				if
+					(
+						(EWindow::mouse_x >= master_position_x + button_size_x * *p_vertex->position_x - 5.0f)
+						&
+						(EWindow::mouse_x <= master_position_x + button_size_x * *p_vertex->position_x + 5.0f)
+						&
+						(EWindow::mouse_y >= master_position_y + button_size_y * *p_vertex->position_y - 5.0f)
+						&
+						(EWindow::mouse_y <= master_position_y + button_size_y * *p_vertex->position_y + 5.0f)
+						)
+				{
+					if (!EWindow::LMB)
+					{
+						*p_vertex->is_catched = true;
+
+					}
+					
+				}
+				else
+				{
+					if (!EWindow::LMB)
+					{
+						*p_vertex->is_catched = false;
+					}
+				}
+
+				if
+				(
+					(EWindow::LMB)
+					&
+					(*p_vertex->is_catched)
+				)
+				{
+					*p_vertex->position_x += EWindow::mouse_speed_x / button_size_x;
+					*p_vertex->position_y += EWindow::mouse_speed_y / button_size_y;
+				}
+			}
+
+			
+		}
+	}
 }
 
 void EButton::update_additional(float _d)
@@ -1355,6 +1405,68 @@ void EButton::default_draw(Batcher* _batch, float _d)
 			if (*gr->cathed_up_side) { _batch->draw_gabarite(master_position_x + *gr->position_x * icon_size_multiplier, master_position_y + (*gr->position_y + *gr->size_y) * icon_size_multiplier, *gr->size_x * icon_size_multiplier, 5.0f, EGraphicCore::gabarite_white_pixel); }
 			if (*gr->cathed_down_side) { _batch->draw_gabarite(master_position_x + *gr->position_x * icon_size_multiplier, master_position_y + *gr->position_y * icon_size_multiplier, *gr->size_x * icon_size_multiplier, 5.0f, EGraphicCore::gabarite_white_pixel); }
 		}
+
+	if
+	(
+		(polygon_massive != NULL)
+		&
+		(!mode_list.empty())
+	)
+	{
+		_batch->setcolor(EColor::COLOR_WHITE);
+		if (*mode_list.at(0) == PolygonDrawMode::POLYGON_DRAW_MODE_DEPTH)
+		{
+			_batch->draw_depthmap_polygon
+			(
+				polygon_massive,
+				master_position_x,
+				master_position_y,
+				button_size_x,
+				button_size_y,
+				EGraphicCore::gabarite_white_pixel
+			);
+
+			
+
+			/*_batch->draw_gabarite
+			(
+				0.0f,
+				0.0f,
+				100.0f,
+				100.0f,
+				EGraphicCore::gabarite_white_pixel
+			);*/
+		}
+
+		_batch->setcolor(EColor::COLOR_GREEN);
+		for (Batcher::EPolygonShape* p_shape : polygon_massive->shape_list)
+		{
+			for (Batcher::EPolygonVertex* p_vertex : p_shape->vertex_list)
+			{
+				if (*p_vertex->is_catched)
+				{
+					_batch->draw_gabarite
+					(
+						master_position_x + *p_vertex->position_x * button_size_x - 2.0f,
+						master_position_y + *p_vertex->position_y * button_size_y - 2.0f,
+						5.0f,
+						5.0f,
+						EGraphicCore::gabarite_white_pixel
+					);
+				}
+			}
+		}
+		/*for (Batcher::EPolygonShape* p_massive : polygon_massive->shape_list)
+		{
+			for (Batcher::EPolygonVertex* p_vertex : p_massive->vertex_list)
+			{
+				if (*mode_list.at(0) == PolygonDrawMode::POLYGON_DRAW_MODE_DEPTH)
+				{
+					_batch-> draw_depthmap_polygon()
+				}
+			}
+		}*/
+	}
 }
 
 void EButton::additional_draw(Batcher* _batch, float _d)
@@ -1618,8 +1730,8 @@ EButton::EButton(float _x, float _y, float _sx, float _sy, EWindow* _w, button_s
 	button_size_x = _sx;
 	button_size_y = _sy;
 
-	button_min_size_x = _sx;
-	button_min_size_y = _sy;
+	//button_min_size_x = _sx;
+	//button_min_size_y = _sy;
 
 	master_window = _w;
 	master_super_group = _bsg;

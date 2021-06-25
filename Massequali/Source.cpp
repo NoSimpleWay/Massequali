@@ -17,6 +17,7 @@
 
 #include <windows.h>
 #include "EWindowMain.h"
+#include "ExternalEnums.h"
 
 static unsigned int transformLoc;
 
@@ -320,7 +321,7 @@ int main()
 				(glfwGetKey(EWindow::main_window, GLFW_KEY_COMMA) == GLFW_RELEASE)
 				&&
 				(glfwGetKey(EWindow::main_window, GLFW_KEY_PERIOD) == GLFW_RELEASE)
-				)
+			)
 		{
 			EWindow::button_main_group_pressed = false;
 		}

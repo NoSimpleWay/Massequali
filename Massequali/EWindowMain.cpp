@@ -6,22 +6,31 @@
 #include <experimental/filesystem>
 #include <direct.h>
 
+#define STBI_MSC_SECURE_CRT
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+//#define INCLUDE_STB_IMAGE_WRITE_H
+#include "stb_image_write.h"
+
 
 namespace fs = std::experimental::filesystem;
 
-EButton::button_super_group* EWindowMain::super_group_texture_collection_link;
-EButton::button_group* EWindowMain::group_texture_collection_link;
+EButton::button_super_group*			EWindowMain::super_group_texture_collection_link;
+EButton::button_group*					EWindowMain::group_texture_collection_link;
 
-EButton::button_super_group* EWindowMain::super_group_autobuilding;
+EButton::button_super_group*			EWindowMain::super_group_autobuilding;
 
-EButton::button_group* EWindowMain::group_grid_region_edit_link;
-EButton::button_group* EWindowMain::group_grid_region_second_layer_link;
-EButton::button_group* EWindowMain::group_grid_entity_list_link;
-EButton::button_group* EWindowMain::button_group_autobuilding_base;
+EButton::button_group*					EWindowMain::group_grid_region_edit_link;
+EButton::button_group*					EWindowMain::group_grid_region_second_layer_link;
+EButton::button_group*					EWindowMain::group_grid_entity_list_link;
+EButton::button_group*					EWindowMain::button_group_autobuilding_base;
 
-EButton::button_group* EWindowMain::button_group_autobuilding_group_element;
-EButton::button_group* EWindowMain::button_group_autobuilding_group;
-EButton::button_group* EWindowMain::group_grid_autobuilding_draw_order;
+EButton::button_group*					EWindowMain::button_group_autobuilding_group_element;
+EButton::button_group*					EWindowMain::button_group_autobuilding_group;
+EButton::button_group*					EWindowMain::group_grid_autobuilding_draw_order;
+
+EButton::button_super_group*			EWindowMain::super_group_vertex_editor;
+EButton::button_group*					EWindowMain::group_vertex_editor;
+EButton*								EWindowMain::link_to_button_vertex_editor;
 
 EButton* EWindowMain::grid_region_edit_button_link;
 
@@ -36,7 +45,9 @@ EButton* EWindowMain::link_button_sprite_push_direction;
 std::vector<EButton*>			EWindowMain::auto_size_region_button;
 
 std::vector<Entity*>			EWindowMain::selected_entities;
-EButton::EGridRegion* EWindowMain::entity_selection_region;
+EButton::EGridRegion*			EWindowMain::entity_selection_region;
+
+ECamera*						EWindowMain::main_camera = new ECamera();
 
 //std::vector<Entity*>			EWindowMain::entity_list;
 bool							EWindowMain::is_entity_selection_started = false;
@@ -67,6 +78,28 @@ EWindowMain::EWindowMain()
 		cluster_static		[j][i] = new ECluster();
 		cluster_non_static	[j][i] = new ECluster();
 	}
+}
+
+void saveImage(char* filepath, GLFWwindow* w)
+{
+	int width, height;
+	glfwGetFramebufferSize(w, &width, &height);
+
+	//width = 100;
+	//height = 100;
+
+	GLsizei nrChannels = 3;
+	GLsizei stride = nrChannels * width;
+	stride += (stride % 4) ? (4 - stride % 4) : 0;
+	GLsizei bufferSize = stride * height;
+
+	std::vector<char> buffer(bufferSize);
+
+	glPixelStorei(GL_PACK_ALIGNMENT, 4);
+	glReadBuffer(GL_FRONT);
+	glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, buffer.data());
+	stbi_flip_vertically_on_write(true);
+	stbi_write_png(filepath, width, height, nrChannels, buffer.data(), stride);
 }
 
 void EWindowMain::create_button_groups()
@@ -724,6 +757,83 @@ void EWindowMain::create_button_groups()
 	*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_X;
 	but->action_on_left_click.push_back(&ExternalButtonAction::external_button_action_load_map);
 	but->text = "Load";
+
+	but = new EButton(0.0f, 0.0f, 70.0f, 15.0f, this, just_created_button_super_group, just_created_button_group);
+		just_created_button_group->button_list.push_back(but);
+		*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_X;
+		but->action_on_left_click.push_back(&ExternalButtonAction::external_button_action_create_new_entity);
+		but->text = "New Entity";
+
+
+	/////////////vertex editor
+		super_group_vertex_editor = new EButton::button_super_group();
+			button_group_list.push_back(super_group_vertex_editor);
+			*super_group_vertex_editor->size_x = 300.0f;
+			*super_group_vertex_editor->size_y = 300.0f;
+
+
+			group_vertex_editor = new EButton::button_group();
+				super_group_vertex_editor->button_group_list.push_back(group_vertex_editor);
+				*group_vertex_editor->position_x = 0.0f;
+				*group_vertex_editor->position_y = 0.0f;
+				*group_vertex_editor->size_x = 320.0f;
+				*group_vertex_editor->size_y = 320.0f;
+				*group_vertex_editor->can_be_stretched_x = false;
+				*group_vertex_editor->can_be_stretched_y = false;
+				*group_vertex_editor->can_be_moved_by_user = false;
+
+				but = new EButton(5.0f, 5.0f, 300.0f, 300.0f, this, super_group_vertex_editor, group_vertex_editor);
+					link_to_button_vertex_editor = but;
+					but->mode_list.push_back(new int(0));
+					but->have_bg = false;
+					*but->is_double_click = true;
+					but->action_on_left_double_click.push_back(ExternalButtonAction::external_button_action_open_select_texture_window_for_vertex_editor);
+
+					Batcher::EPolygonMassive* just_created_polygon_massive = new Batcher::EPolygonMassive();
+					but->polygon_massive = just_created_polygon_massive;
+
+					Batcher::EPolygonShape* just_created_polygon_shape = new Batcher::EPolygonShape();
+					just_created_polygon_massive->shape_list.push_back(just_created_polygon_shape);
+
+					//.#
+					//..
+					Batcher::EPolygonVertex*
+						just_created_polygon_vertex = new Batcher::EPolygonVertex();
+						*just_created_polygon_vertex->position_x = 1.0f;
+						*just_created_polygon_vertex->position_y = 1.0f;
+						just_created_polygon_vertex->float_vector.push_back(new float(rand() % 500));
+						just_created_polygon_shape->vertex_list.push_back(just_created_polygon_vertex);
+					//..
+					//.#
+						just_created_polygon_vertex = new Batcher::EPolygonVertex();
+						*just_created_polygon_vertex->position_x = 1.0f;
+						*just_created_polygon_vertex->position_y = 0.0f;
+						just_created_polygon_vertex->float_vector.push_back(new float(rand() % 500));
+						just_created_polygon_shape->vertex_list.push_back(just_created_polygon_vertex);
+					//..
+					//#.
+						just_created_polygon_vertex = new Batcher::EPolygonVertex();
+						*just_created_polygon_vertex->position_x = 0.0f;
+						*just_created_polygon_vertex->position_y = 0.0f;
+						just_created_polygon_vertex->float_vector.push_back(new float(rand() % 500));
+						just_created_polygon_shape->vertex_list.push_back(just_created_polygon_vertex);
+					//#.
+					//..
+						just_created_polygon_vertex = new Batcher::EPolygonVertex();
+						*just_created_polygon_vertex->position_x = 0.0f;
+						*just_created_polygon_vertex->position_y = 1.0f;
+						just_created_polygon_vertex->float_vector.push_back(new float(rand() % 500));
+						just_created_polygon_shape->vertex_list.push_back(just_created_polygon_vertex);
+
+
+
+					group_vertex_editor->button_list.push_back(but);
+					*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_X;
+
+
+
+
+		
 }
 
 EWindowMain::~EWindowMain()
@@ -796,7 +906,7 @@ last_index = 0;
 	
 	last_index = 0;
 
-	std::cout << "----------------" << std::endl;
+	//std::cout << "----------------" << std::endl;
 
 for (int i = cluster_draw_end_y; i >= cluster_draw_start_y; i--)
 for (int j = cluster_draw_start_x; j <= cluster_draw_end_x; j++)
@@ -834,7 +944,7 @@ for (int j = cluster_draw_start_x; j <= cluster_draw_end_x; j++)
 	}
 
 	bool need_sort = true;
-	std::cout << "---" << std::endl;
+	//std::cout << "---" << std::endl;
 
 	
 	while (need_sort)
@@ -995,7 +1105,7 @@ for (int j = cluster_draw_start_x; j <= cluster_draw_end_x; j++)
 
 				swap(draw_group_buffer.at(z), draw_group_buffer.at(z + 1));
 			}
-			std::cout << "try sort z" << std::endl;
+			//std::cout << "try sort z" << std::endl;
 			if
 				(
 					(
@@ -1184,17 +1294,36 @@ if (is_entity_selection_started)
 	EGraphicCore::batch->draw_rama(*entity_selection_region->position_x, *entity_selection_region->position_y, *entity_selection_region->size_x, *entity_selection_region->size_y, 2.0f, EGraphicCore::gabarite_white_pixel);
 }
 
-if ((glfwGetKey(EWindow::main_window, GLFW_KEY_TAB) == GLFW_PRESS))
-{
+	if ((glfwGetKey(EWindow::main_window, GLFW_KEY_TAB) == GLFW_PRESS))
+	{
 
 
-	EGraphicCore::batch->reset();
-	EGraphicCore::batch->setcolor(EColor::COLOR_WHITE);
-	EGraphicCore::batch->draw_gabarite(0.0f, 0.0f, EGraphicCore::gabarite_full_atlas);
+		EGraphicCore::batch->reset();
+		EGraphicCore::batch->setcolor(EColor::COLOR_WHITE);
+		EGraphicCore::batch->draw_gabarite(0.0f, 0.0f, EGraphicCore::gabarite_full_atlas);
 
-	EGraphicCore::batch->draw_rama(0.0f, 0.0f, 4096.0f, 4096.0f, 3.0f, EGraphicCore::gabarite_white_pixel);
+		EGraphicCore::batch->draw_rama(0.0f, 0.0f, 4096.0f, 4096.0f, 3.0f, EGraphicCore::gabarite_white_pixel);
 
-}
+	}
+
+	EGraphicCore::batch->reinit();
+	EGraphicCore::batch->draw_call();
+
+	if
+	(
+		(glfwGetKey(EWindow::main_window, GLFW_KEY_F1) == GLFW_PRESS)
+		&
+		(!EWindow::button_main_group_pressed)
+	)
+	{
+		EWindow::button_main_group_pressed = true;
+		saveImage((char*)"zzz.png", EWindow::main_window);
+	}
+	
+
+	
+
+
 }
 
 void EWindowMain::update(float _d)
@@ -1391,9 +1520,9 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 					&
 					(get_real_world_position_x_by_mouse(main_camera) <= *e->position_x + *a_group->offset_x + 30.0f)
 					&
-					(get_real_world_position_y_by_mouse(main_camera) >= *e->position_y + *a_group->offset_y + *a_group->offset_z - 30.0f)
+					(get_real_world_position_y_by_mouse(main_camera) >= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z - 30.0f)
 					&
-					(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *a_group->offset_y + *a_group->offset_z + 30.0f)
+					(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z + 30.0f)
 				)
 			{
 				if (!LMB) { *a_group->is_catched = true; }
@@ -1470,9 +1599,9 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 							&
 							(get_real_world_position_x_by_mouse(main_camera) <= *e->position_x + *a_group->offset_x + *a_element->offset_x + catch_size)
 							&
-							(get_real_world_position_y_by_mouse(main_camera) >= *e->position_y + *a_group->offset_y + *a_element->offset_y + *a_element->offset_z - catch_size)
+							(get_real_world_position_y_by_mouse(main_camera) >= *e->position_y + *e->position_z + *a_group->offset_y + *a_element->offset_y + *a_element->offset_z - catch_size)
 							&
-							(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *a_group->offset_y + *a_element->offset_y + *a_element->size_y + *a_element->offset_z + catch_size)
+							(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *e->position_z + *a_group->offset_y + *a_element->offset_y + *a_element->size_y + *a_element->offset_z + catch_size)
 						)
 					{
 						if (!LMB) { *a_element->catched_left_side = true; }
@@ -1488,9 +1617,9 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 							&
 							(get_real_world_position_x_by_mouse(main_camera) <= *e->position_x + *a_group->offset_x + *a_element->offset_x + *a_element->size_x + catch_size)
 							&
-							(get_real_world_position_y_by_mouse(main_camera) >= *e->position_y + *a_group->offset_y + *a_element->offset_y + *a_element->offset_z - catch_size)
+							(get_real_world_position_y_by_mouse(main_camera) >= *e->position_y + *e->position_z + *a_group->offset_y + *a_element->offset_y + *a_element->offset_z - catch_size)
 							&
-							(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *a_group->offset_y + *a_element->offset_y + *a_element->size_y + *a_element->offset_z + catch_size)
+							(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *e->position_z + *a_group->offset_y + *a_element->offset_y + *a_element->size_y + *a_element->offset_z + catch_size)
 							)
 					{
 						if (!LMB) { *a_element->catched_right_side = true; }
@@ -1506,9 +1635,9 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 							&
 							(get_real_world_position_x_by_mouse(main_camera) <= *e->position_x + *a_group->offset_x + *a_element->offset_x + *a_element->size_x + catch_size)
 							&
-							(get_real_world_position_y_by_mouse(main_camera) >= *e->position_y + *a_group->offset_y + *a_element->offset_y + *a_element->offset_z - catch_size)
+							(get_real_world_position_y_by_mouse(main_camera) >= *e->position_y + *e->position_z + *a_group->offset_y + *a_element->offset_y + *a_element->offset_z - catch_size)
 							&
-							(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *a_group->offset_y + *a_element->offset_y + *a_element->offset_z + catch_size)
+							(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *e->position_z + *a_group->offset_y + *a_element->offset_y + *a_element->offset_z + catch_size)
 							)
 					{
 						if (!LMB) { *a_element->catched_down_side = true; }
@@ -1524,9 +1653,9 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 							&
 							(get_real_world_position_x_by_mouse(main_camera) <= *e->position_x + *a_group->offset_x + *a_element->offset_x + *a_element->size_x + catch_size)
 							&
-							(get_real_world_position_y_by_mouse(main_camera) >= *e->position_y + *a_group->offset_y + *a_element->offset_y + *a_element->size_y + *a_element->offset_z - catch_size)
+							(get_real_world_position_y_by_mouse(main_camera) >= *e->position_y + *e->position_z + *a_group->offset_y + *a_element->offset_y + *a_element->size_y + *a_element->offset_z - catch_size)
 							&
-							(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *a_group->offset_y + *a_element->offset_y + *a_element->size_y + *a_element->offset_z + catch_size)
+							(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *e->position_z + *a_group->offset_y + *a_element->offset_y + *a_element->size_y + *a_element->offset_z + catch_size)
 							)
 					{
 						if (!LMB) { *a_element->catched_up_side = true; }
@@ -1542,9 +1671,9 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 							&
 							(get_real_world_position_x_by_mouse(main_camera) <= *e->position_x + *a_group->offset_x + *a_element->offset_x + *a_element->size_x / 2.0f + 10.0f)
 							&
-							(get_real_world_position_y_by_mouse(main_camera) >= *e->position_y + *a_group->offset_y + *a_element->offset_y + *a_element->offset_z + *a_element->size_y / 2.0f - 10.0f)
+							(get_real_world_position_y_by_mouse(main_camera) >= *e->position_y + *e->position_z + *a_group->offset_y + *a_element->offset_y + *a_element->offset_z + *a_element->size_y / 2.0f - 10.0f)
 							&
-							(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *a_group->offset_y + *a_element->offset_y + *a_element->offset_z + *a_element->size_y / 2.0f + 10.0f)
+							(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *e->position_z + *a_group->offset_y + *a_element->offset_y + *a_element->offset_z + *a_element->size_y / 2.0f + 10.0f)
 							)
 					{
 						if (!LMB) { *a_element->catched_mid = true; }
@@ -1560,9 +1689,9 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 							&
 							(get_real_world_position_x_by_mouse(main_camera) <= *e->position_x + *a_group->offset_x + *a_element->offset_x + *a_element->size_x / 2.0f + 5.0f)
 							&
-							(get_real_world_position_y_by_mouse(main_camera) >= *e->position_y + *a_group->offset_y + *a_element->offset_y + *a_element->offset_z + *a_element->size_y / 2.0f + 10.0f)
+							(get_real_world_position_y_by_mouse(main_camera) >= *e->position_y + *e->position_z + *a_group->offset_y + *a_element->offset_y + *a_element->offset_z + *a_element->size_y / 2.0f + 10.0f)
 							&
-							(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *a_group->offset_y + *a_element->offset_y + *a_element->offset_z + *a_element->size_y / 2.0f + 30.0f)
+							(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *e->position_z + *a_group->offset_y + *a_element->offset_y + *a_element->offset_z + *a_element->size_y / 2.0f + 40.0f)
 							)
 					{
 						if (!LMB) { *a_element->catched_z = true; }

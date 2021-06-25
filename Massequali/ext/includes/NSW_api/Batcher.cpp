@@ -570,6 +570,78 @@ void Batcher::draw_sprite(float _x, float _y, float _w, float _h, float _left, f
 	}
 }
 
+void Batcher::draw_depthmap_polygon(EPolygonMassive* _p_massive, float _start_x, float _start_y, float _size_x, float _size_y, EGabarite* _g)
+{
+	
+	for (EPolygonShape* p_shape: _p_massive->shape_list)
+	{
+		//std::cout << "try draw vertex massive" << std::endl;
+		//.#
+		//..
+		vertices[id + 0] = (_start_x + _size_x * *p_shape->vertex_list.at(0)->position_x);
+		vertices[id + 1] = (_start_y + _size_y * *p_shape->vertex_list.at(0)->position_y);
+		//vertices[id + 2] = 0;
+
+		vertices[id + 2] = *p_shape->vertex_list.at(0)->float_vector.at(0) / 512.0f;
+		vertices[id + 3] = *p_shape->vertex_list.at(0)->float_vector.at(0) / 512.0f;
+		vertices[id + 4] = *p_shape->vertex_list.at(0)->float_vector.at(0) / 512.0f;
+		vertices[id + 5] = 1.0f;
+
+		vertices[id + 6] = *_g->x2;
+		vertices[id + 7] = *_g->y2;
+
+		//..
+		//.#
+		vertices[id +	8]	= (_start_x + _size_x * *p_shape->vertex_list.at(1)->position_x);
+		vertices[id +	9]	= (_start_y + _size_y * *p_shape->vertex_list.at(1)->position_y);
+
+		vertices[id +	10]	= *p_shape->vertex_list.at(1)->float_vector.at(0) / 512.0f;
+		vertices[id +	11]	= *p_shape->vertex_list.at(1)->float_vector.at(0) / 512.0f;
+		vertices[id +	12]	= *p_shape->vertex_list.at(1)->float_vector.at(0) / 512.0f;
+		vertices[id +	13]	= 1.0f;
+
+		vertices[id +	14]	= *_g->x2;
+		vertices[id +	15]	= *_g->y;
+
+		//..
+		//#.
+		vertices[id + 16] = (_start_x + _size_x * *p_shape->vertex_list.at(2)->position_x);
+		vertices[id + 17] = (_start_y + _size_y * *p_shape->vertex_list.at(2)->position_y);
+
+		vertices[id + 18] = *p_shape->vertex_list.at(2)->float_vector.at(0) / 512.0f;
+		vertices[id + 19] = *p_shape->vertex_list.at(2)->float_vector.at(0) / 512.0f;
+		vertices[id + 20] = *p_shape->vertex_list.at(2)->float_vector.at(0) / 512.0f;
+		vertices[id + 21] = 1.0f;
+
+		vertices[id + 22] = *_g->x;
+		vertices[id + 23] = *_g->y;
+
+		//#.
+		//..
+		vertices[id + 24] = (_start_x + _size_x * *p_shape->vertex_list.at(3)->position_x);
+		vertices[id + 25] = (_start_y + _size_y * *p_shape->vertex_list.at(3)->position_y);
+
+		vertices[id + 26] = *p_shape->vertex_list.at(3)->float_vector.at(0) / 512.0f;
+		vertices[id + 27] = *p_shape->vertex_list.at(3)->float_vector.at(0) / 512.0f;
+		vertices[id + 28] = *p_shape->vertex_list.at(3)->float_vector.at(0) / 512.0f;
+		vertices[id + 29] = 1.0f;
+
+		vertices[id + 30] = *_g->x;
+		vertices[id + 31] = *_g->y2;
+	}
+
+	id += 32;
+
+	if (id > batch_force_draw_call)
+	{
+		reinit();
+		draw_call();
+		reset();
+	}
+}
+
+
+
 void Batcher::draw_gabarite(float _x, float _y, EGabarite* _g)
 {
 	//std::cout << "filled rect" << std::endl;
@@ -1640,4 +1712,28 @@ void Batcher::set_interpolated_color(EColorCollection* _a, EColorCollection* _b,
 	batch_color_b = _a->color_blue * _value + _b->color_blue * (1.0f - _value);
 
 	batch_color_a = _a->color_alpha * _value + _b->color_alpha * (1.0f - _value);
+}
+
+Batcher::EPolygonMassive::EPolygonMassive()
+{
+}
+
+Batcher::EPolygonMassive::~EPolygonMassive()
+{
+}
+
+Batcher::EPolygonShape::EPolygonShape()
+{
+}
+
+Batcher::EPolygonShape::~EPolygonShape()
+{
+}
+
+Batcher::EPolygonVertex::EPolygonVertex()
+{
+}
+
+Batcher::EPolygonVertex::~EPolygonVertex()
+{
 }

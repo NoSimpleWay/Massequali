@@ -121,20 +121,24 @@ void ExternalButtonAction::external_button_action_select_entity_from_list(EButto
 			
 		}
 		
+		//select fisrt button (base)
 		if (en->autobuilding_base_list.size() > 0)
 		{ EWindowMain::button_group_autobuilding_base->selected_button = EWindowMain::button_group_autobuilding_base->button_list.at(0); }
 		
 		
+		//select base
 		if (EWindowMain::button_group_autobuilding_base->selected_button != NULL)
 		{
 			external_button_action_select_autobuilding_base(EWindowMain::button_group_autobuilding_base->selected_button, 0.0f);
 		}
 
+		/*
 		if (EWindowMain::button_group_autobuilding_group_element->selected_button != NULL)
 		{
 			//action_select(EWindowMain::button_group_autobuilding_group_element->selected_button, 0.0f);
-		}
+		}*/
 
+		//select group
 		if (EWindowMain::button_group_autobuilding_group->selected_button != NULL)
 		{
 			external_button_action_select_autobuilding_group(EWindowMain::button_group_autobuilding_group->selected_button, 0.0f);
@@ -168,10 +172,12 @@ void ExternalButtonAction::external_button_action_select_entity_from_list(EButto
 						(!en->autobuilding_group_list.at(get_autobuilding_group_id())->autobuilding_group_element_list.empty())
 						&&
 						(i < en->autobuilding_group_list.at(get_autobuilding_group_id())->autobuilding_group_element_list.size())
-						)
+					)
 				{
 					EWindowMain::button_group_autobuilding_group_element->button_list.at(i)->is_active = true;
-					EWindowMain::button_group_autobuilding_group_element->button_list.at(i)->gabarite = en->autobuilding_base_list.at(i)->main_texture;
+					EWindowMain::button_group_autobuilding_group_element->button_list.at(i)->gabarite
+					=
+					get_selected_autobuilding_group(get_entity())->autobuilding_group_element_list.at(i)->autobuilding_base->main_texture;
 
 				}
 				else
@@ -191,6 +197,7 @@ void ExternalButtonAction::external_button_action_select_entity_from_list(EButto
 						)
 				{
 					EWindowMain::button_group_autobuilding_group->button_list.at(i)->is_active = true;
+					EWindowMain::button_group_autobuilding_group->button_list.at(i)->text = *en->autobuilding_group_list.at(i)->name;
 				}
 				else
 				{
@@ -199,6 +206,7 @@ void ExternalButtonAction::external_button_action_select_entity_from_list(EButto
 				}
 			}
 
+		//select group button
 		if (!en->autobuilding_group_list.empty())
 		{
 			EWindowMain::button_group_autobuilding_group->selected_button = EWindowMain::button_group_autobuilding_group->button_list.at(0);
@@ -288,6 +296,16 @@ void ExternalButtonAction::external_button_action_remove_autobuilding_base(EButt
 		EButton::update_data_id_for_buttons(EWindowMain::button_group_autobuilding_base);
 		EButton::update_data_id_for_buttons(EWindowMain::button_group_autobuilding_group_element);
 	}
+}
+
+void ExternalButtonAction::external_button_action_create_new_entity(EButton* _b, float _f)
+{
+	Entity* _e = new Entity();
+
+	*_e->position_x = *EWindowMain::main_camera->position_x + EGraphicCore::SCR_WIDTH / 2000.0f;
+	*_e->position_y = *EWindowMain::main_camera->position_y + EGraphicCore::SCR_HEIGHT / 2000.0f;
+
+	EWindowMain::put_entity_to_map(_e);
 }
 
 void ExternalButtonAction::external_button_action_select_autobuilding_base(EButton* _b, float _f)
@@ -384,6 +402,18 @@ void ExternalButtonAction::external_button_action_open_select_texture_window_for
 		}
 }
 
+void ExternalButtonAction::external_button_action_open_select_texture_window_for_vertex_editor(EButton* _b, float _f)
+{
+	*EWindowMain::super_group_texture_collection_link->is_active = true;
+
+	for (EButton* b : EWindowMain::group_texture_collection_link->button_list)
+		if (*b->can_be_selected)
+		{
+			b->action_on_left_click.clear();
+			b->action_on_left_click.push_back(&external_button_action_select_texture_for_vertex_editor);
+		}
+}
+
 void ExternalButtonAction::external_button_action_select_texture_for_autobuilding_region(EButton* _b, float _f)
 {
 	if (valid_entity_select())
@@ -430,6 +460,18 @@ void ExternalButtonAction::external_button_action_select_texture_for_autobuildin
 			external_button_action_select_autobuilding_group(EWindowMain::button_group_autobuilding_group->selected_button, 0.0f);
 		}
 	}
+}
+
+void ExternalButtonAction::external_button_action_select_texture_for_vertex_editor(EButton* _b, float _f)
+{
+	EWindowMain::link_to_button_vertex_editor->gabarite = _b->gabarite;
+	EWindowMain::link_to_button_vertex_editor->have_icon = true;
+
+	EWindowMain::link_to_button_vertex_editor->button_size_x = *_b->gabarite->size_x * 2.0f;
+	EWindowMain::link_to_button_vertex_editor->button_size_y = *_b->gabarite->size_y * 2.0f;
+
+	*EWindowMain::group_vertex_editor->size_x = *_b->gabarite->size_x * 2.0f + 10.0f;
+	*EWindowMain::group_vertex_editor->size_y = *_b->gabarite->size_y * 2.0f + 10.0f;
 }
 
 void ExternalButtonAction::external_button_action_add_selected_region_to_autobuilding_group(EButton* _b, float _f)

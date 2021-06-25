@@ -27,7 +27,9 @@ void Entity::draw_catched_element(Entity::AutobuildingGroupElement* _element, En
 		EGraphicCore::batch->draw_gabarite
 		(
 			*_e->position_x + *_group->offset_x + *_element->offset_x + 1.0f,
-			*_e->position_y + *_group->offset_y + *_element->offset_y + *_element->offset_z,
+			*_e->position_y + *_group->offset_y + *_element->offset_y
+			+
+			*_e->position_z + *_group->offset_z + *_element->offset_z,
 			2.0f,
 			*_element->size_y,
 			EGraphicCore::gabarite_white_pixel
@@ -39,7 +41,9 @@ void Entity::draw_catched_element(Entity::AutobuildingGroupElement* _element, En
 		EGraphicCore::batch->draw_gabarite
 		(
 			*_e->position_x + *_group->offset_x + *_element->offset_x + 1.0f + *_element->size_x,
-			*_e->position_y + *_group->offset_y + *_element->offset_y + *_element->offset_z,
+			*_e->position_y + *_group->offset_y + *_element->offset_y + *_element->offset_z
+			+
+			*_e->position_z + *_group->offset_z + *_element->offset_z,
 			2.0f,
 			*_element->size_y,
 			EGraphicCore::gabarite_white_pixel
@@ -51,7 +55,9 @@ void Entity::draw_catched_element(Entity::AutobuildingGroupElement* _element, En
 		EGraphicCore::batch->draw_gabarite
 		(
 			*_e->position_x + *_group->offset_x + *_element->offset_x - 0.0f,
-			*_e->position_y + *_group->offset_y + *_element->offset_y + *_element->offset_z + 1.0f,
+			*_e->position_y + *_group->offset_y + *_element->offset_y + *_element->offset_z + 1.0f
+			+
+			*_e->position_z + *_group->offset_z + *_element->offset_z,
 			*_element->size_x,
 			2.0f,
 			EGraphicCore::gabarite_white_pixel
@@ -63,7 +69,9 @@ void Entity::draw_catched_element(Entity::AutobuildingGroupElement* _element, En
 		EGraphicCore::batch->draw_gabarite
 		(
 			*_e->position_x + *_group->offset_x + *_element->offset_x - 0.0f,
-			*_e->position_y + *_group->offset_y + *_element->offset_y + *_element->offset_z + *_element->size_y + 1.0f,
+			*_e->position_y + *_group->offset_y + *_element->offset_y + *_element->offset_z + *_element->size_y + 1.0f
+			+
+			*_e->position_z + *_group->offset_z + *_element->offset_z,
 			*_element->size_x,
 			2.0f,
 			EGraphicCore::gabarite_white_pixel
@@ -75,7 +83,9 @@ void Entity::draw_catched_element(Entity::AutobuildingGroupElement* _element, En
 		EGraphicCore::batch->draw_gabarite
 		(
 			*_e->position_x + *_group->offset_x + *_element->offset_x + *_element->size_x / 2.0f - 10.0f,
-			*_e->position_y + *_group->offset_y + *_element->offset_y + *_element->offset_z + *_element->size_y / 2.0f - 10.0f,
+			*_e->position_y + *_group->offset_y + *_element->offset_y + *_element->offset_z + *_element->size_y / 2.0f - 10.0f
+			+
+			*_e->position_z + *_group->offset_z + *_element->offset_z,
 			20.0f,
 			20.0f,
 			EGraphicCore::gabarite_white_pixel
@@ -87,7 +97,9 @@ void Entity::draw_catched_element(Entity::AutobuildingGroupElement* _element, En
 		EGraphicCore::batch->draw_gabarite
 		(
 			*_e->position_x + *_group->offset_x + *_element->offset_x + *_element->size_x / 2.0f - 3.0f,
-			*_e->position_y + *_group->offset_y + *_element->offset_y + *_element->offset_z + *_element->size_y / 2.0f + 10.0f,
+			*_e->position_y + *_group->offset_y + *_element->offset_y + *_element->offset_z + *_element->size_y / 2.0f + 10.0f
+			+
+			*_e->position_z + *_group->offset_z + *_element->offset_z,
 			6.0f,
 			30.0f,
 			EGraphicCore::gabarite_white_pixel
@@ -98,6 +110,20 @@ void Entity::draw_catched_element(Entity::AutobuildingGroupElement* _element, En
 void Entity::draw_entity_autobuilging_helping(Entity* _e, Batcher* _b, float _d)
 {
 
+	if ((glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS))
+	{
+		EGraphicCore::batch->setcolor(EColor::COLOR_LIME);
+		EGraphicCore::batch->draw_rama
+		(
+			*_e->position_x - 5.0f,
+			*_e->position_y,
+			10.0f,
+			5.0f,
+			2.0f,
+			EGraphicCore::gabarite_white_pixel
+		);
+	}
+
 	//HIGHLIGHT
 	if (!_e->autobuilding_group_list.empty())
 		for (AutobuildingGroup* _group : _e->autobuilding_group_list)
@@ -106,7 +132,15 @@ void Entity::draw_entity_autobuilging_helping(Entity* _e, Batcher* _b, float _d)
 				if (*_element->highlight_time > 0.0f)
 				{
 					EGraphicCore::batch->setcolor_alpha(EColor::COLOR_LIME, *_element->highlight_time);
-					EGraphicCore::batch->draw_gabarite(*_e->position_x + *_group->offset_x + *_element->offset_x, *_e->position_y + *_group->offset_y + *_element->offset_y, *_element->size_x, *_element->size_y, EGraphicCore::gabarite_white_pixel);
+					EGraphicCore::batch->draw_gabarite
+					(
+						*_e->position_x + *_group->offset_x + *_element->offset_x,
+						*_e->position_y + *_group->offset_y + *_element->offset_y
+						+ *_e->position_z + *_group->offset_z + *_element->offset_z,
+						*_element->size_x,
+						*_element->size_y,
+						EGraphicCore::gabarite_white_pixel
+					);
 
 					*_element->highlight_time -= _d;
 				}
@@ -125,13 +159,21 @@ void Entity::draw_entity_autobuilging_helping(Entity* _e, Batcher* _b, float _d)
 
 
 					//draw border rama
-					if ((glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS))
+					if
+						(
+							(glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
+							&&
+							(ExternalButtonAction::get_entity() != NULL)
+							&&
+							(ExternalButtonAction::get_entity() == _e)	
+						)
 					{
 						if
 							(
 								(ExternalButtonAction::get_selected_autobuilding_group_element(_e) != NULL)
 								&&
 								(ExternalButtonAction::get_selected_autobuilding_group_element(_e) == _element)
+
 							)
 						{
 							EGraphicCore::batch->setcolor(EColor::COLOR_WHITE);
@@ -158,6 +200,10 @@ void Entity::draw_entity_autobuilging_helping(Entity* _e, Batcher* _b, float _d)
 							&&
 							(ExternalButtonAction::get_selected_autobuilding_group(_e) == _group)
 							&&
+							(ExternalButtonAction::get_entity() != NULL)
+							&&
+							(ExternalButtonAction::get_entity() == _e)
+							&&
 							(*_group->is_catched)
 						)
 					{
@@ -176,10 +222,14 @@ void Entity::draw_entity_autobuilging_helping(Entity* _e, Batcher* _b, float _d)
 					{
 						if
 							(
+								(ExternalButtonAction::get_entity() != NULL)
+								&&
+								(ExternalButtonAction::get_entity() == _e)
+								&&
 								(ExternalButtonAction::get_selected_autobuilding_group_element(_e) != NULL)
 								&&
 								(ExternalButtonAction::get_selected_autobuilding_group_element(_e) == _element)
-								)
+							)
 
 						{
 							EGraphicCore::batch->setcolor_alpha(EColor::COLOR_PINK, 0.5f);

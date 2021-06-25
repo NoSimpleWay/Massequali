@@ -1,9 +1,43 @@
 #pragma once
+
 #include "EColor.h"
 #include "EGabarite.h"
+#include <vector>
+
+
 class Batcher
 {
+
 public:
+	struct EPolygonVertex
+	{
+		float* position_x = new float(0.0f);
+		float* position_y = new float(0.0f);
+
+		EPolygonVertex();
+		~EPolygonVertex();
+
+		bool* is_catched = new bool(false);
+
+		std::vector <float*> float_vector;
+	};
+
+	struct EPolygonShape
+	{
+		std::vector<EPolygonVertex*> vertex_list;
+
+		EPolygonShape();
+		~EPolygonShape();
+	};
+
+	struct EPolygonMassive
+	{
+		std::vector<EPolygonShape*> shape_list;
+
+		EPolygonMassive();
+		~EPolygonMassive();
+	};
+
 	Batcher();
 
 	void init();
@@ -20,6 +54,8 @@ public:
 	void draw_gabarite(float _x, float _y, float _w, float _h, EGabarite* _g);
 
 	void draw_sprite(float _x, float _y, float _w, float _h, float _left, float _right, float _down, float _up, EGabarite* _g);
+
+	void draw_depthmap_polygon(EPolygonMassive* _p_massive, float _start_x, float _start_y, float _size_x, float _size_y, EGabarite* _g);
 
 	void draw_gabarite(float _x, float _y, EGabarite* _g);
 

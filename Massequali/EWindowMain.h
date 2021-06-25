@@ -3,6 +3,7 @@
 #include "Entity.h"
 #include "ExternalEnums.h"
 
+
 class EWindowMain : public EWindow
 {
 public:
@@ -12,36 +13,40 @@ public:
 
 	ECluster* cluster_list[100][100];
 
-	static EButton::button_super_group* super_group_texture_collection_link;
-	static EButton::button_group* group_texture_collection_link;
+	static EButton::button_super_group*		super_group_texture_collection_link;
+	static EButton::button_group*			group_texture_collection_link;
 
-	static EButton::button_super_group* super_group_autobuilding;
+	static EButton::button_super_group*		super_group_autobuilding;
 
-	static EButton::button_group* group_grid_region_edit_link;
-	static EButton::button_group* group_grid_region_second_layer_link;
-	static EButton::button_group* group_grid_entity_list_link;
-	static EButton::button_group* button_group_autobuilding_base;
+	static EButton::button_group*			group_grid_region_edit_link;
+	static EButton::button_group*			group_grid_region_second_layer_link;
+	static EButton::button_group*			group_grid_entity_list_link;
+	static EButton::button_group*			button_group_autobuilding_base;
 
-	static EButton::button_group* button_group_autobuilding_group_element;
-	static EButton::button_group* button_group_autobuilding_group;
-	static EButton::button_group* group_grid_autobuilding_draw_order;
+	static EButton::button_group*			button_group_autobuilding_group_element;
+	static EButton::button_group*			button_group_autobuilding_group;
+	static EButton::button_group*			group_grid_autobuilding_draw_order;
 
-	static EButton* grid_region_edit_button_link;
+	static EButton::button_super_group*		super_group_vertex_editor;
+	static EButton::button_group*			group_vertex_editor;
+	static EButton*							link_to_button_vertex_editor;
 
-	static std::vector<EButton*> auto_size_region_button;
+	static EButton*							grid_region_edit_button_link;
 
-	static EButton* space_between_sprites_x_button;
-	static EButton* space_between_sprites_y_button;
+	static std::vector<EButton*>			auto_size_region_button;
 
-	static EButton* link_button_subdivision_mid_x;
-	static EButton* link_button_subdivision_mid_y;
+	static EButton*							space_between_sprites_x_button;
+	static EButton*							space_between_sprites_y_button;
 
-	static EButton* link_button_sprite_push_direction;
+	static EButton*							link_button_subdivision_mid_x;
+	static EButton*							link_button_subdivision_mid_y;
 
-	static std::vector<Entity*> selected_entities;
+	static EButton*							link_button_sprite_push_direction;
 
-	static EButton::EGridRegion* entity_selection_region;
-	static bool is_entity_selection_started;
+	static std::vector<Entity*>				selected_entities;
+
+	static EButton::EGridRegion*			entity_selection_region;
+	static bool								is_entity_selection_started;
 
 	static bool is_entity_in_region(Entity* _e, EButton::EGridRegion* _gr);
 
@@ -57,7 +62,7 @@ public:
 
 	//static std::vector<Entity*> entity_list;
 
-	ECamera* main_camera = new ECamera();
+	static ECamera* main_camera;
 
 	static float get_real_world_position_x_by_mouse(ECamera* _camera);
 	static float get_real_world_position_y_by_mouse(ECamera* _camera);

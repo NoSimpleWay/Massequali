@@ -5,7 +5,7 @@
 
 //glm::mat4 matrix_transform;
 
-#include "NSW_api/Batcher.h"
+
 #include <vector>
 #include "NSW_api/EFont.h"
 
@@ -16,6 +16,9 @@
 
 #include "NSW_api/EUtils.h"
 #include <windows.h>
+#include "NSW_api/Batcher.h"
+#include "../../../ExternalEnums.h"
+
 
 //#include <WinUser.h>
 
@@ -23,6 +26,9 @@
 
 class EWindowMain;
 class EWindow;
+
+
+
 
 class EButton
 {
@@ -33,6 +39,17 @@ public:
 	std::vector<BUTTON_ACTION> action_on_drag;
 
 	bool* drag_is_positive = new bool(false);
+
+	
+
+
+	//std::vector <EPolygomMassive*> polygon_massive_list;
+
+	Batcher::EPolygonMassive* polygon_massive;
+
+	std::vector <int*> mode_list;
+
+
 
 	enum ButtonSimpleChangerActivationType
 	{

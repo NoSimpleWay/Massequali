@@ -8,6 +8,7 @@
 
 #include <stb_image.h>
 #include <learnopengl/shader_s.h>
+
 #include "NSW_api/Batcher.h"
 #include "EGabarite.h"
 #include <vector>
