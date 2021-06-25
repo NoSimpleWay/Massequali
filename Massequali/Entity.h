@@ -42,6 +42,8 @@ public:
 		std::vector<EButton::EGridRegion*> grid_region;
 
 		AutobuildingBase();
+
+		
 	};
 
 	struct AutobuildingGroupElement
@@ -78,10 +80,18 @@ public:
 		float* bottom_offset	= new float(0.0f);
 		float* up_offset		= new float(0.0f);
 
-		int* selected_direction_of_push = new int(AutobuildingSpritePushDirection::AUTOBUILDING_SPRITE_PUSH_DIRECTION_Y);
+		int* selected_direction_of_push = new int(AutobuildingSpritePushDirection::AUTOBUILDING_SPRITE_PUSH_DIRECTION_ROOF_Y);
 
 
 		std::vector<AutobuildingGroupElement*> autobuilding_group_element_list;
+
+		std::vector<EGraphicCore::ESprite*> sprite_list;
+
+		Entity* master_entity;
+		bool* is_catched = new bool (false);
+		std::string* name = new string("!");
+
+		float* max_height = new float(0.0f);
 	};
 
 	std::vector<AutobuildingBase*> autobuilding_base_list;

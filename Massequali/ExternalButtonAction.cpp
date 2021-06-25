@@ -508,7 +508,11 @@ void ExternalButtonAction::external_button_action_add_new_group_for_autobuilding
 
 				Entity* en = get_entity();
 
-				en->autobuilding_group_list.push_back(new Entity::AutobuildingGroup());
+				Entity::AutobuildingGroup* jcg = new Entity::AutobuildingGroup();
+				jcg->master_entity = en;
+
+				en->autobuilding_group_list.push_back( jcg );
+
 
 				break;
 			}
@@ -577,6 +581,17 @@ void ExternalButtonAction::external_button_action_select_autobuilding_group(EBut
 		{
 			EWindowMain::link_button_sprite_push_direction->target_address_for_int = get_selected_autobuilding_group(get_entity())->selected_direction_of_push;
 		}
+
+		if
+		(
+			(EWindowMain::button_group_autobuilding_group->selected_button != NULL)
+			&&
+			(get_selected_autobuilding_group(get_entity()) != NULL)
+		)
+		{
+			EWindowMain::button_group_autobuilding_group->selected_button->target_address_for_string = get_selected_autobuilding_group(get_entity())->name;
+			EWindowMain::button_group_autobuilding_group->selected_button->text = *get_selected_autobuilding_group(get_entity())->name;
+		}
 	}
 }
 
@@ -634,6 +649,24 @@ void ExternalButtonAction::external_button_action_set_button_value(EButton* _b, 
 	{
 		*_b->target_address_for_int = _b->selected_element;
 	}
+	if ((_b->target_address_for_string != NULL))
+	{
+		*_b->target_address_for_string = _b->text;
+	}
+}
+
+void ExternalButtonAction::external_button_action_set_button_constant_value(EButton* _b, float _f)
+{
+	if ((_b->target_address_for_int != NULL))
+	{
+		*_b->target_address_for_int = *_b->target_value_for_int;
+	}
+
+	if ((_b->target_address_for_bool != NULL))
+	{
+		*_b->target_address_for_bool = *_b->target_value_for_bool;
+	}
+
 }
 
 void ExternalButtonAction::external_button_action_drag_autobuilding_base(EButton* _b, float _f)
@@ -774,8 +807,8 @@ int ExternalButtonAction::get_autobuilding_group_id()
 
 Entity::AutobuildingGroup* ExternalButtonAction::get_selected_autobuilding_group(Entity* _e)
 {
-	std::cout << "!@! " << std::to_string(get_autobuilding_group_id()) << std::endl;
-	std::cout << "#$# " << std::to_string(_e->autobuilding_group_list.size()) << std::endl;
+	//std::cout << "!@! " << std::to_string(get_autobuilding_group_id()) << std::endl;
+	//std::cout << "#$# " << std::to_string(_e->autobuilding_group_list.size()) << std::endl;
 	if ((_e != NULL) && (!_e->autobuilding_group_list.empty()) && (get_autobuilding_group_id() >= 0) && (get_autobuilding_group_id()< _e->autobuilding_group_list.size()))
 	{
 		

@@ -29,6 +29,7 @@ public:
 	static void external_button_action_close_master_button_super_group(EButton* _b, float _f);
 
 	static void external_button_action_set_button_value(EButton* _b, float _f);
+	static void external_button_action_set_button_constant_value(EButton* _b, float _f);
 
 	static void external_button_action_drag_autobuilding_base(EButton* _b, float _f);
 	static void external_button_action_drag_autobuilding_group_element(EButton* _b, float _f);

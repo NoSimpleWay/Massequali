@@ -147,6 +147,30 @@ void EGraphicCore::draw_sprite_regular(sprite_array* _sprite_array, Batcher* _ba
 	}
 }
 
+void EGraphicCore::draw_sprite_regular(EGraphicCore::ESprite* _sprite, Batcher* _batch, float _offset_x, float _offset_y, float _offset_z)
+{
+	if ((_sprite != NULL) && (_sprite->texture_gabarite != NULL))
+	{
+		_batch->setcolor(EColor::COLOR_WHITE);
+		_batch->draw_sprite
+		(
+			_offset_x + *_sprite->offset_x,
+			_offset_y + *_sprite->offset_y + _offset_z + *_sprite->offset_z,
+
+			*_sprite->size_x,
+			*_sprite->size_y,
+
+			*_sprite->fragment_left,
+			*_sprite->fragment_right,
+			*_sprite->fragment_down,
+			*_sprite->fragment_up,
+
+			_sprite->texture_gabarite
+		);
+		//_batch->draw_gabarite(_offset_x + *spr->offset_x, _offset_y + *spr->offset_y + _offset_z + *spr->offset_z, spr->texture_gabarite);
+	}
+}
+
 EGraphicCore::ESprite::~ESprite()
 {
 	delete offset_x;

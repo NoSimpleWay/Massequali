@@ -68,6 +68,7 @@ public:
 	EGraphicCore::ESprite* create_new_sprite_if_need(int selected_sprite_id, Entity* _e, std::string _text);
 
 	static void add_new_sprite_if_need(int _i, Entity* _e, std::string _text);
+	static void add_new_sprite_to_group_if_need(int _i, Entity::AutobuildingGroup* _gr, std::string _text);
 
 	static void generate_building(Entity* _e);
 
@@ -87,6 +88,8 @@ public:
 	static int cluster_draw_end_y;
 
 	static std::vector<Entity*> draw_buffer;
+	static std::vector<Entity::AutobuildingGroup*> draw_group_buffer;
+
 	static int last_index;
 
 	enum GridRegionNameByOrder

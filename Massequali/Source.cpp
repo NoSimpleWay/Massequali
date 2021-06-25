@@ -218,17 +218,44 @@ int main()
 	jc_massive_style->background = ETextureAtlas::put_texture_to_atlas("data/textures/massive_bg_blue_blured.png", EWindow::default_texture_atlas);
 	EWindow::list_of_massive_style.push_back(jc_massive_style);
 
+
+	std::vector <float> fff(1000);
+	float start_id;
+
 	while (!glfwWindowShouldClose(EWindow::main_window))
 	{
+		EWindow::stop = std::chrono::high_resolution_clock::now();
+		EWindow::start = std::chrono::high_resolution_clock::now();
+
+		start_id = 0;
+		EWindow::add_time_process("Begin");
+
+	//	for (int i = 0; i < 1000; i++)
+		//{
+		//	fff.at(i) = (rand() % 100) / 100.0f;
+		//}
+		//EWindow::add_time_process("fill data");
+
+		/*
+		for (int k=0; k<998; k++)
+		for (int i=k; i<999; i++)
+		{
+			if (fff.at(i) > fff.at(i + 1))
+			{
+				swap(fff.at(i), fff.at(i + 1));
+			}
+		}*/
+
+		//EWindow::add_time_process("sort");
+
 		glfwPollEvents();
 
 		//EWindow::time_process_name.clear();
 		//EWindow::time_process_value.clear();
 
-		EWindow::stop = std::chrono::high_resolution_clock::now();
-		EWindow::start = std::chrono::high_resolution_clock::now();
+		
 
-		EWindow::add_time_process("Begin");
+		
 
 		clock_t time = clock();
 		delta_time = (time - saved_time_for_delta) / 1000.0;

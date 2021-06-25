@@ -97,6 +97,8 @@ void Entity::draw_catched_element(Entity::AutobuildingGroupElement* _element, En
 
 void Entity::draw_entity_autobuilging_helping(Entity* _e, Batcher* _b, float _d)
 {
+
+	//HIGHLIGHT
 	if (!_e->autobuilding_group_list.empty())
 		for (AutobuildingGroup* _group : _e->autobuilding_group_list)
 			for (AutobuildingGroupElement* _element : _group->autobuilding_group_element_list)
@@ -110,8 +112,11 @@ void Entity::draw_entity_autobuilging_helping(Entity* _e, Batcher* _b, float _d)
 				}
 			}
 
+	
 	//if ((glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS))
 	{
+
+		//transparent drag point and ramas
 		if (!_e->autobuilding_group_list.empty())
 			for (AutobuildingGroup* _group : _e->autobuilding_group_list)
 			{
@@ -136,9 +141,35 @@ void Entity::draw_entity_autobuilging_helping(Entity* _e, Batcher* _b, float _d)
 							EGraphicCore::batch->setcolor_alpha(EColor::COLOR_BLACK, 0.5f);
 						}
 
-						EGraphicCore::batch->draw_rama(*_e->position_x + *_group->offset_x + *_element->offset_x, *_e->position_y + *_group->offset_y + *_element->offset_y + *_element->offset_z, *_element->size_x, *_element->size_y, 1.0f, EGraphicCore::gabarite_white_pixel);
+						EGraphicCore::batch->draw_rama
+						(
+							*_e->position_x + *_group->offset_x + *_element->offset_x,
+							*_e->position_y +*_e->position_z + *_group->offset_y + *_group->offset_z + *_element->offset_y + *_element->offset_z,
+							*_element->size_x,
+							*_element->size_y,
+							1.0f,
+							EGraphicCore::gabarite_white_pixel
+						);
+					}
 
-
+					if
+						(
+							(ExternalButtonAction::get_selected_autobuilding_group(_e) != NULL)
+							&&
+							(ExternalButtonAction::get_selected_autobuilding_group(_e) == _group)
+							&&
+							(*_group->is_catched)
+						)
+					{
+						EGraphicCore::batch->setcolor(EColor::COLOR_YELLOW);
+						EGraphicCore::batch->draw_gabarite
+						(
+							*_e->position_x + *_group->offset_x - 30.0f,
+							*_e->position_y + *_e->position_z + *_group->offset_y + *_group->offset_z - 25.0f,
+							60.0f,
+							10.0f,
+							EGraphicCore::gabarite_white_pixel
+						);
 					}
 
 					if ((glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS))

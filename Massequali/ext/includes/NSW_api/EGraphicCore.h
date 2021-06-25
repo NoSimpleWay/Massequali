@@ -88,5 +88,6 @@ public:
 	};
 
 	static void draw_sprite_regular(sprite_array* _sprite_array, Batcher* _batch, float _offset_x, float _offset_y, float _offset_z);
+	static void draw_sprite_regular(EGraphicCore::ESprite* _sprite, Batcher* _batch, float _offset_x, float _offset_y, float _offset_z);
 	static void reset_sprite_data(EGraphicCore::ESprite* _sprite);
 };
