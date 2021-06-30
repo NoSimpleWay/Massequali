@@ -30,7 +30,9 @@ EButton::button_group*					EWindowMain::group_grid_autobuilding_draw_order;
 
 EButton::button_super_group*			EWindowMain::super_group_vertex_editor;
 EButton::button_group*					EWindowMain::group_vertex_editor;
+EButton::button_group*					EWindowMain::group_vertex_normal_color_editor;
 EButton*								EWindowMain::link_to_button_vertex_editor;
+EButton*								EWindowMain::link_to_button_two_dimension_gradient;
 
 EButton* EWindowMain::grid_region_edit_button_link;
 
@@ -737,7 +739,7 @@ void EWindowMain::create_button_groups()
 
 	*just_created_button_super_group->size_x = 300.0f;
 	*just_created_button_super_group->size_y = 30.0f;
-	button_group_list.push_back(just_created_button_super_group);
+	//button_group_list.push_back(just_created_button_super_group);
 
 	just_created_button_group = new EButton::button_group();
 	just_created_button_super_group->button_group_list.push_back(just_created_button_group);
@@ -768,7 +770,7 @@ void EWindowMain::create_button_groups()
 	/////////////vertex editor
 		super_group_vertex_editor = new EButton::button_super_group();
 			button_group_list.push_back(super_group_vertex_editor);
-			*super_group_vertex_editor->size_x = 300.0f;
+			*super_group_vertex_editor->size_x = 500.0f;
 			*super_group_vertex_editor->size_y = 300.0f;
 
 
@@ -776,7 +778,7 @@ void EWindowMain::create_button_groups()
 				super_group_vertex_editor->button_group_list.push_back(group_vertex_editor);
 				*group_vertex_editor->position_x = 0.0f;
 				*group_vertex_editor->position_y = 0.0f;
-				*group_vertex_editor->size_x = 320.0f;
+				*group_vertex_editor->size_x = 520.0f;
 				*group_vertex_editor->size_y = 320.0f;
 				*group_vertex_editor->can_be_stretched_x = false;
 				*group_vertex_editor->can_be_stretched_y = false;
@@ -784,7 +786,7 @@ void EWindowMain::create_button_groups()
 
 				but = new EButton(5.0f, 5.0f, 300.0f, 300.0f, this, super_group_vertex_editor, group_vertex_editor);
 					link_to_button_vertex_editor = but;
-					but->mode_list.push_back(new int(0));
+					but->mode_list.push_back(new int(PolygonDrawMode::POLYGON_DRAW_MODE_NORMAL_MAP));
 					but->have_bg = false;
 					*but->is_double_click = true;
 					but->action_on_left_double_click.push_back(ExternalButtonAction::external_button_action_open_select_texture_window_for_vertex_editor);
@@ -801,34 +803,73 @@ void EWindowMain::create_button_groups()
 						just_created_polygon_vertex = new Batcher::EPolygonVertex();
 						*just_created_polygon_vertex->position_x = 1.0f;
 						*just_created_polygon_vertex->position_y = 1.0f;
-						just_created_polygon_vertex->float_vector.push_back(new float(rand() % 500));
+						just_created_polygon_vertex->float_vector.push_back(new float(1.0f));
+						just_created_polygon_vertex->float_vector.push_back(new float(1.0f));
 						just_created_polygon_shape->vertex_list.push_back(just_created_polygon_vertex);
 					//..
 					//.#
 						just_created_polygon_vertex = new Batcher::EPolygonVertex();
 						*just_created_polygon_vertex->position_x = 1.0f;
 						*just_created_polygon_vertex->position_y = 0.0f;
-						just_created_polygon_vertex->float_vector.push_back(new float(rand() % 500));
+						just_created_polygon_vertex->float_vector.push_back(new float(1.0f));
+						just_created_polygon_vertex->float_vector.push_back(new float(0.0f));
 						just_created_polygon_shape->vertex_list.push_back(just_created_polygon_vertex);
 					//..
 					//#.
 						just_created_polygon_vertex = new Batcher::EPolygonVertex();
 						*just_created_polygon_vertex->position_x = 0.0f;
 						*just_created_polygon_vertex->position_y = 0.0f;
-						just_created_polygon_vertex->float_vector.push_back(new float(rand() % 500));
+						just_created_polygon_vertex->float_vector.push_back(new float(0.0f));
+						just_created_polygon_vertex->float_vector.push_back(new float(0.0f));
 						just_created_polygon_shape->vertex_list.push_back(just_created_polygon_vertex);
 					//#.
 					//..
 						just_created_polygon_vertex = new Batcher::EPolygonVertex();
 						*just_created_polygon_vertex->position_x = 0.0f;
 						*just_created_polygon_vertex->position_y = 1.0f;
-						just_created_polygon_vertex->float_vector.push_back(new float(rand() % 500));
+						just_created_polygon_vertex->float_vector.push_back(new float(0.0f));
+						just_created_polygon_vertex->float_vector.push_back(new float(1.0f));
 						just_created_polygon_shape->vertex_list.push_back(just_created_polygon_vertex);
 
 
 
 					group_vertex_editor->button_list.push_back(but);
 					*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_X;
+
+
+					but = new EButton(5.0f, 5.0f, 100.0f, 100.0f, this, super_group_vertex_editor, group_vertex_editor);
+					link_to_button_two_dimension_gradient = but;
+					//but->mode_list.push_back(new int(PolygonDrawMode::POLYGON_DRAW_MODE_NORMAL_MAP));
+					but->have_bg = false;
+					*but->is_double_click = true;
+					*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_X;
+					group_vertex_editor->button_list.push_back(but);
+						EButton::ETwoDimensionGradient* just_created_td_gradient = new EButton::ETwoDimensionGradient();
+						*just_created_td_gradient->value_x = 0.5f;
+						*just_created_td_gradient->value_y = 0.5f;
+						but->two_dimension_gradient = just_created_td_gradient;
+						just_created_td_gradient->color_x->set_color(EColor::COLOR_RED);
+						just_created_td_gradient->color_y->set_color(EColor::COLOR_BLUE);
+						but->action_on_td_gradient_drag.push_back(&ExternalButtonAction::external_button_action_change_normal_color_for_vertex);
+
+			group_vertex_normal_color_editor = new EButton::button_group();
+						super_group_vertex_editor->button_group_list.push_back(group_vertex_normal_color_editor);
+						*group_vertex_normal_color_editor->position_x = 0.0f;
+						*group_vertex_normal_color_editor->position_y = 0.0f;
+						*group_vertex_normal_color_editor->size_x = 520.0f;
+						*group_vertex_normal_color_editor->size_y = 320.0f;
+						*group_vertex_normal_color_editor->can_be_stretched_x = true;
+						*group_vertex_normal_color_editor->can_be_stretched_y = true;
+						*group_vertex_normal_color_editor->can_be_moved_by_user = false;
+
+						for (int i = 0; i < 4; i++)
+						{
+							but = new EButton(0.0f, 0.0f, 20.0f, 20.0f, this, super_group_vertex_editor, group_vertex_normal_color_editor);
+							but->text = std::to_string(i);
+							*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_X;
+							group_vertex_normal_color_editor->button_list.push_back(but);
+						}
+
 
 
 

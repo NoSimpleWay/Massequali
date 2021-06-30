@@ -184,13 +184,13 @@ bool EButton::is_overlap()
 
 	if
 		(
-			(EWindow::mouse_x > master_position_x - bound_size_left)
+			(EWindow::mouse_x > screen_position_x - bound_size_left)
 			&&
-			(EWindow::mouse_x < master_position_x + button_size_x + bound_size_right)
+			(EWindow::mouse_x < screen_position_x + button_size_x + bound_size_right)
 			&&
-			(EWindow::mouse_y > master_position_y - bound_size_down)
+			(EWindow::mouse_y > screen_position_y - bound_size_down)
 			&&
-			(EWindow::mouse_y < master_position_y + button_size_y + bound_size_up)
+			(EWindow::mouse_y < screen_position_y + button_size_y + bound_size_up)
 			&&
 			(top_window_id == master_window->id)
 			)
@@ -439,32 +439,32 @@ void EButton::update(float _d)
 
 	if ((master_position == Enums::PositionMaster::WINDOW) && (master_window != NULL))
 	{
-		if (position_by_window_mode_x == Enums::PositionMode::LEFT) { master_position_x = master_window->offset_x + button_x_offset; }
-		if (position_by_window_mode_x == Enums::PositionMode::MID) { master_position_x = master_window->offset_x + (master_window->window_size_x - button_size_x) / 2.0f + button_x_offset; }
-		if (position_by_window_mode_x == Enums::PositionMode::RIGHT) { master_position_x = master_window->offset_x + master_window->window_size_x + button_x_offset - button_size_x; }
+		if (position_by_window_mode_x == Enums::PositionMode::LEFT) { screen_position_x = master_window->offset_x + button_x_offset; }
+		if (position_by_window_mode_x == Enums::PositionMode::MID) { screen_position_x = master_window->offset_x + (master_window->window_size_x - button_size_x) / 2.0f + button_x_offset; }
+		if (position_by_window_mode_x == Enums::PositionMode::RIGHT) { screen_position_x = master_window->offset_x + master_window->window_size_x + button_x_offset - button_size_x; }
 
-		if (position_by_window_mode_y == Enums::PositionMode::DOWN) { master_position_y = master_window->offset_y + button_y_offset; }
-		if (position_by_window_mode_y == Enums::PositionMode::MID) { master_position_y = master_window->offset_y + (master_window->window_size_y - button_size_y) / 2.0f + button_y_offset; }
-		if (position_by_window_mode_y == Enums::PositionMode::UP) { master_position_y = master_window->offset_y + master_window->window_size_y + button_y_offset - button_size_y; }
+		if (position_by_window_mode_y == Enums::PositionMode::DOWN) { screen_position_y = master_window->offset_y + button_y_offset; }
+		if (position_by_window_mode_y == Enums::PositionMode::MID) { screen_position_y = master_window->offset_y + (master_window->window_size_y - button_size_y) / 2.0f + button_y_offset; }
+		if (position_by_window_mode_y == Enums::PositionMode::UP) { screen_position_y = master_window->offset_y + master_window->window_size_y + button_y_offset - button_size_y; }
 	}
 
 	if ((master_position == Enums::PositionMaster::BUTTON) && (master_button != NULL))
 	{
-		if (position_by_window_mode_x == Enums::PositionMode::SUPER_LEFT) { master_position_x = master_button->master_position_x + button_x_offset - master_button->button_size_x; }
-		if (position_by_window_mode_x == Enums::PositionMode::LEFT) { master_position_x = master_button->master_position_x + button_x_offset; }
-		if (position_by_window_mode_x == Enums::PositionMode::MID) { master_position_x = master_button->master_position_x + (master_button->button_size_x - button_size_x) / 2.0f + button_x_offset; }
-		if (position_by_window_mode_x == Enums::PositionMode::RIGHT) { master_position_x = master_button->master_position_x + master_button->button_size_x + button_x_offset - button_size_x; }
-		if (position_by_window_mode_x == Enums::PositionMode::SUPER_RIGHT) { master_position_x = master_button->master_position_x + master_button->button_size_x + button_x_offset; }
+		if (position_by_window_mode_x == Enums::PositionMode::SUPER_LEFT) { screen_position_x = master_button->screen_position_x + button_x_offset - master_button->button_size_x; }
+		if (position_by_window_mode_x == Enums::PositionMode::LEFT) { screen_position_x = master_button->screen_position_x + button_x_offset; }
+		if (position_by_window_mode_x == Enums::PositionMode::MID) { screen_position_x = master_button->screen_position_x + (master_button->button_size_x - button_size_x) / 2.0f + button_x_offset; }
+		if (position_by_window_mode_x == Enums::PositionMode::RIGHT) { screen_position_x = master_button->screen_position_x + master_button->button_size_x + button_x_offset - button_size_x; }
+		if (position_by_window_mode_x == Enums::PositionMode::SUPER_RIGHT) { screen_position_x = master_button->screen_position_x + master_button->button_size_x + button_x_offset; }
 
-		if (position_by_window_mode_y == Enums::PositionMode::UP) { master_position_y = master_button->master_position_y + button_y_offset + master_button->button_size_y; }
-		if (position_by_window_mode_y == Enums::PositionMode::MID) { master_position_y = master_button->master_position_y + (master_button->button_size_y - button_size_y) / 2.0f + button_y_offset; }
-		if (position_by_window_mode_y == Enums::PositionMode::DOWN) { master_position_y = master_button->master_position_y + button_y_offset - button_size_y; }
+		if (position_by_window_mode_y == Enums::PositionMode::UP) { screen_position_y = master_button->screen_position_y + button_y_offset + master_button->button_size_y; }
+		if (position_by_window_mode_y == Enums::PositionMode::MID) { screen_position_y = master_button->screen_position_y + (master_button->button_size_y - button_size_y) / 2.0f + button_y_offset; }
+		if (position_by_window_mode_y == Enums::PositionMode::DOWN) { screen_position_y = master_button->screen_position_y + button_y_offset - button_size_y; }
 	}
 
 	if (master_position == Enums::PositionMaster::SCREEN)
 	{
-		if (position_by_window_mode_x == Enums::PositionMode::LEFT) { master_position_x = button_x_offset; }
-		if (position_by_window_mode_y == Enums::PositionMode::DOWN) { master_position_y = button_y_offset; }
+		if (position_by_window_mode_x == Enums::PositionMode::LEFT) { screen_position_x = button_x_offset; }
+		if (position_by_window_mode_y == Enums::PositionMode::DOWN) { screen_position_y = button_y_offset; }
 	}
 
 	if (is_input_mode_active)
@@ -617,7 +617,7 @@ void EButton::update(float _d)
 					&
 					(*can_be_selected)
 					&
-					(EWindow::mouse_x < master_position_x + button_size_x / 2.0f)
+					(EWindow::mouse_x < screen_position_x + button_size_x / 2.0f)
 					&
 					(dragged_button != this)
 					&
@@ -670,7 +670,7 @@ void EButton::update(float _d)
 					&&
 					(*can_be_selected)
 					&&
-					(EWindow::mouse_x > master_position_x + button_size_x / 2.0f)
+					(EWindow::mouse_x > screen_position_x + button_size_x / 2.0f)
 					&&
 					(dragged_button != this)
 					&&
@@ -791,7 +791,7 @@ void EButton::update(float _d)
 
 	if ((is_overlap()) & (is_drop_list) & (is_expanded))
 	{
-		selected_element = (int)((master_position_y - EWindow::mouse_y) / 22.0f);
+		selected_element = (int)((screen_position_y - EWindow::mouse_y) / 22.0f);
 
 		if (action_on_drop_list_select_element != NULL)
 		{
@@ -865,6 +865,10 @@ void EButton::update(float _d)
 
 			*click_timer = -1.0f;
 		}
+		
+		
+
+		
 	}
 
 	if (!EWindow::LMB)
@@ -904,7 +908,7 @@ void EButton::update(float _d)
 
 	if (((is_slider) || (*is_radial_button)) && (slider_activate) && (!slider_is_horizontal))
 	{
-		slider_value = 1.0f - (EWindow::mouse_y - master_position_y) / button_size_y;
+		slider_value = 1.0f - (EWindow::mouse_y - screen_position_y) / button_size_y;
 		slider_value = EMath::clamp_value_float(slider_value, 0.0f, *maximum_value);
 
 		slider_drag_event();
@@ -1008,13 +1012,13 @@ void EButton::update(float _d)
 			//left
 			if
 				(
-					(EWindow::mouse_x >= master_position_x + (*gr->position_x + *gr->size_x * 0.0f) * icon_size_multiplier - 5.0f)
+					(EWindow::mouse_x >= screen_position_x + (*gr->position_x + *gr->size_x * 0.0f) * icon_size_multiplier - 5.0f)
 					&
-					(EWindow::mouse_x <= master_position_x + (*gr->position_x + *gr->size_x * 0.0f) * icon_size_multiplier + 0.0f)
+					(EWindow::mouse_x <= screen_position_x + (*gr->position_x + *gr->size_x * 0.0f) * icon_size_multiplier + 0.0f)
 					&
-					(EWindow::mouse_y >= master_position_y + (*gr->position_y + *gr->size_y * 0.0f) * icon_size_multiplier + 0.0f)
+					(EWindow::mouse_y >= screen_position_y + (*gr->position_y + *gr->size_y * 0.0f) * icon_size_multiplier + 0.0f)
 					&
-					(EWindow::mouse_y <= master_position_y + (*gr->position_y + *gr->size_y * 1.0f) * icon_size_multiplier + 0.0f)
+					(EWindow::mouse_y <= screen_position_y + (*gr->position_y + *gr->size_y * 1.0f) * icon_size_multiplier + 0.0f)
 					&
 					(!*gr->locked_left_side)
 					)
@@ -1029,13 +1033,13 @@ void EButton::update(float _d)
 			//right
 			if
 				(
-					(EWindow::mouse_x >= master_position_x + (*gr->position_x + *gr->size_x * 1.0f) * icon_size_multiplier + 0.0f)
+					(EWindow::mouse_x >= screen_position_x + (*gr->position_x + *gr->size_x * 1.0f) * icon_size_multiplier + 0.0f)
 					&
-					(EWindow::mouse_x <= master_position_x + (*gr->position_x + *gr->size_x * 1.0f) * icon_size_multiplier + 5.0f)
+					(EWindow::mouse_x <= screen_position_x + (*gr->position_x + *gr->size_x * 1.0f) * icon_size_multiplier + 5.0f)
 					&
-					(EWindow::mouse_y >= master_position_y + (*gr->position_y + *gr->size_y * 0.0f) * icon_size_multiplier + 0.0f)
+					(EWindow::mouse_y >= screen_position_y + (*gr->position_y + *gr->size_y * 0.0f) * icon_size_multiplier + 0.0f)
 					&
-					(EWindow::mouse_y <= master_position_y + (*gr->position_y + *gr->size_y * 1.0f) * icon_size_multiplier + 0.0f)
+					(EWindow::mouse_y <= screen_position_y + (*gr->position_y + *gr->size_y * 1.0f) * icon_size_multiplier + 0.0f)
 					&
 					(!*gr->locked_right_side)
 					)
@@ -1050,13 +1054,13 @@ void EButton::update(float _d)
 			//up
 			if
 				(
-					(EWindow::mouse_x >= master_position_x + (*gr->position_x + *gr->size_x * 0.0f) * icon_size_multiplier + 0.0f)
+					(EWindow::mouse_x >= screen_position_x + (*gr->position_x + *gr->size_x * 0.0f) * icon_size_multiplier + 0.0f)
 					&
-					(EWindow::mouse_x <= master_position_x + (*gr->position_x + *gr->size_x * 1.0f) * icon_size_multiplier + 0.0f)
+					(EWindow::mouse_x <= screen_position_x + (*gr->position_x + *gr->size_x * 1.0f) * icon_size_multiplier + 0.0f)
 					&
-					(EWindow::mouse_y >= master_position_y + (*gr->position_y + *gr->size_y * 1.0f) * icon_size_multiplier + 0.0f)
+					(EWindow::mouse_y >= screen_position_y + (*gr->position_y + *gr->size_y * 1.0f) * icon_size_multiplier + 0.0f)
 					&
-					(EWindow::mouse_y <= master_position_y + (*gr->position_y + *gr->size_y * 1.0f) * icon_size_multiplier + 5.0f)
+					(EWindow::mouse_y <= screen_position_y + (*gr->position_y + *gr->size_y * 1.0f) * icon_size_multiplier + 5.0f)
 					&
 					(!*gr->locked_up_side)
 					)
@@ -1071,13 +1075,13 @@ void EButton::update(float _d)
 			//down
 			if
 				(
-					(EWindow::mouse_x >= master_position_x + (*gr->position_x + *gr->size_x * 0.0f) * icon_size_multiplier + 0.0f)
+					(EWindow::mouse_x >= screen_position_x + (*gr->position_x + *gr->size_x * 0.0f) * icon_size_multiplier + 0.0f)
 					&
-					(EWindow::mouse_x <= master_position_x + (*gr->position_x + *gr->size_x * 1.0f) * icon_size_multiplier + 0.0f)
+					(EWindow::mouse_x <= screen_position_x + (*gr->position_x + *gr->size_x * 1.0f) * icon_size_multiplier + 0.0f)
 					&
-					(EWindow::mouse_y >= master_position_y + (*gr->position_y + *gr->size_y * 0.0f) * icon_size_multiplier + 0.0f)
+					(EWindow::mouse_y >= screen_position_y + (*gr->position_y + *gr->size_y * 0.0f) * icon_size_multiplier + 0.0f)
 					&
-					(EWindow::mouse_y <= master_position_y + (*gr->position_y + *gr->size_y * 0.0f) * icon_size_multiplier + 5.0f)
+					(EWindow::mouse_y <= screen_position_y + (*gr->position_y + *gr->size_y * 0.0f) * icon_size_multiplier + 5.0f)
 					&
 					(!*gr->locked_down_side)
 					)
@@ -1124,26 +1128,32 @@ void EButton::update(float _d)
 			}
 		}
 
+	
 	if (polygon_massive != NULL)
 	{
 		for (Batcher::EPolygonShape* p_shape : polygon_massive->shape_list)
 		{
+			int vertex_id = 0;
 			for (Batcher::EPolygonVertex* p_vertex : p_shape->vertex_list)
 			{
+				
+
 				if
 					(
-						(EWindow::mouse_x >= master_position_x + button_size_x * *p_vertex->position_x - 5.0f)
+						(EWindow::mouse_x >= screen_position_x + button_size_x * *p_vertex->position_x - 5.0f)
 						&
-						(EWindow::mouse_x <= master_position_x + button_size_x * *p_vertex->position_x + 5.0f)
+						(EWindow::mouse_x <= screen_position_x + button_size_x * *p_vertex->position_x + 5.0f)
 						&
-						(EWindow::mouse_y >= master_position_y + button_size_y * *p_vertex->position_y - 5.0f)
+						(EWindow::mouse_y >= screen_position_y + button_size_y * *p_vertex->position_y - 5.0f)
 						&
-						(EWindow::mouse_y <= master_position_y + button_size_y * *p_vertex->position_y + 5.0f)
-						)
+						(EWindow::mouse_y <= screen_position_y + button_size_y * *p_vertex->position_y + 5.0f)
+					)
 				{
 					if (!EWindow::LMB)
 					{
 						*p_vertex->is_catched = true;
+
+
 
 					}
 					
@@ -1163,12 +1173,115 @@ void EButton::update(float _d)
 					(*p_vertex->is_catched)
 				)
 				{
+					for (Batcher::EPolygonShape* p_shape2 : polygon_massive->shape_list)
+					{
+						p_shape2->selected_vertex = NULL;
+					}
+
+					p_shape->selected_vertex = p_vertex;
+
 					*p_vertex->position_x += EWindow::mouse_speed_x / button_size_x;
 					*p_vertex->position_y += EWindow::mouse_speed_y / button_size_y;
+
+					if
+						(
+							(
+								*p_shape->vertex_list.at(PolygonVertexName::POLYGON_VERTEX_NAME_RIGHT_UP)->position_x - 0.001f
+								<
+								*p_shape->vertex_list.at(PolygonVertexName::POLYGON_VERTEX_NAME_LEFT_UP)->position_x
+							)
+							&
+							(
+								vertex_id == PolygonVertexName::POLYGON_VERTEX_NAME_RIGHT_UP
+							)
+						)
+					{
+						*p_shape->vertex_list.at(PolygonVertexName::POLYGON_VERTEX_NAME_LEFT_UP)->position_x
+						=
+						*p_shape->vertex_list.at(PolygonVertexName::POLYGON_VERTEX_NAME_RIGHT_UP)->position_x - 0.001f;
+					}
+
+					if
+						(
+							(
+								*p_shape->vertex_list.at(PolygonVertexName::POLYGON_VERTEX_NAME_RIGHT_UP)->position_x
+								<
+								*p_shape->vertex_list.at(PolygonVertexName::POLYGON_VERTEX_NAME_LEFT_UP)->position_x + 0.001f
+								)
+							&
+							(
+								vertex_id == PolygonVertexName::POLYGON_VERTEX_NAME_LEFT_UP
+							)
+						)
+					{
+						*p_shape->vertex_list.at(PolygonVertexName::POLYGON_VERTEX_NAME_RIGHT_UP)->position_x
+						=
+						*p_shape->vertex_list.at(PolygonVertexName::POLYGON_VERTEX_NAME_LEFT_UP)->position_x + 0.001f;
+					}
+
+					if
+						(
+							(
+								*p_shape->vertex_list.at(PolygonVertexName::POLYGON_VERTEX_NAME_RIGHT_DOWN)->position_x - 0.001f
+								<
+								*p_shape->vertex_list.at(PolygonVertexName::POLYGON_VERTEX_NAME_LEFT_DOWN)->position_x
+							)
+							&
+							(
+								vertex_id == PolygonVertexName::POLYGON_VERTEX_NAME_RIGHT_DOWN
+							)
+						)
+					{
+						*p_shape->vertex_list.at(PolygonVertexName::POLYGON_VERTEX_NAME_LEFT_DOWN)->position_x
+						=
+						*p_shape->vertex_list.at(PolygonVertexName::POLYGON_VERTEX_NAME_RIGHT_DOWN)->position_x - 0.001f;
+					}
 				}
+
+
+				vertex_id++;
 			}
 
 			
+			
+
+			//*p_shape->vertex_list.at(PolygonVertexName::POLYGON_VERTEX_NAME_LEFT_UP)->position_x = 0.5f;
+
+			
+		}
+	}
+
+	if (two_dimension_gradient != NULL)
+	{
+		*two_dimension_gradient->is_catched
+			=
+			is_catched_by_mouse
+			(
+				*two_dimension_gradient->is_catched,
+				screen_position_x + *two_dimension_gradient->value_x * button_size_x,
+				screen_position_y + *two_dimension_gradient->value_y * button_size_y,
+				0.0f,
+				0.0f,
+				5.0f,
+				CatchMethod::CATCH_METHOD_FREE
+			);
+
+
+		if ((*two_dimension_gradient->is_catched)& (EWindow::LMB))
+		{
+			*two_dimension_gradient->value_x = (EWindow::mouse_x - screen_position_x) / button_size_x;
+			*two_dimension_gradient->value_y = (EWindow::mouse_y - screen_position_y) / button_size_y;
+
+			EMath::clamp_value_float(two_dimension_gradient->value_x, 0.0f, 1.0f);
+			EMath::clamp_value_float(two_dimension_gradient->value_y, 0.0f, 1.0f);
+
+			if (!action_on_td_gradient_drag.empty())
+			{
+				for (BUTTON_ACTION ba : action_on_td_gradient_drag)
+				{
+					ba(this, _d);
+				}
+			}
 		}
 	}
 }
@@ -1200,7 +1313,7 @@ void EButton::default_draw(Batcher* _batch, float _d)
 	if ((have_bg) & (EGraphicCore::gabarite_small_wood_button_bg != NULL))
 	{
 		_batch->setcolor(bg_color);
-		_batch->draw_gabarite(master_position_x, master_position_y, button_size_x, button_size_y, EGraphicCore::gabarite_small_wood_button_bg);
+		_batch->draw_gabarite(screen_position_x, screen_position_y, button_size_x, button_size_y, EGraphicCore::gabarite_small_wood_button_bg);
 	}
 
 	float temp_w = 0;
@@ -1213,12 +1326,12 @@ void EButton::default_draw(Batcher* _batch, float _d)
 			//float mul_y = 1;
 
 			_batch->setcolor(icon_color);
-			_batch->draw_gabarite(master_position_x + round((button_size_x - *gabarite->size_x * icon_size_multiplier) / 2.0f), master_position_y, *gabarite->size_x * icon_size_multiplier, *gabarite->size_y * icon_size_multiplier, gabarite);
+			_batch->draw_gabarite(screen_position_x + round((button_size_x - *gabarite->size_x * icon_size_multiplier) / 2.0f), screen_position_y, *gabarite->size_x * icon_size_multiplier, *gabarite->size_y * icon_size_multiplier, gabarite);
 		}
 		else
 		{
 			_batch->setcolor(icon_color);
-			_batch->draw_gabarite(master_position_x, master_position_y, button_size_x, button_size_y, gabarite);
+			_batch->draw_gabarite(screen_position_x, screen_position_y, button_size_x, button_size_y, gabarite);
 		}
 	}
 
@@ -1236,13 +1349,13 @@ void EButton::default_draw(Batcher* _batch, float _d)
 		if (text != "")
 		{
 			_batch->setcolor(text_color);
-			target_font->draw(_batch, text, master_position_x + 3.0f + added_x, master_position_y + ((button_size_y - 20.0f) / 2.0f + 4.0f));
+			target_font->draw(_batch, text, screen_position_x + 3.0f + added_x, screen_position_y + ((button_size_y - 20.0f) / 2.0f + 4.0f));
 		}
 
 		if ((text == "") && (input_hint != ""))
 		{
 			_batch->setcolor(0.2f, 0.2f, 0.2f, 0.8f);
-			target_font->draw(_batch, input_hint, master_position_x + 3.0f + added_x, master_position_y + ((button_size_y - 20.0f) / 2.0f + 4.0f));
+			target_font->draw(_batch, input_hint, screen_position_x + 3.0f + added_x, screen_position_y + ((button_size_y - 20.0f) / 2.0f + 4.0f));
 		}
 
 		if (is_input_mode_active)
@@ -1250,14 +1363,14 @@ void EButton::default_draw(Batcher* _batch, float _d)
 			if (flash_line_active)
 			{
 				_batch->setcolor(EColor::COLOR_BLACK);
-				_batch->draw_gabarite(master_position_x + 3.0f + EFont::get_width(target_font, text) + added_x, master_position_y + (button_size_y - 20.0f) / 2.0f + 4.0f, 3.0f, 17, EGraphicCore::gabarite_white_pixel);
+				_batch->draw_gabarite(screen_position_x + 3.0f + EFont::get_width(target_font, text) + added_x, screen_position_y + (button_size_y - 20.0f) / 2.0f + 4.0f, 3.0f, 17, EGraphicCore::gabarite_white_pixel);
 			}
 		}
 	}
 
 	if (*side_text != "")
 	{
-		target_font->draw_with_background(*side_text, _batch, master_position_x - 8.0f - EFont::get_width(target_font, *side_text), master_position_y + ((button_size_y - 20.0f) / 2.0f + 0.0f), EColor::COLOR_LIGHT_GRAY, EColor::COLOR_DARK_GRAY);
+		target_font->draw_with_background(*side_text, _batch, screen_position_x - 8.0f - EFont::get_width(target_font, *side_text), screen_position_y + ((button_size_y - 20.0f) / 2.0f + 0.0f), EColor::COLOR_LIGHT_GRAY, EColor::COLOR_DARK_GRAY);
 	}
 
 	if (have_rama)
@@ -1271,7 +1384,7 @@ void EButton::default_draw(Batcher* _batch, float _d)
 			_batch->setcolor(rama_color);
 		}
 
-		_batch->draw_rama(master_position_x, master_position_y, button_size_x, button_size_y, rama_thikness, EGraphicCore::gabarite_small_wood_button_bg);
+		_batch->draw_rama(screen_position_x, screen_position_y, button_size_x, button_size_y, rama_thikness, EGraphicCore::gabarite_small_wood_button_bg);
 	}
 
 	if (is_slider)
@@ -1279,18 +1392,18 @@ void EButton::default_draw(Batcher* _batch, float _d)
 		if (slider_is_horizontal)
 		{
 			_batch->setcolor(EColor::COLOR_WHITE);
-			_batch->draw_gabarite(master_position_x + (button_size_x - 3.0f) * slider_value / *maximum_value - 1, master_position_y - 1, 5, button_size_y + 2, EGraphicCore::gabarite_white_pixel);
+			_batch->draw_gabarite(screen_position_x + (button_size_x - 3.0f) * slider_value / *maximum_value - 1, screen_position_y - 1, 5, button_size_y + 2, EGraphicCore::gabarite_white_pixel);
 
 			_batch->setcolor(EColor::COLOR_BLACK);
-			_batch->draw_gabarite(master_position_x + (button_size_x - 3.0f) * slider_value / *maximum_value, master_position_y, 3, button_size_y, EGraphicCore::gabarite_white_pixel);
+			_batch->draw_gabarite(screen_position_x + (button_size_x - 3.0f) * slider_value / *maximum_value, screen_position_y, 3, button_size_y, EGraphicCore::gabarite_white_pixel);
 		}
 		else
 		{
 			_batch->setcolor(EColor::COLOR_WHITE);
-			_batch->draw_gabarite(master_position_x - 1, master_position_y - 31.0f + button_size_y - (button_size_y - 32.0f) * slider_value / *maximum_value, button_size_x + 2, 32.0f, EGraphicCore::gabarite_white_pixel);
+			_batch->draw_gabarite(screen_position_x - 1, screen_position_y - 31.0f + button_size_y - (button_size_y - 32.0f) * slider_value / *maximum_value, button_size_x + 2, 32.0f, EGraphicCore::gabarite_white_pixel);
 
 			_batch->setcolor(EColor::COLOR_BLACK);
-			_batch->draw_gabarite(master_position_x, master_position_y - 30.0f + button_size_y - (button_size_y - 32.0f) * slider_value / *maximum_value, button_size_x, 32.0f, EGraphicCore::gabarite_white_pixel);
+			_batch->draw_gabarite(screen_position_x, screen_position_y - 30.0f + button_size_y - (button_size_y - 32.0f) * slider_value / *maximum_value, button_size_x, 32.0f, EGraphicCore::gabarite_white_pixel);
 		}
 	}
 
@@ -1299,18 +1412,18 @@ void EButton::default_draw(Batcher* _batch, float _d)
 	if (is_overlap())
 	{
 		_batch->setcolor_alpha(EColor::COLOR_GREEN, 0.25f);
-		_batch->draw_gabarite(master_position_x - 3.0f, master_position_y - 3.0f, button_size_x + 6.0f, button_size_y + 6.0f, EGraphicCore::gabarite_white_pixel);
+		_batch->draw_gabarite(screen_position_x - 3.0f, screen_position_y - 3.0f, button_size_x + 6.0f, button_size_y + 6.0f, EGraphicCore::gabarite_white_pixel);
 
 		_batch->setcolor_alpha(EColor::COLOR_GREEN, 1.0f);
 		if ((dragged_button != NULL) & (flash_line_active))
 		{
-			if (EWindow::mouse_x < master_position_x + button_size_x / 2.0f)
+			if (EWindow::mouse_x < screen_position_x + button_size_x / 2.0f)
 			{
-				_batch->draw_gabarite(master_position_x - 3.0f, master_position_y, 3.0f, button_size_y, EGraphicCore::gabarite_white_pixel);
+				_batch->draw_gabarite(screen_position_x - 3.0f, screen_position_y, 3.0f, button_size_y, EGraphicCore::gabarite_white_pixel);
 			}
 			else
 			{
-				_batch->draw_gabarite(master_position_x + button_size_x, master_position_y, 3.0f, button_size_y, EGraphicCore::gabarite_white_pixel);
+				_batch->draw_gabarite(screen_position_x + button_size_x, screen_position_y, 3.0f, button_size_y, EGraphicCore::gabarite_white_pixel);
 			}
 		}
 	}
@@ -1324,16 +1437,16 @@ void EButton::default_draw(Batcher* _batch, float _d)
 		float tx = (*EGraphicCore::gabarite_radial_button->size_x - tsx) / 2.0f;
 
 		_batch->setcolor(bg_color);
-		_batch->draw_gabarite(master_position_x, master_position_y, EGraphicCore::gabarite_radial_button);
+		_batch->draw_gabarite(screen_position_x, screen_position_y, EGraphicCore::gabarite_radial_button);
 
 		_batch->setcolor_lum(EColor::COLOR_WHITE, 0.12f);
-		_batch->draw_gabarite(master_position_x + tx, master_position_y + tsy, tsx, 20.0f, EGraphicCore::gabarite_white_pixel);
+		_batch->draw_gabarite(screen_position_x + tx, screen_position_y + tsy, tsx, 20.0f, EGraphicCore::gabarite_white_pixel);
 
 		_batch->setcolor(text_color);
-		EFont::font_list.at(EFont::FONT_ENUM::FE_DOT)->draw(_batch, EString::float_to_string(round(slider_value * 100.0f) / 100.0f) + "", master_position_x + tx, master_position_y + tsy);
+		EFont::font_list.at(EFont::FONT_ENUM::FE_DOT)->draw(_batch, EString::float_to_string(round(slider_value * 100.0f) / 100.0f) + "", screen_position_x + tx, screen_position_y + tsy);
 
 		_batch->setcolor(EColor::COLOR_WHITE);
-		_batch->draw_gabarite(master_position_x + cos(3.14f * (1.0f - slider_value / *maximum_value)) * 13.0f + 13.0f, master_position_y + sin(3.14f * (1.0f - slider_value / *maximum_value)) * 13.0f + 13.0f, EGraphicCore::gabarite_radial_button_dot);
+		_batch->draw_gabarite(screen_position_x + cos(3.14f * (1.0f - slider_value / *maximum_value)) * 13.0f + 13.0f, screen_position_y + sin(3.14f * (1.0f - slider_value / *maximum_value)) * 13.0f + 13.0f, EGraphicCore::gabarite_radial_button_dot);
 	}
 
 	if (*is_checkbox)
@@ -1341,10 +1454,10 @@ void EButton::default_draw(Batcher* _batch, float _d)
 		if (*is_checked)
 		{
 			_batch->setcolor(EColor::COLOR_GREEN);
-			_batch->draw_rama(master_position_x + button_size_x + 2.0f - button_size_y, master_position_y + 2.0f, button_size_y - 4.0f, button_size_y - 4.0f, 2.0f, EGraphicCore::gabarite_white_pixel);
+			_batch->draw_rama(screen_position_x + button_size_x + 2.0f - button_size_y, screen_position_y + 2.0f, button_size_y - 4.0f, button_size_y - 4.0f, 2.0f, EGraphicCore::gabarite_white_pixel);
 
 			_batch->setcolor(EColor::COLOR_DARK_GREEN);
-			_batch->draw_gabarite(master_position_x + button_size_x + 4.0f - button_size_y, master_position_y + 4.0f, button_size_y - 8.0f, button_size_y - 8.0f, EGraphicCore::gabarite_white_pixel);
+			_batch->draw_gabarite(screen_position_x + button_size_x + 4.0f - button_size_y, screen_position_y + 4.0f, button_size_y - 8.0f, button_size_y - 8.0f, EGraphicCore::gabarite_white_pixel);
 
 			rama_color->set_color(EColor::COLOR_WHITE);
 			bg_color->set_color(EColor::COLOR_LIME);
@@ -1353,10 +1466,10 @@ void EButton::default_draw(Batcher* _batch, float _d)
 		else
 		{
 			_batch->setcolor(EColor::COLOR_RED);
-			_batch->draw_rama(master_position_x + button_size_x + 2.0f - button_size_y, master_position_y + 2.0f, button_size_y - 4.0f, button_size_y - 4.0f, 2.0f, EGraphicCore::gabarite_white_pixel);
+			_batch->draw_rama(screen_position_x + button_size_x + 2.0f - button_size_y, screen_position_y + 2.0f, button_size_y - 4.0f, button_size_y - 4.0f, 2.0f, EGraphicCore::gabarite_white_pixel);
 
 			_batch->setcolor(EColor::COLOR_BLACK);
-			_batch->draw_gabarite(master_position_x + button_size_x + 4.0f - button_size_y, master_position_y + 4.0f, button_size_y - 8.0f, button_size_y - 8.0f, EGraphicCore::gabarite_white_pixel);
+			_batch->draw_gabarite(screen_position_x + button_size_x + 4.0f - button_size_y, screen_position_y + 4.0f, button_size_y - 8.0f, button_size_y - 8.0f, EGraphicCore::gabarite_white_pixel);
 
 			rama_color->set_color(EColor::COLOR_RED);
 			bg_color->set_color(EColor::COLOR_RED);
@@ -1368,7 +1481,7 @@ void EButton::default_draw(Batcher* _batch, float _d)
 		for (EGridRegion* gr : grid_region_list)
 		{
 			_batch->setcolor_alpha(EColor::COLOR_BLUE, 0.8f);
-			_batch->draw_rama(master_position_x + *gr->position_x * icon_size_multiplier, master_position_y + *gr->position_y * icon_size_multiplier, *gr->size_x * icon_size_multiplier, *gr->size_y * icon_size_multiplier, 1.0f, EGraphicCore::gabarite_white_pixel);
+			_batch->draw_rama(screen_position_x + *gr->position_x * icon_size_multiplier, screen_position_y + *gr->position_y * icon_size_multiplier, *gr->size_x * icon_size_multiplier, *gr->size_y * icon_size_multiplier, 1.0f, EGraphicCore::gabarite_white_pixel);
 
 			_batch->setcolor_alpha(EColor::COLOR_BLUE, 0.5f);
 
@@ -1379,8 +1492,8 @@ void EButton::default_draw(Batcher* _batch, float _d)
 				{
 					_batch->draw_gabarite
 					(
-						master_position_x + (*gr->position_x + subdivided_line_size * i) * icon_size_multiplier,
-						master_position_y + *gr->position_y * icon_size_multiplier,
+						screen_position_x + (*gr->position_x + subdivided_line_size * i) * icon_size_multiplier,
+						screen_position_y + *gr->position_y * icon_size_multiplier,
 						1.0f,
 						*gr->size_y * icon_size_multiplier, EGraphicCore::gabarite_white_pixel
 					);
@@ -1391,8 +1504,8 @@ void EButton::default_draw(Batcher* _batch, float _d)
 				{
 					_batch->draw_gabarite
 					(
-						master_position_x + *gr->position_x * icon_size_multiplier,
-						master_position_y + (*gr->position_y + subdivided_line_size * i) * icon_size_multiplier,
+						screen_position_x + *gr->position_x * icon_size_multiplier,
+						screen_position_y + (*gr->position_y + subdivided_line_size * i) * icon_size_multiplier,
 						*gr->size_x * icon_size_multiplier,
 						1.0f,
 						EGraphicCore::gabarite_white_pixel
@@ -1400,10 +1513,10 @@ void EButton::default_draw(Batcher* _batch, float _d)
 				}
 
 			_batch->setcolor_alpha(EColor::COLOR_PINK, 0.8f);
-			if (*gr->cathed_left_side) { _batch->draw_gabarite(master_position_x + *gr->position_x * icon_size_multiplier - 5.0f, master_position_y + *gr->position_y * icon_size_multiplier, 5.0f, *gr->size_y * icon_size_multiplier, EGraphicCore::gabarite_white_pixel); }
-			if (*gr->cathed_right_side) { _batch->draw_gabarite(master_position_x + (*gr->position_x + *gr->size_x) * icon_size_multiplier, master_position_y + *gr->position_y * icon_size_multiplier, 5.0f, *gr->size_y * icon_size_multiplier, EGraphicCore::gabarite_white_pixel); }
-			if (*gr->cathed_up_side) { _batch->draw_gabarite(master_position_x + *gr->position_x * icon_size_multiplier, master_position_y + (*gr->position_y + *gr->size_y) * icon_size_multiplier, *gr->size_x * icon_size_multiplier, 5.0f, EGraphicCore::gabarite_white_pixel); }
-			if (*gr->cathed_down_side) { _batch->draw_gabarite(master_position_x + *gr->position_x * icon_size_multiplier, master_position_y + *gr->position_y * icon_size_multiplier, *gr->size_x * icon_size_multiplier, 5.0f, EGraphicCore::gabarite_white_pixel); }
+			if (*gr->cathed_left_side) { _batch->draw_gabarite(screen_position_x + *gr->position_x * icon_size_multiplier - 5.0f, screen_position_y + *gr->position_y * icon_size_multiplier, 5.0f, *gr->size_y * icon_size_multiplier, EGraphicCore::gabarite_white_pixel); }
+			if (*gr->cathed_right_side) { _batch->draw_gabarite(screen_position_x + (*gr->position_x + *gr->size_x) * icon_size_multiplier, screen_position_y + *gr->position_y * icon_size_multiplier, 5.0f, *gr->size_y * icon_size_multiplier, EGraphicCore::gabarite_white_pixel); }
+			if (*gr->cathed_up_side) { _batch->draw_gabarite(screen_position_x + *gr->position_x * icon_size_multiplier, screen_position_y + (*gr->position_y + *gr->size_y) * icon_size_multiplier, *gr->size_x * icon_size_multiplier, 5.0f, EGraphicCore::gabarite_white_pixel); }
+			if (*gr->cathed_down_side) { _batch->draw_gabarite(screen_position_x + *gr->position_x * icon_size_multiplier, screen_position_y + *gr->position_y * icon_size_multiplier, *gr->size_x * icon_size_multiplier, 5.0f, EGraphicCore::gabarite_white_pixel); }
 		}
 
 	if
@@ -1419,38 +1532,60 @@ void EButton::default_draw(Batcher* _batch, float _d)
 			_batch->draw_depthmap_polygon
 			(
 				polygon_massive,
-				master_position_x,
-				master_position_y,
+				screen_position_x,
+				screen_position_y,
 				button_size_x,
 				button_size_y,
 				EGraphicCore::gabarite_white_pixel
 			);
-
-			
-
-			/*_batch->draw_gabarite
-			(
-				0.0f,
-				0.0f,
-				100.0f,
-				100.0f,
-				EGraphicCore::gabarite_white_pixel
-			);*/
 		}
 
-		_batch->setcolor(EColor::COLOR_GREEN);
+		if (*mode_list.at(0) == PolygonDrawMode::POLYGON_DRAW_MODE_NORMAL_MAP)
+		{
+			_batch->draw_normalmap_polygon
+			(
+				polygon_massive,
+				screen_position_x,
+				screen_position_y,
+				button_size_x,
+				button_size_y,
+				EGraphicCore::gabarite_white_pixel
+			);
+		}
+
+		
 		for (Batcher::EPolygonShape* p_shape : polygon_massive->shape_list)
 		{
 			for (Batcher::EPolygonVertex* p_vertex : p_shape->vertex_list)
 			{
 				if (*p_vertex->is_catched)
 				{
+					_batch->setcolor(EColor::COLOR_GREEN);
 					_batch->draw_gabarite
 					(
-						master_position_x + *p_vertex->position_x * button_size_x - 2.0f,
-						master_position_y + *p_vertex->position_y * button_size_y - 2.0f,
+						screen_position_x + *p_vertex->position_x * button_size_x - 2.0f,
+						screen_position_y + *p_vertex->position_y * button_size_y - 2.0f,
 						5.0f,
 						5.0f,
+						EGraphicCore::gabarite_white_pixel
+					);
+				}
+
+				if
+					(
+						(p_shape->selected_vertex != NULL)
+						&&
+						(p_shape->selected_vertex == p_vertex)
+						)
+				{
+					_batch->setcolor(EColor::COLOR_YELLOW);
+
+					_batch->draw_gabarite
+					(
+						screen_position_x + *p_vertex->position_x * button_size_x - 1.0f,
+						screen_position_y + *p_vertex->position_y * button_size_y - 1.0f,
+						3.0f,
+						3.0f,
 						EGraphicCore::gabarite_white_pixel
 					);
 				}
@@ -1467,6 +1602,57 @@ void EButton::default_draw(Batcher* _batch, float _d)
 			}
 		}*/
 	}
+
+	if (two_dimension_gradient != NULL)
+	{
+
+		_batch->draw_two_dimension_gradient
+		(
+			screen_position_x,
+			screen_position_y,
+			button_size_x,
+			button_size_y,
+			EGraphicCore::gabarite_white_pixel,
+			two_dimension_gradient->color_x,
+			two_dimension_gradient->color_y
+		);
+
+		if (*two_dimension_gradient->is_catched)
+		{
+			_batch->setcolor(EColor::COLOR_GREEN);
+		}
+		else
+		{
+			_batch->setcolor(EColor::COLOR_WHITE);
+		}
+
+		//
+		//------
+		//
+		_batch->draw_gabarite
+		(
+			screen_position_x,
+			screen_position_y + *two_dimension_gradient->value_y * button_size_y,
+			button_size_x,
+			1.0f,
+			EGraphicCore::gabarite_white_pixel
+		);
+
+		//	|
+		//	|
+		//	|
+		_batch->draw_gabarite
+		(
+			screen_position_x + *two_dimension_gradient->value_x * button_size_x,
+			screen_position_y,
+			1.0f,
+			button_size_y,
+			EGraphicCore::gabarite_white_pixel
+		);
+
+
+
+	}
 }
 
 void EButton::additional_draw(Batcher* _batch, float _d)
@@ -1476,7 +1662,7 @@ void EButton::additional_draw(Batcher* _batch, float _d)
 
 void EButton::text_pass(Batcher* _batch)
 {
-	catched_element = (int)((master_position_y - EWindow::mouse_y) / 22.0f);
+	catched_element = (int)((screen_position_y - EWindow::mouse_y) / 22.0f);
 	if (is_expanded)
 	{
 		bound_size_down = drop_elements * 22;
@@ -1499,10 +1685,10 @@ void EButton::text_pass(Batcher* _batch)
 				}
 			}
 
-			_batch->draw_gabarite(master_position_x, master_position_y - i * 22 - 20, button_size_x, 20, EGraphicCore::gabarite_white_pixel);
+			_batch->draw_gabarite(screen_position_x, screen_position_y - i * 22 - 20, button_size_x, 20, EGraphicCore::gabarite_white_pixel);
 
 			_batch->setcolor(0.0f, 0.1f, 0.2f, 0.9f);
-			_batch->draw_rama(master_position_x, master_position_y - i * 22 - 20, button_size_x, 20, rama_thikness, EGraphicCore::gabarite_white_pixel);
+			_batch->draw_rama(screen_position_x, screen_position_y - i * 22 - 20, button_size_x, 20, rama_thikness, EGraphicCore::gabarite_white_pixel);
 
 			if (catched_element == i)
 			{
@@ -1513,7 +1699,7 @@ void EButton::text_pass(Batcher* _batch)
 				_batch->setcolor(EColor::COLOR_BLACK);
 			}
 			EFont::active_font->set_align_once(Enums::PositionMode::MID);
-			EFont::active_font->draw(_batch, drop_text.at(i), master_position_x + button_size_x / 2.0f, master_position_y - i * 22 - 20 + 3);
+			EFont::active_font->draw(_batch, drop_text.at(i), screen_position_x + button_size_x / 2.0f, screen_position_y - i * 22 - 20 + 3);
 		}
 	}
 	else
@@ -2613,4 +2799,110 @@ EWindow::button_array_collection_massive::button_array_collection_massive(EWindo
 	*button_close->target_value_for_bool = false;
 
 	service_button.push_back(button_close);
+}
+
+EButton::ETwoDimensionGradient::ETwoDimensionGradient()
+{
+}
+
+EButton::ETwoDimensionGradient::~ETwoDimensionGradient()
+{
+}
+
+bool is_catched_by_mouse(bool _is_catched, float _x, float _y, float _size_x, float _size_y, float _catch_size, int _mode)
+{
+	float border_right	= _x + _size_x + _catch_size;
+	float border_left	= _x - _catch_size;
+	float border_up		= _y + _size_y + _catch_size;
+	float border_down	= _y - _catch_size;
+
+	switch (_mode)
+	{
+		case	CatchMethod::CATCH_METHOD_BORDER_DOWN:
+				border_up		= _y + _catch_size;
+				break;
+		
+		case	CatchMethod::CATCH_METHOD_BORDER_LEFT:
+				border_right	= _x + _catch_size;
+				break;
+		
+		case	CatchMethod::CATCH_METHOD_BORDER_RIGHT:
+				border_left		= _x + _size_x - _catch_size;
+				break;
+		
+		case	CatchMethod::CATCH_METHOD_BORDER_UP:
+				border_down		= _y + _size_y - _catch_size;
+				break;
+		
+		case	CatchMethod::CATCH_METHOD_BOTTOM:
+				border_down		= _y  - _catch_size * 2.0f;
+				border_up		= _y  - _catch_size;
+				break;
+		
+		case	CatchMethod::CATCH_METHOD_CORNER_LEFT_DOWN:
+				border_right	= _x + _catch_size;
+				border_up		= _y + _catch_size;
+				break;
+				break;
+		
+		case	CatchMethod::CATCH_METHOD_CORNER_LEFT_UP:
+				border_right	= _x + _catch_size;
+				border_down		= _y + _size_y - _catch_size;
+				break;
+		
+		case	CatchMethod::CATCH_METHOD_CORNER_RIGHT_DOWN:
+				border_left		= _x +	_size_x - _catch_size;
+				border_up		= _y +	_catch_size;
+				break;
+
+		case	CatchMethod::CATCH_METHOD_CORNER_RIGHT_UP:
+				border_left		= _x + _size_x - _catch_size;
+				border_down		= _y + _size_y - _catch_size;
+				break;
+
+		case	CatchMethod::CATCH_METHOD_MID:
+				border_left		= _x + _size_x / 2.0f - _catch_size;
+				border_down		= _y + _size_y / 2.0f - _catch_size;
+				border_up		= _y + _size_y / 2.0f + _catch_size;
+				border_right	= _x + _size_x / 2.0f + _catch_size;
+				break;
+
+		case	CatchMethod::CATCH_METHOD_MID_UP:
+				border_left		= _x + _size_x / 2.0f - _catch_size / 2.0f;
+				border_down		= _y + _size_y / 2.0f + _catch_size;
+				border_up		= _y + _size_y / 2.0f + _catch_size * 2.0f;
+				border_right	= _x + _size_x / 2.0f + _catch_size / 2.0f;
+				break;
+
+		default:break;
+	}
+
+
+	if
+	(
+		(EWindow::mouse_x >= border_left)
+		&
+		(EWindow::mouse_x <= border_right)
+		&
+		(EWindow::mouse_y >= border_down)
+		&
+		(EWindow::mouse_y <= border_up)
+	)
+	{
+		//std::cout << "inside!" << std::endl;
+		if (!EWindow::LMB)
+		{
+			return true;
+		}
+	}
+	else
+	{
+		//std::cout << "outside!" << std::endl;
+		if (!EWindow::LMB)
+		{
+			return false;
+		}
+	}
+
+	return _is_catched;
 }

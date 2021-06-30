@@ -47,6 +47,8 @@ public:
 	static void external_button_action_save_map(EButton* _b, float _f);
 	static void external_button_action_load_map(EButton* _b, float _f);
 
+	static void external_button_action_change_normal_color_for_vertex(EButton* _b, float _f);
+
 	static Entity* get_entity();
 	static bool valid_entity_select();
 	static int get_autobuilding_base_id();

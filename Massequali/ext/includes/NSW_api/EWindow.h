@@ -28,7 +28,7 @@ class EWindowMain;
 class EWindow;
 
 
-
+static bool is_catched_by_mouse(bool _is_catched, float _x, float _y, float _size_x, float _size_y, float _catch_size, int _mode);
 
 class EButton
 {
@@ -37,6 +37,7 @@ public:
 
 	std::vector<BUTTON_ACTION> action_on_left_click;
 	std::vector<BUTTON_ACTION> action_on_drag;
+	std::vector<BUTTON_ACTION> action_on_td_gradient_drag;
 
 	bool* drag_is_positive = new bool(false);
 
@@ -205,8 +206,8 @@ public:
 	EWindow* master_window;
 	EButton* master_button;
 
-	float master_position_x = 0;
-	float master_position_y = 0;
+	float screen_position_x = 0;
+	float screen_position_y = 0;
 
 	EButton();
 	EButton(float _x, float _y, float _sx, float _sy);
@@ -459,6 +460,25 @@ public:
 
 	bool* start_drag = new bool(false);
 	static EButton* dragged_button;
+
+	struct ETwoDimensionGradient
+	{
+		float* value_x = new float(0.0f);
+		float* value_y = new float(0.0f);
+
+		EColor* color_x = new EColor(1.0f, 0.0f, 0.0f, 1.0f);
+		EColor* color_y = new EColor(0.0f, 0.0f, 1.0f, 1.0f);
+
+		EColor* lines_color = new EColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+		ETwoDimensionGradient();
+		~ETwoDimensionGradient();
+
+		bool* is_catched = new bool(false);
+
+	};
+
+	ETwoDimensionGradient* two_dimension_gradient;
 };
 
 class EWindow

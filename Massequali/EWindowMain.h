@@ -29,7 +29,9 @@ public:
 
 	static EButton::button_super_group*		super_group_vertex_editor;
 	static EButton::button_group*			group_vertex_editor;
+	static EButton::button_group*			group_vertex_normal_color_editor;
 	static EButton*							link_to_button_vertex_editor;
+	static EButton*							link_to_button_two_dimension_gradient;
 
 	static EButton*							grid_region_edit_button_link;
 

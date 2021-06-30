@@ -8,6 +8,12 @@ float EMath::clamp_value_float(float _v, float _min, float _max)
 	return _v;
 }
 
+void EMath::clamp_value_float(float* _v, float _min, float _max)
+{
+	if (*_v < _min) { *_v = _min; }
+	if (*_v > _max) { *_v = _max; }
+}
+
 int EMath::clamp_value_int(int _v, int _min, int _max)
 {
 	if (_v < _min) { return _min; }

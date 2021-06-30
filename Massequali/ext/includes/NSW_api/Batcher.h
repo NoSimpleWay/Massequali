@@ -26,6 +26,9 @@ public:
 	{
 		std::vector<EPolygonVertex*> vertex_list;
 
+		EPolygonVertex* selected_vertex = NULL;
+
+
 		EPolygonShape();
 		~EPolygonShape();
 	};
@@ -55,7 +58,12 @@ public:
 
 	void draw_sprite(float _x, float _y, float _w, float _h, float _left, float _right, float _down, float _up, EGabarite* _g);
 
-	void draw_depthmap_polygon(EPolygonMassive* _p_massive, float _start_x, float _start_y, float _size_x, float _size_y, EGabarite* _g);
+	void draw_depthmap_polygon	(EPolygonMassive* _p_massive, float _start_x, float _start_y, float _size_x, float _size_y, EGabarite* _g);
+	void draw_normalmap_polygon	(EPolygonMassive* _p_massive, float _start_x, float _start_y, float _size_x, float _size_y, EGabarite* _g);
+
+	void draw_two_dimension_gradient	(float _start_x, float _start_y, float _size_x, float _size_y, EGabarite* _g, EColor* _color_x, EColor* _color_y);
+
+
 
 	void draw_gabarite(float _x, float _y, EGabarite* _g);
 

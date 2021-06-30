@@ -785,6 +785,27 @@ void ExternalButtonAction::external_button_action_load_map(EButton* _b, float _f
 	EWindowMain::load_map("test");
 }
 
+void ExternalButtonAction::external_button_action_change_normal_color_for_vertex(EButton* _b, float _f)
+{
+	if
+	(
+			(EWindowMain::link_to_button_vertex_editor->polygon_massive != NULL)
+			&&
+			(EWindowMain::link_to_button_vertex_editor->polygon_massive->shape_list.at(0) != NULL)
+			&&
+			(EWindowMain::link_to_button_vertex_editor->polygon_massive->shape_list.at(0)->selected_vertex != NULL)
+	)
+	{
+		*EWindowMain::link_to_button_vertex_editor->polygon_massive->shape_list.at(0)->selected_vertex->float_vector.at(0)
+		=
+		*_b->two_dimension_gradient->value_x;
+
+		*EWindowMain::link_to_button_vertex_editor->polygon_massive->shape_list.at(0)->selected_vertex->float_vector.at(1)
+		=
+		*_b->two_dimension_gradient->value_y;
+	}
+}
+
 Entity* ExternalButtonAction::get_entity()
 {
 	if

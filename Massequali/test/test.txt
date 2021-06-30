@@ -305,7 +305,7 @@ autobuilding_group_offset_and_size	0	0	0	0	0
 direction_of_sprite_push	1
 autobuilding_group_name	garage_wall
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	-95	-12	0	196	85
+autobuilding_group_element_offset_and_size	-95	-12	0	196	83
 autobuilding_group_element_base_id	0
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
 autobuilding_group_element_offset_and_size	-5	3	0	82	66
@@ -317,11 +317,11 @@ CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
 autobuilding_group_element_offset_and_size	44.5	-6	0	15.25	45.5
 autobuilding_group_element_base_id	2
 CREATE_NEW_AUTOBUILDING_GROUP
-autobuilding_group_offset_and_size	0	0	90	0	0
+autobuilding_group_offset_and_size	6	-4	84	0	0
 direction_of_sprite_push	0
 autobuilding_group_name	garage_roof
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	-97	-11	0	201	321
+autobuilding_group_element_offset_and_size	-100	-8	0	201	321
 autobuilding_group_element_base_id	1
 PUT_ENTITY_TO_MAP
 CREATE_NEW_ENTITY
