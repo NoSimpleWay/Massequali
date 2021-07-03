@@ -15,6 +15,9 @@ ETextureAtlas* EWindow::lightmap_FBO2;
 ETextureAtlas* EWindow::base_lightmap;
 ETextureAtlas* EWindow::base_blockmap;
 
+ETextureAtlas* EWindow::supermap_FBO;
+ETextureAtlas* EWindow::AO_shadow_FBO;
+
 ETextureAtlas* EWindow::screen_FBO;
 
 EButton* EButton::dragged_button;
@@ -71,7 +74,8 @@ int EButton::top_window_id = -1;
 bool EButton::any_input = false;
 bool EButton::any_overlap = false;
 
-std::vector <EWindow::massive_style*> EWindow::list_of_massive_style;
+std::vector <EWindow::massive_style*>	EWindow::list_of_massive_style;
+EButton::button_super_group*			EWindow::top_overlaped_group;
 
 EButton::EButton()
 {
@@ -163,21 +167,23 @@ bool EButton::is_overlap()
 	float total_x = 0.0f;
 	float total_y = 0.0f;
 	if
+	(
+		(master_group != NULL)
+		&&
+		(master_super_group != NULL)
+		&&
 		(
-			(master_group != NULL)
-			&&
-			(master_super_group != NULL)
-			&&
-			(
-				(EWindow::mouse_x < *master_super_group->position_x + *master_group->position_x)
-				||
-				(EWindow::mouse_x > * master_super_group->position_x + *master_group->position_x + *master_group->size_x)
-				||
-				(EWindow::mouse_y < *master_super_group->position_y + *master_group->position_y)
-				||
-				(EWindow::mouse_y > * master_super_group->position_y + *master_group->position_y + *master_group->size_y)
-				)
-			)
+			(EWindow::mouse_x < *master_super_group->position_x + *master_group->position_x)
+			||
+			(EWindow::mouse_x > * master_super_group->position_x + *master_group->position_x + *master_group->size_x)
+			||
+			(EWindow::mouse_y < *master_super_group->position_y + *master_group->position_y)
+			||
+			(EWindow::mouse_y > * master_super_group->position_y + *master_group->position_y + *master_group->size_y)
+			||
+			(EWindow::top_overlaped_group != master_super_group)
+		)
+	)
 	{
 		return false;
 	}
@@ -1134,9 +1140,13 @@ void EButton::update(float _d)
 		for (Batcher::EPolygonShape* p_shape : polygon_massive->shape_list)
 		{
 			int vertex_id = 0;
+
+			
+
+			//catch vertex
 			for (Batcher::EPolygonVertex* p_vertex : p_shape->vertex_list)
 			{
-				
+
 
 				if
 					(
@@ -1147,16 +1157,13 @@ void EButton::update(float _d)
 						(EWindow::mouse_y >= screen_position_y + button_size_y * *p_vertex->position_y - 5.0f)
 						&
 						(EWindow::mouse_y <= screen_position_y + button_size_y * *p_vertex->position_y + 5.0f)
-					)
+						)
 				{
 					if (!EWindow::LMB)
 					{
 						*p_vertex->is_catched = true;
-
-
-
 					}
-					
+
 				}
 				else
 				{
@@ -1165,7 +1172,105 @@ void EButton::update(float _d)
 						*p_vertex->is_catched = false;
 					}
 				}
+			}
 
+			//catch borders
+			if (glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_CONTROL) != GLFW_PRESS)
+			{
+				*p_shape->catched_left_side
+					=
+					is_catched_by_mouse
+					(
+						*p_shape->catched_left_side,
+						screen_position_x + *p_shape->pos_x * button_size_x - 3.0f,
+						screen_position_y + *p_shape->pos_y * button_size_y,
+						(*p_shape->size_x - *p_shape->pos_x) * button_size_x,
+						(*p_shape->size_y - *p_shape->pos_y) * button_size_y,
+						2.0f,
+						CatchMethod::CATCH_METHOD_BORDER_LEFT
+					);
+
+				*p_shape->vertex_list.at(2)->is_catched |= *p_shape->catched_left_side;
+				*p_shape->vertex_list.at(3)->is_catched |= *p_shape->catched_left_side;
+				//*//*//*//*//*//*//*//*//*//*//*//*//*//*//*//*//*//*//*//*
+				*p_shape->catched_right_side
+					=
+					is_catched_by_mouse
+					(
+						*p_shape->catched_right_side,
+						screen_position_x + *p_shape->pos_x * button_size_x,
+						screen_position_y + *p_shape->pos_y * button_size_y,
+						(*p_shape->size_x - *p_shape->pos_x) * button_size_x,
+						(*p_shape->size_y - *p_shape->pos_y) * button_size_y,
+						2.0f,
+						CatchMethod::CATCH_METHOD_BORDER_RIGHT
+					);
+
+				*p_shape->vertex_list.at(1)->is_catched |= *p_shape->catched_right_side;
+				*p_shape->vertex_list.at(0)->is_catched |= *p_shape->catched_right_side;
+
+				//*//*//*//*//*//*//*//*//*//*//*//*//*//*//*//*//*//*//*//*
+				*p_shape->catched_down_side
+					=
+					is_catched_by_mouse
+					(
+						*p_shape->catched_down_side,
+						screen_position_x + *p_shape->pos_x * button_size_x,
+						screen_position_y + *p_shape->pos_y * button_size_y,
+						(*p_shape->size_x - *p_shape->pos_x) * button_size_x,
+						(*p_shape->size_y - *p_shape->pos_y) * button_size_y,
+						2.0f,
+						CatchMethod::CATCH_METHOD_BORDER_DOWN
+					);
+
+				*p_shape->vertex_list.at(1)->is_catched |= *p_shape->catched_down_side;
+				*p_shape->vertex_list.at(2)->is_catched |= *p_shape->catched_down_side;
+				//*//*//*//*//*//*//*//*//*//*//*//*//*//*//*//*//*//*//*//*
+				*p_shape->catched_up_side
+					=
+					is_catched_by_mouse
+					(
+						*p_shape->catched_up_side,
+						screen_position_x + *p_shape->pos_x * button_size_x,
+						screen_position_y + *p_shape->pos_y * button_size_y,
+						(*p_shape->size_x - *p_shape->pos_x) * button_size_x,
+						(*p_shape->size_y - *p_shape->pos_y) * button_size_y,
+						2.0f,
+						CatchMethod::CATCH_METHOD_BORDER_UP
+					);
+
+				*p_shape->vertex_list.at(0)->is_catched |= *p_shape->catched_up_side;
+				*p_shape->vertex_list.at(3)->is_catched |= *p_shape->catched_up_side;
+				//*//*//*//*//*//*//*//*//*//*//*//*//*//*//*//*//*//*//*//*
+				*p_shape->catched_mid_side
+					=
+					is_catched_by_mouse
+					(
+						*p_shape->catched_mid_side,
+						screen_position_x + *p_shape->pos_x * button_size_x,
+						screen_position_y + *p_shape->pos_y * button_size_y,
+						(*p_shape->size_x - *p_shape->pos_x) * button_size_x,
+						(*p_shape->size_y - *p_shape->pos_y) * button_size_y,
+						2.0f,
+						CatchMethod::CATCH_METHOD_MID
+					);
+
+				*p_shape->vertex_list.at(0)->is_catched |= *p_shape->catched_mid_side;
+				*p_shape->vertex_list.at(1)->is_catched |= *p_shape->catched_mid_side;
+				*p_shape->vertex_list.at(2)->is_catched |= *p_shape->catched_mid_side;
+				*p_shape->vertex_list.at(3)->is_catched |= *p_shape->catched_mid_side;
+			}
+			if (glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_CONTROL) != GLFW_PRESS)
+			{
+				*p_shape->pos_x = 1.0f;
+				*p_shape->pos_y = 1.0f;
+				*p_shape->size_x = 0.0f;
+				*p_shape->size_y = 0.0f;
+			}
+
+			//move vertex
+			for (Batcher::EPolygonVertex* p_vertex : p_shape->vertex_list)
+			{
 				if
 				(
 					(EWindow::LMB)
@@ -1180,8 +1285,34 @@ void EButton::update(float _d)
 
 					p_shape->selected_vertex = p_vertex;
 
-					*p_vertex->position_x += EWindow::mouse_speed_x / button_size_x;
-					*p_vertex->position_y += EWindow::mouse_speed_y / button_size_y;
+					if
+						(
+							(!*p_shape->catched_up_side)
+							&
+							(!*p_shape->catched_down_side)
+						)
+					{
+						*p_vertex->position_x += EWindow::mouse_speed_x / button_size_x;
+					}
+
+					if
+						(
+							(!*p_shape->catched_left_side)
+							&
+							(!*p_shape->catched_right_side)
+						)
+					{
+						*p_vertex->position_y += EWindow::mouse_speed_y / button_size_y;
+					}
+
+					EMath::clamp_value_float(p_vertex->position_x, 0.0f, 1.0f);
+					EMath::clamp_value_float(p_vertex->position_y, 0.0f, 1.0f);
+
+					if (glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+					{
+						EMath::clamp_value_float(p_vertex->position_x, *p_shape->pos_x, *p_shape->size_x);
+						EMath::clamp_value_float(p_vertex->position_y, *p_shape->pos_y, *p_shape->size_y);
+					}
 
 					if
 						(
@@ -1236,6 +1367,27 @@ void EButton::update(float _d)
 						=
 						*p_shape->vertex_list.at(PolygonVertexName::POLYGON_VERTEX_NAME_RIGHT_DOWN)->position_x - 0.001f;
 					}
+				}
+
+				
+				if (*p_vertex->position_x < *p_shape->pos_x)
+				{
+					*p_shape->pos_x = *p_vertex->position_x;
+				}
+
+				if (*p_vertex->position_y < *p_shape->pos_y)
+				{
+					*p_shape->pos_y = *p_vertex->position_y;
+				}
+
+				if (*p_vertex->position_x > *p_shape->size_x)
+				{
+					*p_shape->size_x = *p_vertex->position_x;
+				}
+
+				if (*p_vertex->position_y > *p_shape->size_y)
+				{
+					*p_shape->size_y = *p_vertex->position_y;
 				}
 
 
@@ -1589,6 +1741,89 @@ void EButton::default_draw(Batcher* _batch, float _d)
 						EGraphicCore::gabarite_white_pixel
 					);
 				}
+
+				
+			}
+
+			if (glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+			{
+				_batch->setcolor_alpha(EColor::COLOR_RED, 0.75f);
+				
+			}
+			else
+			{
+				_batch->setcolor_alpha(EColor::COLOR_WHITE, 0.5f);
+			}
+			
+			_batch->draw_rama
+			(
+				screen_position_x + *p_shape->pos_x * button_size_x,
+				screen_position_y + *p_shape->pos_y * button_size_y,
+				(*p_shape->size_x - *p_shape->pos_x) * button_size_x,
+				(*p_shape->size_y - *p_shape->pos_y) * button_size_y,
+				1.0f,
+				EGraphicCore::gabarite_white_pixel
+			);
+
+			_batch->setcolor_alpha(EColor::COLOR_WHITE, 1.0f);
+			if (*p_shape->catched_left_side)
+			{
+				_batch->draw_gabarite
+				(
+					screen_position_x + *p_shape->pos_x * button_size_x,
+					screen_position_y + *p_shape->pos_y * button_size_y,
+					3.0f,
+					(*p_shape->size_y - *p_shape->pos_y)* button_size_y,
+					EGraphicCore::gabarite_white_pixel
+				);
+			}
+
+			if (*p_shape->catched_right_side)
+			{
+				_batch->draw_gabarite
+				(
+					screen_position_x + *p_shape->size_x * button_size_x,
+					screen_position_y + *p_shape->pos_y * button_size_x,
+					3.0f,
+					(*p_shape->size_y - *p_shape->pos_y) * button_size_y,
+					EGraphicCore::gabarite_white_pixel
+				);
+			}
+
+			if (*p_shape->catched_down_side)
+			{
+				_batch->draw_gabarite
+				(
+					screen_position_x + *p_shape->pos_x * button_size_x,
+					screen_position_y + *p_shape->pos_y * button_size_y,
+					(*p_shape->size_x - *p_shape->pos_x)* button_size_x,
+					3.0f,
+					EGraphicCore::gabarite_white_pixel
+				);
+			}
+
+			if (*p_shape->catched_up_side)
+			{
+				_batch->draw_gabarite
+				(
+					screen_position_x + *p_shape->pos_x * button_size_x,
+					screen_position_y + *p_shape->size_y * button_size_y,
+					(*p_shape->size_x - *p_shape->pos_x)* button_size_x,
+					3.0f,
+					EGraphicCore::gabarite_white_pixel
+				);
+			}
+
+			if (*p_shape->catched_mid_side)
+			{
+				_batch->draw_gabarite
+				(
+					screen_position_x + (*p_shape->pos_x + *p_shape->size_x) / 2.0f * button_size_x - 3.0f,
+					screen_position_y + (*p_shape->pos_y + *p_shape->size_y) / 2.0f * button_size_y - 3.0f,
+					7.0f,
+					7.0f,
+					EGraphicCore::gabarite_white_pixel
+				);
 			}
 		}
 		/*for (Batcher::EPolygonShape* p_massive : polygon_massive->shape_list)
@@ -2457,7 +2692,7 @@ void EWindow::default_draw_interface(float _d)
 
 	//if ((glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) != GLFW_PRESS))
 	//if ((glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) != GLFW_PRESS))
-	{EGraphicCore::matrix_transform = glm::translate(EGraphicCore::matrix_transform, glm::vec3(-1.0f - EGraphicCore::correction_x / 2.0f * 0.0f, -1.0f - EGraphicCore::correction_y / 2.0f * 0.0f, 0.0f)); }
+	{EGraphicCore::matrix_transform = glm::translate(EGraphicCore::matrix_transform, glm::vec3(-1.0f, -1.0f, 0.0f)); }
 	//else
 	//{EGraphicCore::matrix_transform = glm::translate(EGraphicCore::matrix_transform, glm::vec3(-1.0f, -1.0f, -1.0f));}
 
@@ -2533,6 +2768,12 @@ void EWindow::default_draw_interface(float _d)
 			{
 				EGraphicCore::batch->setcolor_alpha(EColor::COLOR_BLUE, 0.9f);
 				EGraphicCore::batch->draw_rama(*bsg->position_x, *bsg->position_y, *bsg->size_x, *bsg->size_y, 2.0f, EGraphicCore::gabarite_white_pixel);
+			}
+
+			if (EWindow::top_overlaped_group == bsg)
+			{
+				EGraphicCore::batch->setcolor(EColor::COLOR_DARK_GREEN);
+				EGraphicCore::batch->draw_rama(*bsg->position_x, *bsg->position_y, *bsg->size_x, *bsg->size_y, 1.0f, EGraphicCore::gabarite_white_pixel);;
 			}
 
 			EGraphicCore::batch->reinit();
@@ -2619,6 +2860,8 @@ void EWindow::default_draw_interface(float _d)
 			EGraphicCore::batch->reinit();
 			EGraphicCore::batch->draw_call();
 			EGraphicCore::batch->reset();
+
+
 		}
 
 	//draw graphic for button group
@@ -2775,6 +3018,24 @@ bool EWindow::is_overlap(EWindow* _w)
 		return true;
 	}
 
+	return false;
+}
+
+bool EWindow::is_group_overlapped_by_mouse(EButton::button_super_group* _group)
+{
+	if
+		(
+			(EWindow::mouse_x >= *_group->position_x)
+			&
+			(EWindow::mouse_x <= *_group->position_x + *_group->size_x)
+			&
+			(EWindow::mouse_y >= *_group->position_y)
+			&
+			(EWindow::mouse_y <= *_group->position_y + *_group->size_y + 10.0f)
+		)
+	{
+		return true;
+	}
 	return false;
 }
 

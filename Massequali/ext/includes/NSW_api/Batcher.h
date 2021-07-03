@@ -28,6 +28,19 @@ public:
 
 		EPolygonVertex* selected_vertex = NULL;
 
+		bool* catched_up_side =		new bool(false);
+		bool* catched_down_side =	new bool(false);
+		bool* catched_left_side =	new bool(false);
+		bool* catched_right_side =	new bool(false);
+
+		bool* catched_mid_side =	new bool(false);
+
+		float* pos_x = new float(0.0f);
+		float* pos_y = new float(0.0f);
+
+		float* size_x = new float(0.0f);
+		float* size_y = new float(0.0f);
+
 
 		EPolygonShape();
 		~EPolygonShape();
@@ -46,6 +59,7 @@ public:
 	void init();
 	void init_shadowmap();
 	void init_terrain();
+	void init_PBR();
 
 	void draw_rect(float _x, float _y, float _w, float _h);
 	void draw_rect_position(float _x, float _y, float _x2, float _y2);
@@ -57,6 +71,9 @@ public:
 	void draw_gabarite(float _x, float _y, float _w, float _h, EGabarite* _g);
 
 	void draw_sprite(float _x, float _y, float _w, float _h, float _left, float _right, float _down, float _up, EGabarite* _g);
+	void draw_sprite_PBR(float _x, float _y, float _w, float _h, float _left, float _right, float _down, float _up, EGabarite* _g, float _z);
+
+	void draw_AO_shadow(float _x, float _y, float _size_x, float _size_y, float _size, EGabarite* _g);
 
 	void draw_depthmap_polygon	(EPolygonMassive* _p_massive, float _start_x, float _start_y, float _size_x, float _size_y, EGabarite* _g);
 	void draw_normalmap_polygon	(EPolygonMassive* _p_massive, float _start_x, float _start_y, float _size_x, float _size_y, EGabarite* _g);

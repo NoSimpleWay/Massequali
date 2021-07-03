@@ -41,7 +41,7 @@ void Entity::draw_catched_element(Entity::AutobuildingGroupElement* _element, En
 		EGraphicCore::batch->draw_gabarite
 		(
 			*_e->position_x + *_group->offset_x + *_element->offset_x + 1.0f + *_element->size_x,
-			*_e->position_y + *_group->offset_y + *_element->offset_y + *_element->offset_z
+			*_e->position_y + *_group->offset_y + *_element->offset_y
 			+
 			*_e->position_z + *_group->offset_z + *_element->offset_z,
 			2.0f,
@@ -55,7 +55,7 @@ void Entity::draw_catched_element(Entity::AutobuildingGroupElement* _element, En
 		EGraphicCore::batch->draw_gabarite
 		(
 			*_e->position_x + *_group->offset_x + *_element->offset_x - 0.0f,
-			*_e->position_y + *_group->offset_y + *_element->offset_y + *_element->offset_z + 1.0f
+			*_e->position_y + *_group->offset_y + *_element->offset_y + 1.0f
 			+
 			*_e->position_z + *_group->offset_z + *_element->offset_z,
 			*_element->size_x,
@@ -69,7 +69,7 @@ void Entity::draw_catched_element(Entity::AutobuildingGroupElement* _element, En
 		EGraphicCore::batch->draw_gabarite
 		(
 			*_e->position_x + *_group->offset_x + *_element->offset_x - 0.0f,
-			*_e->position_y + *_group->offset_y + *_element->offset_y + *_element->offset_z + *_element->size_y + 1.0f
+			*_e->position_y + *_group->offset_y + *_element->offset_y + *_element->size_y + 1.0f
 			+
 			*_e->position_z + *_group->offset_z + *_element->offset_z,
 			*_element->size_x,
@@ -83,7 +83,7 @@ void Entity::draw_catched_element(Entity::AutobuildingGroupElement* _element, En
 		EGraphicCore::batch->draw_gabarite
 		(
 			*_e->position_x + *_group->offset_x + *_element->offset_x + *_element->size_x / 2.0f - 10.0f,
-			*_e->position_y + *_group->offset_y + *_element->offset_y + *_element->offset_z + *_element->size_y / 2.0f - 10.0f
+			*_e->position_y + *_group->offset_y + *_element->offset_y + *_element->size_y / 2.0f - 10.0f
 			+
 			*_e->position_z + *_group->offset_z + *_element->offset_z,
 			20.0f,
@@ -97,7 +97,7 @@ void Entity::draw_catched_element(Entity::AutobuildingGroupElement* _element, En
 		EGraphicCore::batch->draw_gabarite
 		(
 			*_e->position_x + *_group->offset_x + *_element->offset_x + *_element->size_x / 2.0f - 3.0f,
-			*_e->position_y + *_group->offset_y + *_element->offset_y + *_element->offset_z + *_element->size_y / 2.0f + 10.0f
+			*_e->position_y + *_group->offset_y + *_element->offset_y + *_element->size_y / 2.0f + 10.0f
 			+
 			*_e->position_z + *_group->offset_z + *_element->offset_z,
 			6.0f,
@@ -232,7 +232,7 @@ void Entity::draw_entity_autobuilging_helping(Entity* _e, Batcher* _b, float _d)
 							)
 
 						{
-							EGraphicCore::batch->setcolor_alpha(EColor::COLOR_PINK, 0.5f);
+							EGraphicCore::batch->setcolor_alpha(EColor::COLOR_RED, 0.33f);
 							draw_catched_element(_element, _e, _group, true);
 						}
 					}

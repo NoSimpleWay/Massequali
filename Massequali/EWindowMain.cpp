@@ -84,24 +84,93 @@ EWindowMain::EWindowMain()
 
 void saveImage(char* filepath, GLFWwindow* w)
 {
-	int width, height;
-	glfwGetFramebufferSize(w, &width, &height);
+	ETextureAtlas::active_this_texture_atlas(EWindow::supermap_FBO, EWindow::default_texture_atlas);
+	//glReadBuffer(GL_READ_FRAMEBUFFER);
+
+	EGraphicCore::ourShader->use();
+	EGraphicCore::matrix_transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+
+	EGraphicCore::batch->reinit();
+	EGraphicCore::batch->draw_call();
+
+	EGraphicCore::ourShader->use();
+	EGraphicCore::matrix_transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+
+	EGraphicCore::matrix_transform = glm::translate(EGraphicCore::matrix_transform, glm::vec3(-1.0f, -1.0f, 0.0f)); 
+	EGraphicCore::matrix_transform = glm::scale(EGraphicCore::matrix_transform, glm::vec3(1.0f/256.0f, 1.0f/256.0f, 1.0f));
+
+	unsigned int transformLoc;
+	transformLoc = glGetUniformLocation(EGraphicCore::ourShader->ID, "transform");
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(EGraphicCore::matrix_transform));
+
+	//סבנמס באעקונא
+	EGraphicCore::batch->reset();
+
+	EGraphicCore::batch->setcolor(EColor::COLOR_WHITE);
+	EGraphicCore::batch->draw_normalmap_polygon
+	(
+		EWindowMain::link_to_button_vertex_editor->polygon_massive,
+		0.0f,
+		0.0f,
+		512.0f,
+		512.0f,
+		EGraphicCore::gabarite_white_pixel
+	);
+
+	
+	EGraphicCore::batch->reinit();
+	EGraphicCore::batch->draw_call();
+	EGraphicCore::batch->reset();
+	
+	
+	int width = 512, height = 512;
+	//glfwGetFramebufferSize(w, &width, &height);
 
 	//width = 100;
 	//height = 100;
 
-	GLsizei nrChannels = 3;
+	GLsizei nrChannels = 4;
 	GLsizei stride = nrChannels * width;
 	stride += (stride % 4) ? (4 - stride % 4) : 0;
 	GLsizei bufferSize = stride * height;
 
-	std::vector<char> buffer(bufferSize);
+	std::vector<byte> buffer(bufferSize);
+
 
 	glPixelStorei(GL_PACK_ALIGNMENT, 4);
 	glReadBuffer(GL_FRONT);
-	glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, buffer.data());
+	glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, buffer.data());
+
+	std::cout << "buffer.size =" << std::to_string(buffer.size()) << std::endl;
+
+	//for (int i = 0; i < 100; i++)
+	//{
+	//	std::cout << "[" << std::to_string(i) << "]" << (int)buffer.at(i) << std::endl;
+	//}
+
+	//for (int i = 0; i < buffer.size(); i++ )
+	//{
+	//	buffer.at(i) = rand() % 256;
+	//}
+
 	stbi_flip_vertically_on_write(true);
 	stbi_write_png(filepath, width, height, nrChannels, buffer.data(), stride);
+
+	ofstream writer;
+
+	writer.open("huita.txt");
+
+		for (int i = 0; i < buffer.size(); i++)
+		{
+			//writer << '(' << buffer.at(i) << ')';
+			writer << (char)(buffer.at(i) >> 8);
+			//writer << '-';
+			writer << (char)(buffer.at(i) & 0x00FF);
+			//writer << '=';
+		}
+	writer.close();
+	ETextureAtlas::return_to_this_texture_atlas(EWindow::default_texture_atlas);
+	
 }
 
 void EWindowMain::create_button_groups()
@@ -152,9 +221,40 @@ void EWindowMain::create_button_groups()
 	just_created_button_group->button_list.push_back(but);
 	but->text = "D";*/
 
+	std::vector<std::string> v_description;
+	std::vector<EGabarite*> v_gabarite;
+
 	EButton* but = NULL;
 
 	for (auto& p : fs::directory_iterator("data/textures"))
+	{
+		v_description.push_back("" + p.path().filename().u8string().substr(0, p.path().filename().u8string().length() - 4));
+		v_gabarite.push_back(ETextureAtlas::put_texture_to_atlas(p.path().u8string(), EWindow::default_texture_atlas));
+	}
+
+
+
+	EButton* swap_button = NULL;
+
+	for (int i = 0; i < v_gabarite.size(); i++)
+	for (int j = i; j < v_gabarite.size(); j++)
+			if
+				(
+					(i != j)
+					&
+					(
+						sqrt(*v_gabarite.at(j)->size_x * *v_gabarite.at(j)->size_y)
+						<
+						sqrt(*v_gabarite.at(i)->size_x * *v_gabarite.at(i)->size_y)
+						)
+					)
+			{
+
+				swap(v_description.at(i), v_description.at(j));
+				swap(v_gabarite.at(i), v_gabarite.at(j));
+			}
+
+	for (int i = 0; i < v_gabarite.size(); i++)
 	{
 		{
 			but = new EButton(0.0f, 0.0f, 20.0f, 20.0f);
@@ -164,8 +264,8 @@ void EWindowMain::create_button_groups()
 
 			just_created_button_group->button_list.push_back(but);
 
-			but->description_text = "" + p.path().filename().u8string().substr(0, p.path().filename().u8string().length() - 4);
-			but->gabarite = ETextureAtlas::put_texture_to_atlas(p.path().u8string(), EWindow::default_texture_atlas);
+			but->description_text = "" + v_description.at(i);
+			but->gabarite = v_gabarite.at(i);
 
 			but->button_size_x = min(500.0f, max(10.0f, *but->gabarite->size_x));
 			but->button_size_y = min(500.0f, max(10.0f, *but->gabarite->size_y));
@@ -182,24 +282,7 @@ void EWindowMain::create_button_groups()
 		}
 	}
 
-	EButton* swap_button = NULL;
-	for (int i = 0; i < just_created_button_group->button_list.size(); i++)
-		for (int j = i; j < just_created_button_group->button_list.size(); j++)
-			if
-				(
-					(i != j)
-					&
-					(
-						*just_created_button_group->button_list.at(j)->gabarite->size_x * *just_created_button_group->button_list.at(j)->gabarite->size_y
-						<
-						*just_created_button_group->button_list.at(i)->gabarite->size_x * *just_created_button_group->button_list.at(i)->gabarite->size_y
-						)
-					)
-			{
-				swap_button = just_created_button_group->button_list.at(j);
-				just_created_button_group->button_list.at(j) = just_created_button_group->button_list.at(i);
-				just_created_button_group->button_list.at(i) = swap_button;
-			}
+	
 
 	//vertical slider
 	but = new EButton(-0.0f, 0.0f, 18.0f, *just_created_button_group->size_y);
@@ -803,32 +886,32 @@ void EWindowMain::create_button_groups()
 						just_created_polygon_vertex = new Batcher::EPolygonVertex();
 						*just_created_polygon_vertex->position_x = 1.0f;
 						*just_created_polygon_vertex->position_y = 1.0f;
-						just_created_polygon_vertex->float_vector.push_back(new float(1.0f));
-						just_created_polygon_vertex->float_vector.push_back(new float(1.0f));
+						just_created_polygon_vertex->float_vector.push_back(new float(0.5f));
+						just_created_polygon_vertex->float_vector.push_back(new float(0.5f));
 						just_created_polygon_shape->vertex_list.push_back(just_created_polygon_vertex);
 					//..
 					//.#
 						just_created_polygon_vertex = new Batcher::EPolygonVertex();
 						*just_created_polygon_vertex->position_x = 1.0f;
 						*just_created_polygon_vertex->position_y = 0.0f;
-						just_created_polygon_vertex->float_vector.push_back(new float(1.0f));
-						just_created_polygon_vertex->float_vector.push_back(new float(0.0f));
+						just_created_polygon_vertex->float_vector.push_back(new float(0.5f));
+						just_created_polygon_vertex->float_vector.push_back(new float(0.5f));
 						just_created_polygon_shape->vertex_list.push_back(just_created_polygon_vertex);
 					//..
 					//#.
 						just_created_polygon_vertex = new Batcher::EPolygonVertex();
 						*just_created_polygon_vertex->position_x = 0.0f;
 						*just_created_polygon_vertex->position_y = 0.0f;
-						just_created_polygon_vertex->float_vector.push_back(new float(0.0f));
-						just_created_polygon_vertex->float_vector.push_back(new float(0.0f));
+						just_created_polygon_vertex->float_vector.push_back(new float(0.5f));
+						just_created_polygon_vertex->float_vector.push_back(new float(0.5f));
 						just_created_polygon_shape->vertex_list.push_back(just_created_polygon_vertex);
 					//#.
 					//..
 						just_created_polygon_vertex = new Batcher::EPolygonVertex();
 						*just_created_polygon_vertex->position_x = 0.0f;
 						*just_created_polygon_vertex->position_y = 1.0f;
-						just_created_polygon_vertex->float_vector.push_back(new float(0.0f));
-						just_created_polygon_vertex->float_vector.push_back(new float(1.0f));
+						just_created_polygon_vertex->float_vector.push_back(new float(0.5f));
+						just_created_polygon_vertex->float_vector.push_back(new float(0.5f));
 						just_created_polygon_shape->vertex_list.push_back(just_created_polygon_vertex);
 
 
@@ -1809,31 +1892,87 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 
 void EWindowMain::reset_render()
 {
+
 	glClearColor(EColor::COLOR_LAZURE_SHADOW->color_red, EColor::COLOR_LAZURE_SHADOW->color_green, EColor::COLOR_LAZURE_SHADOW->color_blue, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	EGraphicCore::batch->reinit();
 	EGraphicCore::batch->draw_call();
 
-	EGraphicCore::ourShader->use();
-	EGraphicCore::matrix_transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-
-	//if ((glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) != GLFW_PRESS))
-	{
+	EGraphicCore::AO_shader->use();
+		EGraphicCore::matrix_transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
 		EGraphicCore::matrix_transform = glm::translate(EGraphicCore::matrix_transform, glm::vec3(-1.0f - EGraphicCore::correction_x / 2.0f * 0.0f + round(EGraphicCore::SCR_WIDTH / 2.0f - *main_camera->position_x) * EGraphicCore::correction_x, -1.0f - EGraphicCore::correction_y / 2.0f * 0.0f + round(EGraphicCore::SCR_HEIGHT / 2.0f - *main_camera->position_y) * EGraphicCore::correction_y, 0.0f));
-	}
-	////
-	//{
-	///	EGraphicCore::matrix_transform = glm::translate(EGraphicCore::matrix_transform, glm::vec3(-1.0f - *main_camera->position_x, -1.0f - *main_camera->position_y, -1.0f));
-	//}
-
-	EGraphicCore::matrix_transform = glm::scale(EGraphicCore::matrix_transform, glm::vec3(EGraphicCore::correction_x * *main_camera->zoom, EGraphicCore::correction_y * *main_camera->zoom, 1.0f));
-
-	transformLoc = glGetUniformLocation(EGraphicCore::ourShader->ID, "transform");
-	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(EGraphicCore::matrix_transform));
+		EGraphicCore::matrix_transform = glm::scale(EGraphicCore::matrix_transform, glm::vec3(EGraphicCore::correction_x * *main_camera->zoom, EGraphicCore::correction_y * *main_camera->zoom, 1.0f));
+		transformLoc = glGetUniformLocation(EGraphicCore::AO_shader->ID, "transform");
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(EGraphicCore::matrix_transform));
 
 	//סבנמס באעקונא
 	EGraphicCore::batch->reset();
+
+	ETextureAtlas::active_this_texture_atlas(EWindow::AO_shadow_FBO, EWindow::default_texture_atlas);
+
+	
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_ONE, GL_ONE);
+	glBlendEquation(GL_MIN);
+		//EGraphicCore::batch->setcolor(EColor::COLOR_WHITE);
+		//EGraphicCore::batch->draw_gabarite(0.0f, 0.0f, 10000.0f, 10000.0f, EGraphicCore::gabarite_white_pixel);
+	
+	EGraphicCore::batch->setcolor(EColor::COLOR_BLACK);
+
+	for (int i = cluster_draw_start_y; i <= cluster_draw_end_y; i++)
+	for (int j = cluster_draw_start_x; j <= cluster_draw_end_x; j++)
+	{
+		for (Entity* e : cluster_static[j][i]->entity_list)
+		for (Entity::AutobuildingGroup* a_group:e->autobuilding_group_list)
+		{
+			EGraphicCore::batch->draw_AO_shadow
+			(
+				*e->position_x + *a_group->offset_x - 100.0f,
+				*e->position_y + *a_group->offset_y - 5.0f,
+				200.0f,
+				200.0f,
+				500.0f,
+				EGraphicCore::gabarite_white_pixel
+			);
+		}
+	}
+
+		EGraphicCore::batch->reinit();
+		EGraphicCore::batch->draw_call();
+		EGraphicCore::batch->reset();
+
+
+
+		EGraphicCore::ourShader->use();
+	ETextureAtlas::return_to_this_texture_atlas(EWindow::AO_shadow_FBO);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendEquation(GL_FUNC_ADD);
+
+		EGraphicCore::matrix_transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+		EGraphicCore::matrix_transform = glm::translate(EGraphicCore::matrix_transform, glm::vec3(-1.0f, -1.0f, 0.0f));
+		EGraphicCore::matrix_transform = glm::scale(EGraphicCore::matrix_transform, glm::vec3(1.0f, 1.0f, 1.0f));
+		transformLoc = glGetUniformLocation(EGraphicCore::ourShader->ID, "transform");
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(EGraphicCore::matrix_transform));
+
+		EGraphicCore::batch->draw_rect(0.0f, 0.0f, 2.0f, 2.0f);
+		EGraphicCore::batch->reinit();
+		EGraphicCore::batch->draw_call();
+		EGraphicCore::batch->reset();
+
+	ETextureAtlas::return_to_this_texture_atlas(EWindow::default_texture_atlas);
+
+	EGraphicCore::matrix_transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+	EGraphicCore::matrix_transform = glm::translate(EGraphicCore::matrix_transform, glm::vec3(-1.0f - EGraphicCore::correction_x / 2.0f * 0.0f + round(EGraphicCore::SCR_WIDTH / 2.0f - *main_camera->position_x) * EGraphicCore::correction_x, -1.0f - EGraphicCore::correction_y / 2.0f * 0.0f + round(EGraphicCore::SCR_HEIGHT / 2.0f - *main_camera->position_y) * EGraphicCore::correction_y, 0.0f));
+	EGraphicCore::matrix_transform = glm::scale(EGraphicCore::matrix_transform, glm::vec3(EGraphicCore::correction_x * *main_camera->zoom, EGraphicCore::correction_y * *main_camera->zoom, 1.0f));
+	transformLoc = glGetUniformLocation(EGraphicCore::ourShader->ID, "transform");
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(EGraphicCore::matrix_transform));
+
 }
 
 float EWindowMain::get_real_world_position_x_by_mouse(ECamera* _camera)

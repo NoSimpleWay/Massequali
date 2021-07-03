@@ -244,16 +244,16 @@ void ETextureAtlas::return_to_this_texture_atlas(ETextureAtlas* _ta)
 	EGraphicCore::batch->setcolor(EColor::COLOR_WHITE);
 }
 
-ETextureAtlas::ETextureAtlas(int _x, int _y)
+ETextureAtlas::ETextureAtlas(int _x, int _y, int _color_depth, int _byte_mode)
 {
 	size_x = _x;
 	size_y = _y;
 
 	for (int j = 0; j < 1024; j++)
-		for (int i = 0; i < 1024; i++)
-		{
-			free_space[j][i] = true;
-		}
+	for (int i = 0; i < 1024; i++)
+	{
+		free_space[j][i] = true;
+	}
 
 	//glGenTextures(1, &ETexture::texture[1]);
 
@@ -264,15 +264,13 @@ ETextureAtlas::ETextureAtlas(int _x, int _y)
 	glGenTextures(1, &colorbuffer);
 	glBindTexture(GL_TEXTURE_2D, colorbuffer);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _x, _y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, _color_depth, _x, _y, 0, GL_RGBA, _byte_mode, NULL);
+
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);//texture filtering
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);//
 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorbuffer, 0);
-	// create a renderbuffer object for depth and stencil attachment (we won't be sampling these)	glGenRenderbuffers(1, &rbo);
-	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, _x, _y); // use a single renderbuffer object for both a depth AND stencil buffer.
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo); // now actually attach it
+	
 	// now that we actually created the framebuffer and added all attachments we want to check if it is actually complete now
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)

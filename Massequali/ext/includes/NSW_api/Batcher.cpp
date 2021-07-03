@@ -120,6 +120,35 @@ void Batcher::init_terrain()
 	glEnableVertexAttribArray(1);
 }
 
+void Batcher::init_PBR()
+{
+	std::cout << "initiate PBR" << std::endl;
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
+
+	glBindVertexArray(VAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	// position attribute
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 10 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	// color attribute
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 10 * sizeof(float), (void*)(2 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+	// texture coord attribute
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 10 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
+	// global illumination reflection UV
+	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 10 * sizeof(float), (void*)(8 * sizeof(float)));
+	glEnableVertexAttribArray(3);
+}
+
 void Batcher::draw_rect_position(float _x, float _y, float _x2, float _y2)
 {
 	//std::cout << "filled rect" << std::endl;
@@ -569,6 +598,726 @@ void Batcher::draw_sprite(float _x, float _y, float _w, float _h, float _left, f
 		reset();
 	}
 }
+
+void Batcher::draw_sprite_PBR(float _x, float _y, float _w, float _h, float _left, float _right, float _down, float _up, EGabarite* _g, float _z)
+{
+	//std::cout << "filled rect" << std::endl;
+
+	//.#
+	//..
+
+	//position
+	vertices[id + 0] = (_x + _w);
+	vertices[id + 1] = (_y + _h);
+	//vertices[id + 2] = 0;
+
+	//color
+	vertices[id + 2] = batch_color_r;
+	vertices[id + 3] = batch_color_g;
+	vertices[id + 4] = batch_color_b;
+	vertices[id + 5] = batch_color_a;
+
+	//uv
+	vertices[id + 6] = *_g->x2 - _right;
+	vertices[id + 7] = *_g->y2 - _up;
+
+	//uv reflection
+	vertices[id + 8] = *_g->x2 - _right;
+	vertices[id + 9] = *_g->y2 - _up;
+
+	//..
+	//.#
+	vertices[id + 8] = (_x + _w);
+	vertices[id + 9] = _y;
+	//vertices[id + 10] = 0;
+
+	vertices[id + 10] = batch_color_r;
+	vertices[id + 11] = batch_color_g;
+	vertices[id + 12] = batch_color_b;
+	vertices[id + 13] = batch_color_a;
+
+	vertices[id + 14] = *_g->x2 - _right;
+	vertices[id + 15] = *_g->y + _down;
+
+	//..
+	//#.
+	vertices[id + 16] = _x;
+	vertices[id + 17] = _y;
+	//vertices[id + 18] = 0;
+
+	vertices[id + 18] = batch_color_r;
+	vertices[id + 19] = batch_color_g;
+	vertices[id + 20] = batch_color_b;
+	vertices[id + 21] = batch_color_a;
+
+	vertices[id + 22] = *_g->x + _left;
+	vertices[id + 23] = *_g->y + _down;
+
+	//#.
+	//..
+	vertices[id + 24] = _x;
+	vertices[id + 25] = (_y + _h);
+	//vertices[id + 26] = 0;
+
+	vertices[id + 26] = batch_color_r;
+	vertices[id + 27] = batch_color_g;
+	vertices[id + 28] = batch_color_b;
+	vertices[id + 29] = batch_color_a;
+
+	vertices[id + 30] = *_g->x + _left;
+	vertices[id + 31] = *_g->y2 - _up;
+
+	id += 32;
+
+	if (id > batch_force_draw_call)
+	{
+		reinit();
+		draw_call();
+		reset();
+	}
+}
+
+void Batcher::draw_AO_shadow(float _x, float _y, float _size_x, float _size_y, float _s, EGabarite* _g)
+{
+	//#..
+	//...
+	//...
+
+		//.#
+		//..
+			vertices[id + 0] = _x;
+			vertices[id + 1] = _y + _size_y + _s;
+			//vertices[id + 2] = 0;
+
+			//color
+			vertices[id + 2] = 1.0f;
+			vertices[id + 3] = 1.0f;
+			vertices[id + 4] = 1.0f;
+			vertices[id + 5] = batch_color_a;
+
+			//uv
+			vertices[id + 6] = *_g->x2;
+			vertices[id + 7] = *_g->y2;
+		
+		//..
+		//.#
+			vertices[id + 8] = _x;
+			vertices[id + 9] = _y + _size_y;
+			//vertices[id + 2] = 0;
+
+			//color
+			vertices[id + 10] = batch_color_r;
+			vertices[id + 11] = batch_color_g;
+			vertices[id + 12] = batch_color_b;
+			vertices[id + 13] = batch_color_a;
+
+			//uv
+			vertices[id + 14] = *_g->x2;
+			vertices[id + 15] = *_g->y;
+			
+		//..
+		//#.
+			vertices[id + 16] = _x - _s;
+			vertices[id + 17] = _y + _size_y;
+			//vertices[id + 2] = 0;
+
+			//color
+			vertices[id + 18] = 1.0f;
+			vertices[id + 19] = 1.0f;
+			vertices[id + 20] = 1.0f;
+			vertices[id + 21] = batch_color_a;
+
+			//uv
+			vertices[id + 22] = *_g->x;
+			vertices[id + 23] = *_g->y;
+			
+		//#.
+		//..
+			vertices[id + 24] = _x - _s * 0.7f;
+			vertices[id + 25] = _y + _size_y + _s * 0.7f;
+			//vertices[id + 2] = 0;
+
+			//color
+			vertices[id + 26] = 1.0f;
+			vertices[id + 27] = 1.0f;
+			vertices[id + 28] = 1.0f;
+			vertices[id + 29] = batch_color_a;
+
+			//uv
+			vertices[id + 30] = *_g->x;
+			vertices[id + 31] = *_g->y;
+
+			id += 32;
+
+	//.#.
+	//...
+	//...
+
+		//.#
+		//..
+		vertices[id + 0] = _x + _size_x;
+		vertices[id + 1] = _y + _size_y + _s;
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 2] = 1.0f;
+		vertices[id + 3] = 1.0f;
+		vertices[id + 4] = 1.0f;
+		vertices[id + 5] = batch_color_a;
+
+		//uv
+		vertices[id + 6] = *_g->x2;
+		vertices[id + 7] = *_g->y2;
+
+		//..
+		//.#
+		vertices[id + 8] = _x + _size_x;
+		vertices[id + 9] = _y + _size_y;
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 10] = batch_color_r;
+		vertices[id + 11] = batch_color_g;
+		vertices[id + 12] = batch_color_b;
+		vertices[id + 13] = batch_color_a;
+
+		//uv
+		vertices[id + 14] = *_g->x2;
+		vertices[id + 15] = *_g->y;
+
+		//..
+		//#.
+		vertices[id + 16] = _x;
+		vertices[id + 17] = _y + _size_y;
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 18] = batch_color_r;
+		vertices[id + 19] = batch_color_g;
+		vertices[id + 20] = batch_color_b;
+		vertices[id + 21] = batch_color_a;
+
+		//uv
+		vertices[id + 22] = *_g->x;
+		vertices[id + 23] = *_g->y;
+
+		//#.
+		//..
+		vertices[id + 24] = _x;
+		vertices[id + 25] = _y + _size_y + _s;
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 26] = 1.0f;
+		vertices[id + 27] = 1.0f;
+		vertices[id + 28] = 1.0f;
+		vertices[id + 29] = batch_color_a;
+
+		//uv
+		vertices[id + 30] = *_g->x;
+		vertices[id + 31] = *_g->y;
+
+		id += 32;
+	//..#
+	//...
+	//...
+
+		//#.
+		//..
+		vertices[id + 0] = _x + _size_x;
+		vertices[id + 1] = _y + _size_y + _s;
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 2] = 1.0f;
+		vertices[id + 3] = 1.0f;
+		vertices[id + 4] = 1.0f;
+		vertices[id + 5] = batch_color_a;
+
+		//uv
+		vertices[id + 6] = *_g->x;
+		vertices[id + 7] = *_g->y2;
+
+		//..
+		//#.
+		vertices[id + 8] = _x + _size_x;
+		vertices[id + 9] = _y + _size_y;
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 10] = batch_color_r;
+		vertices[id + 11] = batch_color_g;
+		vertices[id + 12] = batch_color_b;
+		vertices[id + 13] = batch_color_a;
+
+		//uv
+		vertices[id + 14] = *_g->x;
+		vertices[id + 15] = *_g->y;
+
+		//..
+		//.#
+		vertices[id + 16] = _x + _size_x + _s;
+		vertices[id + 17] = _y + _size_y;
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 18] = 1.0f;
+		vertices[id + 19] = 1.0f;
+		vertices[id + 20] = 1.0f;
+		vertices[id + 21] = batch_color_a;
+
+		//uv
+		vertices[id + 22] = *_g->x2;
+		vertices[id + 23] = *_g->y;
+
+		//.#
+		//..
+		vertices[id + 24] = _x + _size_x + _s * 0.7f;
+		vertices[id + 25] = _y + _size_y + _s * 0.7f;
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 26] = 1.0f;
+		vertices[id + 27] = 1.0f;
+		vertices[id + 28] = 1.0f;
+		vertices[id + 29] = batch_color_a;
+
+		//uv
+		vertices[id + 30] = *_g->x2;
+		vertices[id + 31] = *_g->y2;
+
+		id += 32;
+
+	//...
+	//#..
+	//...
+
+		//.#
+		//..
+		vertices[id + 0] = _x;
+		vertices[id + 1] = _y + _size_y;
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 2] = batch_color_r;
+		vertices[id + 3] = batch_color_g;
+		vertices[id + 4] = batch_color_b;
+		vertices[id + 5] = batch_color_a;
+
+		//uv
+		vertices[id + 6] = *_g->x2;
+		vertices[id + 7] = *_g->y2;
+
+		//..
+		//.#
+		vertices[id + 8] = _x;
+		vertices[id + 9] = _y;
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 10] = batch_color_r;
+		vertices[id + 11] = batch_color_g;
+		vertices[id + 12] = batch_color_b;
+		vertices[id + 13] = batch_color_a;
+
+		//uv
+		vertices[id + 14] = *_g->x2;
+		vertices[id + 15] = *_g->y;
+
+		//..
+		//#.
+		vertices[id + 16] = _x - _s;
+		vertices[id + 17] = _y;
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 18] = 1.0f;
+		vertices[id + 19] = 1.0f;
+		vertices[id + 20] = 1.0f;
+		vertices[id + 21] = batch_color_a;
+
+		//uv
+		vertices[id + 22] = *_g->x;
+		vertices[id + 23] = *_g->y;
+
+		//#.
+		//..
+		vertices[id + 24] = _x - _s;
+		vertices[id + 25] = _y + _size_y;
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 26] = 1.0f;
+		vertices[id + 27] = 1.0f;
+		vertices[id + 28] = 1.0f;
+		vertices[id + 29] = batch_color_a;
+
+		//uv
+		vertices[id + 30] = *_g->x;
+		vertices[id + 31] = *_g->y;
+
+		id += 32;
+
+	//...
+	//.#.
+	//...
+
+		//.#
+		//..
+		vertices[id + 0] = _x + _size_y;
+		vertices[id + 1] = _y + _size_y;
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 2] = batch_color_r;
+		vertices[id + 3] = batch_color_g;
+		vertices[id + 4] = batch_color_b;
+		vertices[id + 5] = batch_color_a;
+
+		//uv
+		vertices[id + 6] = *_g->x2;
+		vertices[id + 7] = *_g->y2;
+
+		//..
+		//.#
+		vertices[id + 8] = _x + _size_x;
+		vertices[id + 9] = _y;
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 10] = batch_color_r;
+		vertices[id + 11] = batch_color_g;
+		vertices[id + 12] = batch_color_b;
+		vertices[id + 13] = batch_color_a;
+
+		//uv
+		vertices[id + 14] = *_g->x2;
+		vertices[id + 15] = *_g->y;
+
+		//..
+		//#.
+		vertices[id + 16] = _x;
+		vertices[id + 17] = _y;
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 18] = batch_color_r;
+		vertices[id + 19] = batch_color_g;
+		vertices[id + 20] = batch_color_b;
+		vertices[id + 21] = batch_color_a;
+
+		//uv
+		vertices[id + 22] = *_g->x;
+		vertices[id + 23] = *_g->y;
+
+		//#.
+		//..
+		vertices[id + 24] = _x;
+		vertices[id + 25] = _y + _size_y;
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 26] = batch_color_r;
+		vertices[id + 27] = batch_color_g;
+		vertices[id + 28] = batch_color_b;
+		vertices[id + 29] = batch_color_a;;
+
+		//uv
+		vertices[id + 30] = *_g->x;
+		vertices[id + 31] = *_g->y;
+
+		id += 32;
+
+	//...
+	//..#
+	//...
+
+		//.#
+		//..
+		vertices[id + 0] = _x + _size_x + _s;
+		vertices[id + 1] = _y + _size_y;
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 2] = 1.0f;
+		vertices[id + 3] = 1.0f;
+		vertices[id + 4] = 1.0f;
+		vertices[id + 5] = batch_color_a;
+
+		//uv
+		vertices[id + 6] = *_g->x2;
+		vertices[id + 7] = *_g->y2;
+
+		//..
+		//.#
+		vertices[id + 8] = _x + _size_x + _s;
+		vertices[id + 9] = _y;
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 10] = 1.0f;
+		vertices[id + 11] = 1.0f;
+		vertices[id + 12] = 1.0f;
+		vertices[id + 13] = batch_color_a;
+
+		//uv
+		vertices[id + 14] = *_g->x2;
+		vertices[id + 15] = *_g->y;
+
+		//..
+		//#.
+		vertices[id + 16] = _x + _size_x;
+		vertices[id + 17] = _y;
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 18] = batch_color_r;
+		vertices[id + 19] = batch_color_g;
+		vertices[id + 20] = batch_color_b;
+		vertices[id + 21] = batch_color_a;
+
+		//uv
+		vertices[id + 22] = *_g->x;
+		vertices[id + 23] = *_g->y;
+
+		//#.
+		//..
+		vertices[id + 24] = _x + _size_x;
+		vertices[id + 25] = _y + _size_y;
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 26] = batch_color_r;
+		vertices[id + 27] = batch_color_g;
+		vertices[id + 28] = batch_color_b;
+		vertices[id + 29] = batch_color_a;
+
+		//uv
+		vertices[id + 30] = *_g->x;
+		vertices[id + 31] = *_g->y;
+
+		id += 32;
+
+	//...
+	//...
+	//#..
+
+		//.#
+		//..
+		vertices[id + 0] = _x;
+		vertices[id + 1] = _y;
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 2] = batch_color_r;
+		vertices[id + 3] = batch_color_g;
+		vertices[id + 4] = batch_color_b;
+		vertices[id + 5] = batch_color_a;
+
+		//uv
+		vertices[id + 6] = *_g->x2;
+		vertices[id + 7] = *_g->y2;
+
+		//..
+		//.#
+		vertices[id + 8] = _x;
+		vertices[id + 9] = _y - _s;
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 10] = 1.0f;
+		vertices[id + 11] = 1.0f;
+		vertices[id + 12] = 1.0f;
+		vertices[id + 13] = batch_color_a;
+
+		//uv
+		vertices[id + 14] = *_g->x2;
+		vertices[id + 15] = *_g->y;
+
+		//..
+		//#.
+		vertices[id + 16] = _x - _s;
+		vertices[id + 17] = _y - _s;
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 18] = 1.0f;
+		vertices[id + 19] = 1.0f;
+		vertices[id + 20] = 1.0f;
+		vertices[id + 21] = batch_color_a;
+
+		//uv
+		vertices[id + 22] = *_g->x;
+		vertices[id + 23] = *_g->y;
+
+		//#.
+		//..
+		vertices[id + 24] = _x - _s;
+		vertices[id + 25] = _y;
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 26] = 1.0f;
+		vertices[id + 27] = 1.0f;
+		vertices[id + 28] = 1.0f;
+		vertices[id + 29] = batch_color_a;
+
+		//uv
+		vertices[id + 30] = *_g->x;
+		vertices[id + 31] = *_g->y;
+
+		id += 32;
+		
+	//...
+	//...
+	//.#.
+
+		//.#
+		//..
+		vertices[id + 0] = _x + _size_x;
+		vertices[id + 1] = _y;
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 2] = batch_color_r;
+		vertices[id + 3] = batch_color_g;
+		vertices[id + 4] = batch_color_b;
+		vertices[id + 5] = batch_color_a;
+
+		//uv
+		vertices[id + 6] = *_g->x2;
+		vertices[id + 7] = *_g->y2;
+
+		//..
+		//.#
+		vertices[id + 8] = _x + _size_x;
+		vertices[id + 9] = _y - _s;
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 10] = 1.0f;
+		vertices[id + 11] = 1.0f;
+		vertices[id + 12] = 1.0f;
+		vertices[id + 13] = batch_color_a;
+
+		//uv
+		vertices[id + 14] = *_g->x2;
+		vertices[id + 15] = *_g->y;
+
+		//..
+		//#.
+		vertices[id + 16] = _x;
+		vertices[id + 17] = _y - _s;
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 18] = 1.0f;
+		vertices[id + 19] = 1.0f;
+		vertices[id + 20] = 1.0f;
+		vertices[id + 21] = batch_color_a;
+
+		//uv
+		vertices[id + 22] = *_g->x;
+		vertices[id + 23] = *_g->y;
+
+		//#.
+		//..
+		vertices[id + 24] = _x;
+		vertices[id + 25] = _y;
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 26] = batch_color_r;
+		vertices[id + 27] = batch_color_g;
+		vertices[id + 28] = batch_color_b;
+		vertices[id + 29] = batch_color_a;
+
+		//uv
+		vertices[id + 30] = *_g->x;
+		vertices[id + 31] = *_g->y;
+
+		id += 32;
+		
+	//...
+	//...
+	//..#
+
+		//.#
+		//..
+		vertices[id + 0] = _x + _size_x + _s;
+		vertices[id + 1] = _y;
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 2] = 1.0f;
+		vertices[id + 3] = 1.0f;
+		vertices[id + 4] = 1.0f;
+		vertices[id + 5] = batch_color_a;
+
+		//uv
+		vertices[id + 6] = *_g->x2;
+		vertices[id + 7] = *_g->y2;
+
+		//..
+		//.#
+		vertices[id + 8] = _x + _size_x + _s * 0.7f;
+		vertices[id + 9] = _y - _s * 0.7f;
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 10] = 1.0f;
+		vertices[id + 11] = 1.0f;
+		vertices[id + 12] = 1.0f;
+		vertices[id + 13] = batch_color_a;
+
+		//uv
+		vertices[id + 14] = *_g->x2;
+		vertices[id + 15] = *_g->y;
+
+		//..
+		//#.
+		vertices[id + 16] = _x + _size_x;
+		vertices[id + 17] = _y - _s;
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 18] = 1.0f;
+		vertices[id + 19] = 1.0f;
+		vertices[id + 20] = 1.0f;
+		vertices[id + 21] = batch_color_a;
+
+		//uv
+		vertices[id + 22] = *_g->x;
+		vertices[id + 23] = *_g->y;
+
+		//#.
+		//..
+		vertices[id + 24] = _x + _size_x;
+		vertices[id + 25] = _y;
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 26] = batch_color_r;
+		vertices[id + 27] = batch_color_g;
+		vertices[id + 28] = batch_color_b;
+		vertices[id + 29] = batch_color_a;
+
+		//uv
+		vertices[id + 30] = *_g->x;
+		vertices[id + 31] = *_g->y;
+
+		id += 32;
+
+
+	if (id > batch_force_draw_call)
+	{
+		reinit();
+		draw_call();
+		reset();
+	}
+
+}
+
 
 void Batcher::draw_depthmap_polygon(EPolygonMassive* _p_massive, float _start_x, float _start_y, float _size_x, float _size_y, EGabarite* _g)
 {

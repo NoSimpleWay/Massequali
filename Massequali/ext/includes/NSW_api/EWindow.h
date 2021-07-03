@@ -570,6 +570,9 @@ public:
 	static ETextureAtlas* base_lightmap;
 	static ETextureAtlas* base_blockmap;
 
+	static ETextureAtlas* supermap_FBO;
+	static ETextureAtlas* AO_shadow_FBO;
+
 	static ETextureAtlas* screen_FBO;
 
 	static bool button_pressed;
@@ -747,6 +750,10 @@ public:
 
 	//void draw_lightmap();
 	std::vector< EButton::button_super_group* > button_group_list;
+
+	static EButton::button_super_group* top_overlaped_group;
+
+	static bool is_group_overlapped_by_mouse(EButton::button_super_group* _group);
 
 	static EButton::button_group* get_button_group_by_name(EWindow* _w, std::string _super_group_name, std::string _group_name);
 };

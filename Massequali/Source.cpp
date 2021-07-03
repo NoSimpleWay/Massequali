@@ -86,6 +86,7 @@ int main()
 	logger_param("max_texture_size:", max_tex_size);
 
 	EGraphicCore::ourShader = new Shader("data/#default.vs", "data/#default.fs");
+	EGraphicCore::AO_shader = new Shader("data/#AO_shadow.vs", "data/#AO_shadow.fs");
 	/*EGraphicCore::shadowmap = new Shader("data/shadowmap.vs", "data/shadowmap.fs");
 	EGraphicCore::shader_terrain = new Shader("data/terrain.vs", "data/terrain.fs");
 	EGraphicCore::lightmap_blur = new Shader("data/lightmap_blur.vs", "data/lightmap_blur.fs");
@@ -131,6 +132,10 @@ int main()
 
 	EWindow::default_texture_atlas = new ETextureAtlas(4096, 4096);
 
+	EWindow::supermap_FBO = new ETextureAtlas(512, 512);
+	EWindow::supermap_FBO = new ETextureAtlas(512, 512);
+	EWindow::AO_shadow_FBO = new ETextureAtlas(1920, 1080, GL_RGBA16, GL_UNSIGNED_SHORT);
+	/*
 	EWindow::shadow_FBO = new ETextureAtlas(1920, 1580);
 	EWindow::screen_FBO = new ETextureAtlas(1920, 1080);
 
@@ -138,7 +143,7 @@ int main()
 	EWindow::lightmap_FBO = new ETextureAtlas(300, 300);
 	EWindow::lightmap_FBO2 = new ETextureAtlas(300, 300);
 	EWindow::base_lightmap = new ETextureAtlas(300, 300);
-	EWindow::base_blockmap = new ETextureAtlas(300, 300);
+	EWindow::base_blockmap = new ETextureAtlas(300, 300);*/
 
 	EGraphicCore::load_texture("data/textures/white_pixel.png", 0);
 
@@ -231,32 +236,8 @@ int main()
 		start_id = 0;
 		EWindow::add_time_process("Begin");
 
-	//	for (int i = 0; i < 1000; i++)
-		//{
-		//	fff.at(i) = (rand() % 100) / 100.0f;
-		//}
-		//EWindow::add_time_process("fill data");
-
-		/*
-		for (int k=0; k<998; k++)
-		for (int i=k; i<999; i++)
-		{
-			if (fff.at(i) > fff.at(i + 1))
-			{
-				swap(fff.at(i), fff.at(i + 1));
-			}
-		}*/
-
-		//EWindow::add_time_process("sort");
 
 		glfwPollEvents();
-
-		//EWindow::time_process_name.clear();
-		//EWindow::time_process_value.clear();
-
-		
-
-		
 
 		clock_t time = clock();
 		delta_time = (time - saved_time_for_delta) / 1000.0;
@@ -340,8 +321,21 @@ int main()
 		}
 
 		//update windows
+		EWindow::top_overlaped_group = NULL;
+
 		EButton::any_input = false;
 		EButton::any_overlap = false;
+		for (EWindow* w : EWindow::window_list)
+		for (EButton::button_super_group* _sg:w->button_group_list)
+		if
+		(
+			(*_sg->is_active)
+			&
+			(EWindow::is_group_overlapped_by_mouse(_sg))
+		)
+		{
+			EWindow::top_overlaped_group = _sg;
+		}
 
 		for (EWindow* w : EWindow::window_list)
 			if (w->is_active) { w->default_update(delta_time); }

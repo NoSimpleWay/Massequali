@@ -22,7 +22,7 @@ public:
 	static void active_this_texture_atlas(ETextureAtlas* _ta, ETextureAtlas* _ta2, ETextureAtlas* _ta3);
 	static void return_to_this_texture_atlas(ETextureAtlas* _ta);
 
-	ETextureAtlas(int _x, int _y);
+	ETextureAtlas(int _x, int _y, int _color_depth = GL_RGBA, int _byte_mode = GL_UNSIGNED_BYTE);
 	~ETextureAtlas();
 
 	static EGabarite* get_supermap_from_regular_texture_path(std::string _s, ETextureAtlas* _a);

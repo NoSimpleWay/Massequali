@@ -28,6 +28,8 @@ public:
 	static Shader* lightmap_blur;
 	static Shader* lightmap_spread;
 
+	static Shader* AO_shader;
+
 	static Batcher* batch;
 	static Batcher* batch_shadowmap;
 	static Batcher* batch_terrain;
@@ -90,5 +92,6 @@ public:
 
 	static void draw_sprite_regular(sprite_array* _sprite_array, Batcher* _batch, float _offset_x, float _offset_y, float _offset_z);
 	static void draw_sprite_regular(EGraphicCore::ESprite* _sprite, Batcher* _batch, float _offset_x, float _offset_y, float _offset_z);
+	static void draw_sprite_PBR(EGraphicCore::ESprite* _sprite, Batcher* _batch, float _offset_x, float _offset_y, float _offset_z);
 	static void reset_sprite_data(EGraphicCore::ESprite* _sprite);
 };
