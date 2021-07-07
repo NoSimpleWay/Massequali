@@ -529,77 +529,10 @@ void Batcher::draw_gabarite(float _x, float _y, float _w, float _h, EGabarite* _
 	}
 }
 
-void Batcher::draw_sprite(float _x, float _y, float _w, float _h, float _left, float _right, float _down, float _up, EGabarite* _g)
-{
-	//std::cout << "filled rect" << std::endl;
+//void Batcher::draw_sprite(float _x, float _y, float _w, float _h, float _left, float _right, float _down, float _up, EGabarite* _g)
 
-	//.#
-	//..
-	vertices[id + 0] = (_x + _w);
-	vertices[id + 1] = (_y + _h);
-	//vertices[id + 2] = 0;
 
-	vertices[id + 2] = batch_color_r;
-	vertices[id + 3] = batch_color_g;
-	vertices[id + 4] = batch_color_b;
-	vertices[id + 5] = batch_color_a;
-
-	vertices[id + 6] = *_g->x2 - _right;
-	vertices[id + 7] = *_g->y2 - _up;
-
-	//..
-	//.#
-	vertices[id + 8] = (_x + _w);
-	vertices[id + 9] = _y;
-	//vertices[id + 10] = 0;
-
-	vertices[id + 10] = batch_color_r;
-	vertices[id + 11] = batch_color_g;
-	vertices[id + 12] = batch_color_b;
-	vertices[id + 13] = batch_color_a;
-
-	vertices[id + 14] = *_g->x2 - _right;
-	vertices[id + 15] = *_g->y + _down;
-
-	//..
-	//#.
-	vertices[id + 16] = _x;
-	vertices[id + 17] = _y;
-	//vertices[id + 18] = 0;
-
-	vertices[id + 18] = batch_color_r;
-	vertices[id + 19] = batch_color_g;
-	vertices[id + 20] = batch_color_b;
-	vertices[id + 21] = batch_color_a;
-
-	vertices[id + 22] = *_g->x + _left;
-	vertices[id + 23] = *_g->y + _down;
-
-	//#.
-	//..
-	vertices[id + 24] = _x;
-	vertices[id + 25] = (_y + _h);
-	//vertices[id + 26] = 0;
-
-	vertices[id + 26] = batch_color_r;
-	vertices[id + 27] = batch_color_g;
-	vertices[id + 28] = batch_color_b;
-	vertices[id + 29] = batch_color_a;
-
-	vertices[id + 30] = *_g->x + _left;
-	vertices[id + 31] = *_g->y2 - _up;
-
-	id += 32;
-
-	if (id > batch_force_draw_call)
-	{
-		reinit();
-		draw_call();
-		reset();
-	}
-}
-
-void Batcher::draw_sprite_PBR(float _x, float _y, float _w, float _h, float _left, float _right, float _down, float _up, EGabarite* _g, float _z)
+void Batcher::draw_sprite_PBR(float _x, float _y, float _w, float _h, float _left, float _right, float _down, float _up, EGabarite* _g, float _true_height)
 {
 	//std::cout << "filled rect" << std::endl;
 
@@ -622,57 +555,73 @@ void Batcher::draw_sprite_PBR(float _x, float _y, float _w, float _h, float _lef
 	vertices[id + 7] = *_g->y2 - _up;
 
 	//uv reflection
-	vertices[id + 8] = *_g->x2 - _right;
-	vertices[id + 9] = *_g->y2 - _up;
+	vertices[id + 8] = 0.0f;
+	vertices[id + 9] = (_true_height + _h) / 1024.0f / 2.0f;
+
+
 
 	//..
 	//.#
-	vertices[id + 8] = (_x + _w);
-	vertices[id + 9] = _y;
+	vertices[id + 10] = (_x + _w);
+	vertices[id + 11] = _y;
 	//vertices[id + 10] = 0;
 
-	vertices[id + 10] = batch_color_r;
-	vertices[id + 11] = batch_color_g;
-	vertices[id + 12] = batch_color_b;
-	vertices[id + 13] = batch_color_a;
+	vertices[id + 12] = batch_color_r;
+	vertices[id + 13] = batch_color_g;
+	vertices[id + 14] = batch_color_b;
+	vertices[id + 15] = batch_color_a;
 
-	vertices[id + 14] = *_g->x2 - _right;
-	vertices[id + 15] = *_g->y + _down;
+	vertices[id + 16] = *_g->x2 - _right;
+	vertices[id + 17] = *_g->y + _down;
+
+	//uv reflection
+	vertices[id + 18] = 0.0f;
+	vertices[id + 19] = (_true_height) / 1024.0f / 2.0f;
+
+
 
 	//..
 	//#.
-	vertices[id + 16] = _x;
-	vertices[id + 17] = _y;
+	vertices[id + 20] = _x;
+	vertices[id + 21] = _y;
 	//vertices[id + 18] = 0;
 
-	vertices[id + 18] = batch_color_r;
-	vertices[id + 19] = batch_color_g;
-	vertices[id + 20] = batch_color_b;
-	vertices[id + 21] = batch_color_a;
+	vertices[id + 22] = batch_color_r;
+	vertices[id + 23] = batch_color_g;
+	vertices[id + 24] = batch_color_b;
+	vertices[id + 25] = batch_color_a;
 
-	vertices[id + 22] = *_g->x + _left;
-	vertices[id + 23] = *_g->y + _down;
+	vertices[id + 26] = *_g->x + _left;
+	vertices[id + 27] = *_g->y + _down;
+
+	//uv reflection
+	vertices[id + 28] = 0.0f;
+	vertices[id + 29] = (_true_height) / 1024.0f / 2.0f;
 
 	//#.
 	//..
-	vertices[id + 24] = _x;
-	vertices[id + 25] = (_y + _h);
+	vertices[id + 30] = _x;
+	vertices[id + 31] = (_y + _h);
 	//vertices[id + 26] = 0;
 
-	vertices[id + 26] = batch_color_r;
-	vertices[id + 27] = batch_color_g;
-	vertices[id + 28] = batch_color_b;
-	vertices[id + 29] = batch_color_a;
+	vertices[id + 32] = batch_color_r;
+	vertices[id + 33] = batch_color_g;
+	vertices[id + 34] = batch_color_b;
+	vertices[id + 35] = batch_color_a;
 
-	vertices[id + 30] = *_g->x + _left;
-	vertices[id + 31] = *_g->y2 - _up;
+	vertices[id + 36] = *_g->x + _left;
+	vertices[id + 37] = *_g->y2 - _up;
 
-	id += 32;
+	//uv reflection
+	vertices[id + 38] = 0.0f;
+	vertices[id + 39] = (_true_height + _h) / 1024.0f / 2.0f;
+
+	id += 40;
 
 	if (id > batch_force_draw_call)
 	{
 		reinit();
-		draw_call();
+		draw_call_PBR();
 		reset();
 	}
 }
@@ -733,8 +682,8 @@ void Batcher::draw_AO_shadow(float _x, float _y, float _size_x, float _size_y, f
 			
 		//#.
 		//..
-			vertices[id + 24] = _x - _s * 0.7f;
-			vertices[id + 25] = _y + _size_y + _s * 0.7f;
+			vertices[id + 24] = _x - _s * 0.6f;
+			vertices[id + 25] = _y + _size_y + _s * 0.6f;
 			//vertices[id + 2] = 0;
 
 			//color
@@ -872,8 +821,8 @@ void Batcher::draw_AO_shadow(float _x, float _y, float _size_x, float _size_y, f
 
 		//.#
 		//..
-		vertices[id + 24] = _x + _size_x + _s * 0.7f;
-		vertices[id + 25] = _y + _size_y + _s * 0.7f;
+		vertices[id + 24] = _x + _size_x + _s * 0.6f;
+		vertices[id + 25] = _y + _size_y + _s * 0.6f;
 		//vertices[id + 2] = 0;
 
 		//color
@@ -1102,41 +1051,44 @@ void Batcher::draw_AO_shadow(float _x, float _y, float _size_x, float _size_y, f
 	//...
 	//#..
 
-		//.#
+		//		|0|
+		//#.
 		//..
-		vertices[id + 0] = _x;
+		vertices[id + 0] = _x - _s;
 		vertices[id + 1] = _y;
 		//vertices[id + 2] = 0;
 
 		//color
-		vertices[id + 2] = batch_color_r;
-		vertices[id + 3] = batch_color_g;
-		vertices[id + 4] = batch_color_b;
+		vertices[id + 2] = 1.0f;
+		vertices[id + 3] = 1.0f;
+		vertices[id + 4] = 1.0f;
 		vertices[id + 5] = batch_color_a;
 
 		//uv
-		vertices[id + 6] = *_g->x2;
+		vertices[id + 6] = *_g->x;
 		vertices[id + 7] = *_g->y2;
 
-		//..
+		//		|1|
 		//.#
+		//..
 		vertices[id + 8] = _x;
-		vertices[id + 9] = _y - _s;
+		vertices[id + 9] = _y;
 		//vertices[id + 2] = 0;
 
 		//color
-		vertices[id + 10] = 1.0f;
-		vertices[id + 11] = 1.0f;
-		vertices[id + 12] = 1.0f;
+		vertices[id + 10] = batch_color_r;
+		vertices[id + 11] = batch_color_g;
+		vertices[id + 12] = batch_color_b;
 		vertices[id + 13] = batch_color_a;
 
 		//uv
-		vertices[id + 14] = *_g->x2;
+		vertices[id + 14] = *_g->x;
 		vertices[id + 15] = *_g->y;
 
+		//		|2|
 		//..
-		//#.
-		vertices[id + 16] = _x - _s;
+		//.#
+		vertices[id + 16] = _x;
 		vertices[id + 17] = _y - _s;
 		//vertices[id + 2] = 0;
 
@@ -1147,13 +1099,14 @@ void Batcher::draw_AO_shadow(float _x, float _y, float _size_x, float _size_y, f
 		vertices[id + 21] = batch_color_a;
 
 		//uv
-		vertices[id + 22] = *_g->x;
+		vertices[id + 22] = *_g->x2;
 		vertices[id + 23] = *_g->y;
-
-		//#.
+		
+		//		|3|
 		//..
-		vertices[id + 24] = _x - _s;
-		vertices[id + 25] = _y;
+		//#.
+		vertices[id + 24] = _x - _s * 0.6f;
+		vertices[id + 25] = _y - _s * 0.6f;
 		//vertices[id + 2] = 0;
 
 		//color
@@ -1166,7 +1119,8 @@ void Batcher::draw_AO_shadow(float _x, float _y, float _size_x, float _size_y, f
 		vertices[id + 30] = *_g->x;
 		vertices[id + 31] = *_g->y;
 
-		id += 32;
+
+			id += 32;
 		
 	//...
 	//...
@@ -1260,8 +1214,8 @@ void Batcher::draw_AO_shadow(float _x, float _y, float _size_x, float _size_y, f
 
 		//..
 		//.#
-		vertices[id + 8] = _x + _size_x + _s * 0.7f;
-		vertices[id + 9] = _y - _s * 0.7f;
+		vertices[id + 8] = _x + _size_x + _s * 0.6f;
+		vertices[id + 9] = _y - _s * 0.6f;
 		//vertices[id + 2] = 0;
 
 		//color
@@ -2389,6 +2343,8 @@ void Batcher::fill_indices()
 	indices[indices_id + 4] = indices_order + 2;
 	indices[indices_id + 5] = indices_order + 3;
 
+	//std::
+
 	indices_id += 6;
 	indices_order += 4;
 }
@@ -2427,6 +2383,12 @@ void Batcher::draw_call_shadowmap()
 {
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, 6 * (id / 60), GL_UNSIGNED_INT, 0);
+}
+
+void Batcher::draw_call_PBR()
+{
+	glBindVertexArray(VAO);
+	glDrawElements(GL_TRIANGLES, 6 * id / 40, GL_UNSIGNED_INT, 0);
 }
 
 void Batcher::reset()
@@ -2585,6 +2547,13 @@ void Batcher::force_draw_call_shadowmap()
 {
 	reinit();
 	draw_call_shadowmap();
+	reset();
+}
+
+void Batcher::force_draw_call_PBR()
+{
+	reinit();
+	draw_call_PBR();
 	reset();
 }
 

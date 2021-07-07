@@ -4,6 +4,7 @@
 #include "EGabarite.h"
 #include <vector>
 
+const static int batch_force_draw_call = 4000;
 
 class Batcher
 {
@@ -70,7 +71,75 @@ public:
 
 	void draw_gabarite(float _x, float _y, float _w, float _h, EGabarite* _g);
 
-	void draw_sprite(float _x, float _y, float _w, float _h, float _left, float _right, float _down, float _up, EGabarite* _g);
+	__inline void draw_sprite(float _x, float _y, float _w, float _h, float _left, float _right, float _down, float _up, EGabarite* _g)
+	{
+		//std::cout << "filled rect" << std::endl;
+
+		//.#
+		//..
+		vertices[id + 0] = (_x + _w);
+		vertices[id + 1] = (_y + _h);
+		//vertices[id + 2] = 0;
+
+		vertices[id + 2] = batch_color_r;
+		vertices[id + 3] = batch_color_g;
+		vertices[id + 4] = batch_color_b;
+		vertices[id + 5] = batch_color_a;
+
+		vertices[id + 6] = *_g->x2 - _right;
+		vertices[id + 7] = *_g->y2 - _up;
+
+		//..
+		//.#
+		vertices[id + 8] = (_x + _w);
+		vertices[id + 9] = _y;
+		//vertices[id + 10] = 0;
+
+		vertices[id + 10] = batch_color_r;
+		vertices[id + 11] = batch_color_g;
+		vertices[id + 12] = batch_color_b;
+		vertices[id + 13] = batch_color_a;
+
+		vertices[id + 14] = *_g->x2 - _right;
+		vertices[id + 15] = *_g->y + _down;
+
+		//..
+		//#.
+		vertices[id + 16] = _x;
+		vertices[id + 17] = _y;
+		//vertices[id + 18] = 0;
+
+		vertices[id + 18] = batch_color_r;
+		vertices[id + 19] = batch_color_g;
+		vertices[id + 20] = batch_color_b;
+		vertices[id + 21] = batch_color_a;
+
+		vertices[id + 22] = *_g->x + _left;
+		vertices[id + 23] = *_g->y + _down;
+
+		//#.
+		//..
+		vertices[id + 24] = _x;
+		vertices[id + 25] = (_y + _h);
+		//vertices[id + 26] = 0;
+
+		vertices[id + 26] = batch_color_r;
+		vertices[id + 27] = batch_color_g;
+		vertices[id + 28] = batch_color_b;
+		vertices[id + 29] = batch_color_a;
+
+		vertices[id + 30] = *_g->x + _left;
+		vertices[id + 31] = *_g->y2 - _up;
+
+		id += 32;
+
+		if (id > batch_force_draw_call)
+		{
+			reinit();
+			draw_call();
+			reset();
+		}
+	}
 	void draw_sprite_PBR(float _x, float _y, float _w, float _h, float _left, float _right, float _down, float _up, EGabarite* _g, float _z);
 
 	void draw_AO_shadow(float _x, float _y, float _size_x, float _size_y, float _size, EGabarite* _g);
@@ -107,7 +176,7 @@ public:
 	float batch_color_b;
 	float batch_color_a;
 
-	int batch_force_draw_call = 12000;
+	
 
 	void reinit();
 
@@ -117,12 +186,13 @@ public:
 	unsigned int indices_id = 0;
 	unsigned int indices_order = 0;
 
-	float vertices[1000 * 32];
-	unsigned int indices[1000 * 6];
+	float vertices[32000];
+	unsigned int indices[6000];
 
 	void draw_call();
 	void draw_call_terrain();
 	void draw_call_shadowmap();
+	void draw_call_PBR();
 
 	void reset();
 
@@ -141,7 +211,7 @@ public:
 	void force_draw_call();
 	void force_draw_call_terrain();
 	void force_draw_call_shadowmap();
-
+	void force_draw_call_PBR();
 	static float shadow_FBO_w;
 	static float shadow_FBO_h;
 	static float zoom;

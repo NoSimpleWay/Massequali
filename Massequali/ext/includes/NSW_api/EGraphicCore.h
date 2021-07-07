@@ -29,10 +29,14 @@ public:
 	static Shader* lightmap_spread;
 
 	static Shader* AO_shader;
+	static Shader* PBR_shader;
+	static Shader* simple_blur;
 
 	static Batcher* batch;
 	static Batcher* batch_shadowmap;
 	static Batcher* batch_terrain;
+
+	static Batcher* batch_PBR;
 
 	static glm::mat4 matrix_transform;
 
@@ -57,12 +61,20 @@ public:
 	static EGabarite* gabarite_supermap_placeholder;
 	static EGabarite* gabarite_full_atlas;
 
+	static EGabarite* gabarite_sun;
+
+	static float sun_position_x;
+	static float sun_position_y;
+
+	static int selected_blur_level;
+
 	EGraphicCore();
 	~EGraphicCore();
 
 	struct ESprite
 	{
 		EGabarite* texture_gabarite = NULL;
+		EGabarite* normal_map_gabarite = NULL;
 
 		float* offset_x = new float(0.0f);
 		float* offset_y = new float(0.0f);
@@ -91,7 +103,32 @@ public:
 	};
 
 	static void draw_sprite_regular(sprite_array* _sprite_array, Batcher* _batch, float _offset_x, float _offset_y, float _offset_z);
-	static void draw_sprite_regular(EGraphicCore::ESprite* _sprite, Batcher* _batch, float _offset_x, float _offset_y, float _offset_z);
-	static void draw_sprite_PBR(EGraphicCore::ESprite* _sprite, Batcher* _batch, float _offset_x, float _offset_y, float _offset_z);
+
+	__inline static void draw_sprite_PBR(EGraphicCore::ESprite* _sprite, Batcher* _batch, float _offset_x, float _offset_y, float _offset_z, float _true_height)
+	{
+		if ((_sprite != NULL) && (_sprite->texture_gabarite != NULL))
+		{
+			_batch->setcolor(EColor::COLOR_WHITE);
+			_batch->draw_sprite_PBR
+			(
+				_offset_x + *_sprite->offset_x,
+				_offset_y + *_sprite->offset_y + _offset_z + *_sprite->offset_z,
+
+				*_sprite->size_x,
+				*_sprite->size_y,
+
+				*_sprite->fragment_left,
+				*_sprite->fragment_right,
+				*_sprite->fragment_down,
+				*_sprite->fragment_up,
+
+				_sprite->texture_gabarite,
+				_true_height
+			);
+			//_batch->draw_gabarite(_offset_x + *spr->offset_x, _offset_y + *spr->offset_y + _offset_z + *spr->offset_z, spr->texture_gabarite);
+		}
+	}
+
+	//static void draw_sprite_PBR(EGraphicCore::ESprite* _sprite, Batcher* _batch, float _offset_x, float _offset_y, float _offset_z);
 	static void reset_sprite_data(EGraphicCore::ESprite* _sprite);
 };

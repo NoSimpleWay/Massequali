@@ -33,6 +33,11 @@ public:
 	static EButton*							link_to_button_vertex_editor;
 	static EButton*							link_to_button_two_dimension_gradient;
 
+	static EButton::button_super_group*		super_group_world_setting;
+	static EButton::button_group*			group_world_setting_sun;
+	static EButton*							link_to_button_sun_position;
+
+
 	static EButton*							grid_region_edit_button_link;
 
 	static std::vector<EButton*>			auto_size_region_button;
@@ -61,6 +66,8 @@ public:
 	void autobuilding_updater(std::vector<Entity*> _v);
 
 	void reset_render();
+
+	void generate_AO_shadow();
 
 	//static std::vector<Entity*> entity_list;
 

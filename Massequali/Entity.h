@@ -35,6 +35,7 @@ public:
 	struct AutobuildingBase
 	{
 		EGabarite* main_texture;
+		EGabarite* normal_map_texture;
 
 		float* space_between_sprite_x = new float(0.0f);
 		float* space_between_sprite_y = new float(0.0f);
@@ -92,6 +93,16 @@ public:
 		std::string* name = new string("!");
 
 		float* max_height = new float(0.0f);
+
+		float* pseudo_pos_x		= new float(0.0f);
+		float* pseudo_size_x	= new float(0.0f);
+
+		float* pseudo_pos_y		= new float(0.0f);
+		float* pseudo_size_y	= new float(0.0f);
+
+		float* pseudo_pos_z		= new float(0.0f);
+		float* pseudo_size_z	= new float(0.0f);
+	
 	};
 
 	std::vector<AutobuildingBase*> autobuilding_base_list;

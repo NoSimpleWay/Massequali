@@ -1,6 +1,5 @@
 #pragma once
 #include "EWindow.h"
-
 //#include "../../../EBA.h"
 
 GLFWwindow* EWindow::main_window = NULL;
@@ -17,6 +16,9 @@ ETextureAtlas* EWindow::base_blockmap;
 
 ETextureAtlas* EWindow::supermap_FBO;
 ETextureAtlas* EWindow::AO_shadow_FBO;
+
+ETextureAtlas* EWindow::skydome_light_FBO[8];
+
 
 ETextureAtlas* EWindow::screen_FBO;
 
@@ -799,9 +801,12 @@ void EButton::update(float _d)
 	{
 		selected_element = (int)((screen_position_y - EWindow::mouse_y) / 22.0f);
 
-		if (action_on_drop_list_select_element != NULL)
+		if (!action_on_drop_list_select_element.empty())
 		{
-			action_on_drop_list_select_element(this, _d);
+			for (BUTTON_ACTION ba : action_on_drop_list_select_element)
+			{
+				ba(this, _d);
+			}
 		}
 	}
 
@@ -1419,7 +1424,18 @@ void EButton::update(float _d)
 			);
 
 
-		if ((*two_dimension_gradient->is_catched)& (EWindow::LMB))
+		if
+		(
+			(
+				(*two_dimension_gradient->is_catched)
+				||
+				(true)
+			)
+			&
+			(EWindow::LMB)
+			&
+			(is_overlap())
+		)
 		{
 			*two_dimension_gradient->value_x = (EWindow::mouse_x - screen_position_x) / button_size_x;
 			*two_dimension_gradient->value_y = (EWindow::mouse_y - screen_position_y) / button_size_y;
@@ -1838,19 +1854,25 @@ void EButton::default_draw(Batcher* _batch, float _d)
 		}*/
 	}
 
-	if (two_dimension_gradient != NULL)
+	if
+	(
+		(two_dimension_gradient != NULL)
+	)
 	{
 
-		_batch->draw_two_dimension_gradient
-		(
-			screen_position_x,
-			screen_position_y,
-			button_size_x,
-			button_size_y,
-			EGraphicCore::gabarite_white_pixel,
-			two_dimension_gradient->color_x,
-			two_dimension_gradient->color_y
-		);
+		if (*two_dimension_gradient->draw_gradient)
+		{
+			_batch->draw_two_dimension_gradient
+			(
+				screen_position_x,
+				screen_position_y,
+				button_size_x,
+				button_size_y,
+				EGraphicCore::gabarite_white_pixel,
+				two_dimension_gradient->color_x,
+				two_dimension_gradient->color_y
+			);
+		}
 
 		if (*two_dimension_gradient->is_catched)
 		{
@@ -2182,6 +2204,11 @@ bool EButton::is_not_outside_of_group(EButton* _b, button_super_group* _bsg, but
 	}
 }
 
+bool EButton::is_not_outside_of_super_group(EButton* _b, button_super_group* _bsg)
+{
+	return false;
+}
+
 void EWindow::default_update(float _d)
 {
 	for (int i = 0; i < button_list.size(); i++)
@@ -2285,6 +2312,8 @@ void EWindow::default_update(float _d)
 			}
 
 			//*bsg->position_x += _d * 20.0f;
+
+
 
 			for (EButton::button_group* bg : bsg->button_group_list)
 			{
@@ -2500,6 +2529,17 @@ void EWindow::default_update(float _d)
 				//main supergroup autostretch
 				if (*bg->position_x + *bg->size_x + 5.0f > * bsg->size_x) { *bsg->size_x = *bg->position_x + *bg->size_x + 5.0f; }
 				if (*bg->position_y + *bg->size_y + 5.0f > * bsg->size_y) { *bsg->size_y = *bg->position_y + *bg->size_y + 5.0f; }
+			}
+
+			if (bsg->button_close != NULL)
+			{
+				bsg->button_close->button_x_offset = *bsg->position_x + *bsg->size_x - bsg->button_close->button_size_x;
+				bsg->button_close->button_y_offset = *bsg->position_y + *bsg->size_y - bsg->button_close->button_size_y;
+			}
+			for (EButton* b : bsg->additional_button_list)
+			{
+				b->update(_d);
+				b->update_additional(_d);
 			}
 		}
 }
@@ -2821,20 +2861,22 @@ void EWindow::default_draw_interface(float _d)
 				EGraphicCore::batch->draw_rama(total_x, total_y, *bg->size_x, *bg->size_y, 2.0f, EGraphicCore::gabarite_white_pixel);
 
 				for (EButton* but : bg->button_list)
-					if
-						(
-							(
-								(EButton::is_not_outside_of_group(but, bsg, bg))
-								||
-								(glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
-								)
-							&
-							(but->is_active)
-							)
-					{
+				if
+				(
+					(
+						(EButton::is_not_outside_of_group(but, bsg, bg))
+						//||
+						//(glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
+					)
+					&
+					(but->is_active)
+				)
+				{
 						but->default_draw(EGraphicCore::batch, _d);
 						but->additional_draw(EGraphicCore::batch, _d);
-					}
+				}
+
+
 
 				EGraphicCore::batch->reinit();
 				EGraphicCore::batch->draw_call();
@@ -2861,7 +2903,12 @@ void EWindow::default_draw_interface(float _d)
 			EGraphicCore::batch->draw_call();
 			EGraphicCore::batch->reset();
 
-
+			for (EButton* but : bsg->additional_button_list)
+				if (but->is_active)
+				{
+					but->default_draw(EGraphicCore::batch, _d);
+					but->additional_draw(EGraphicCore::batch, _d);
+				}
 		}
 
 	//draw graphic for button group
@@ -3166,4 +3213,28 @@ bool is_catched_by_mouse(bool _is_catched, float _x, float _y, float _size_x, fl
 	}
 
 	return _is_catched;
+}
+
+void external_button_action_close_master_button_super_group(EButton* _b, float _f)
+{
+	if (_b->master_super_group != NULL)
+	{
+		*_b->master_super_group->is_active = false;
+	}
+}
+
+EButton::button_super_group::button_super_group(EWindow* _w)
+{
+	EButton* but = new EButton(0.0f, 0.0f, 20.0f, 20.0f, _w, this, nullptr);
+	but->text = "X";
+	but->bg_color->set_color(EColor::COLOR_DARK_RED);
+	but->text_color->set_color(EColor::COLOR_LAMP);
+	but->action_on_left_click.push_back(&external_button_action_close_master_button_super_group);
+
+	button_close = but;
+	additional_button_list.push_back(but);
+}
+
+EButton::button_super_group::~button_super_group()
+{
 }

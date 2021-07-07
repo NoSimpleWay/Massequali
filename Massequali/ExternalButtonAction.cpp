@@ -806,6 +806,15 @@ void ExternalButtonAction::external_button_action_change_normal_color_for_vertex
 	}
 }
 
+void ExternalButtonAction::external_button_action_change_sun_position(EButton* _b, float _f)
+{
+	if (_b->two_dimension_gradient != NULL)
+	{
+		EGraphicCore::sun_position_x = *_b->two_dimension_gradient->value_x;
+		EGraphicCore::sun_position_y = *_b->two_dimension_gradient->value_y;
+	}
+}
+
 Entity* ExternalButtonAction::get_entity()
 {
 	if

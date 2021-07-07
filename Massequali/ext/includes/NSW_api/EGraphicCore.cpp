@@ -17,10 +17,15 @@ Shader* EGraphicCore::lightmap_blur;
 Shader* EGraphicCore::lightmap_spread;
 
 Shader* EGraphicCore::AO_shader;
+Shader* EGraphicCore::PBR_shader;
+Shader* EGraphicCore::simple_blur;
 
 Batcher* EGraphicCore::batch;
 Batcher* EGraphicCore::batch_shadowmap;
 Batcher* EGraphicCore::batch_terrain;
+
+Batcher* EGraphicCore::batch_PBR;
+
 
 glm::mat4 EGraphicCore::matrix_transform;
 
@@ -29,6 +34,11 @@ int EGraphicCore::SCR_HEIGHT = 800;
 
 float EGraphicCore::correction_x = 0.1f;
 float EGraphicCore::correction_y = 0.1f;
+
+float EGraphicCore::sun_position_x = 0.5f;
+float EGraphicCore::sun_position_y = 0.5f;
+
+int EGraphicCore::selected_blur_level = 0;
 
 std::vector<EGabarite*> EGraphicCore::gabarite_list;
 
@@ -43,6 +53,8 @@ EGabarite* EGraphicCore::gabarite_radial_button;
 EGabarite* EGraphicCore::gabarite_radial_button_dot;
 EGabarite* EGraphicCore::gabarite_supermap_placeholder;
 EGabarite* EGraphicCore::gabarite_full_atlas;
+
+EGabarite* EGraphicCore::gabarite_sun;
 
 void EGraphicCore::reset_sprite_data(EGraphicCore::ESprite* _sprite)
 {
@@ -149,31 +161,13 @@ void EGraphicCore::draw_sprite_regular(sprite_array* _sprite_array, Batcher* _ba
 	}
 }
 
+/*
 void EGraphicCore::draw_sprite_regular(EGraphicCore::ESprite* _sprite, Batcher* _batch, float _offset_x, float _offset_y, float _offset_z)
 {
-	if ((_sprite != NULL) && (_sprite->texture_gabarite != NULL))
-	{
-		_batch->setcolor(EColor::COLOR_WHITE);
-		_batch->draw_sprite
-		(
-			_offset_x + *_sprite->offset_x,
-			_offset_y + *_sprite->offset_y + _offset_z + *_sprite->offset_z,
+	
+}*/
 
-			*_sprite->size_x,
-			*_sprite->size_y,
-
-			*_sprite->fragment_left,
-			*_sprite->fragment_right,
-			*_sprite->fragment_down,
-			*_sprite->fragment_up,
-
-			_sprite->texture_gabarite
-		);
-		//_batch->draw_gabarite(_offset_x + *spr->offset_x, _offset_y + *spr->offset_y + _offset_z + *spr->offset_z, spr->texture_gabarite);
-	}
-}
-
-void EGraphicCore::draw_sprite_PBR(EGraphicCore::ESprite* _sprite, Batcher* _batch, float _offset_x, float _offset_y, float _offset_z)
+/*void EGraphicCore::draw_sprite_PBR(EGraphicCore::ESprite* _sprite, Batcher* _batch, float _offset_x, float _offset_y, float _offset_z, float _true_height)
 {
 	if ((_sprite != NULL) && (_sprite->texture_gabarite != NULL))
 	{
@@ -195,7 +189,7 @@ void EGraphicCore::draw_sprite_PBR(EGraphicCore::ESprite* _sprite, Batcher* _bat
 		);
 		//_batch->draw_gabarite(_offset_x + *spr->offset_x, _offset_y + *spr->offset_y + _offset_z + *spr->offset_z, spr->texture_gabarite);
 	}
-}
+}*/
 
 EGraphicCore::ESprite::~ESprite()
 {

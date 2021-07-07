@@ -190,7 +190,7 @@ EGabarite* ETextureAtlas::put_texture_to_atlas(std::string _name, ETextureAtlas*
 	return new_gabarite;
 }
 
-void ETextureAtlas::active_this_texture_atlas(ETextureAtlas* _ta, ETextureAtlas* _ta2)
+void ETextureAtlas::draw_to_this_FBO(ETextureAtlas* _ta, ETextureAtlas* _ta2)
 {
 	glViewport(0, 0, _ta->size_x, _ta->size_y);
 	glBindFramebuffer(GL_FRAMEBUFFER, _ta->framebuffer);
@@ -227,7 +227,7 @@ void ETextureAtlas::active_this_texture_atlas(ETextureAtlas* _ta, ETextureAtlas*
 	EGraphicCore::ourShader->setInt("texture2", 1);
 }
 
-void ETextureAtlas::return_to_this_texture_atlas(ETextureAtlas* _ta)
+void ETextureAtlas::set_this_FBO_as_active(ETextureAtlas* _ta)
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 

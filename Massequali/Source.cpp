@@ -87,6 +87,8 @@ int main()
 
 	EGraphicCore::ourShader = new Shader("data/#default.vs", "data/#default.fs");
 	EGraphicCore::AO_shader = new Shader("data/#AO_shadow.vs", "data/#AO_shadow.fs");
+	EGraphicCore::PBR_shader = new Shader("data/PBR.vs", "data/PBR.fs");
+	EGraphicCore::simple_blur = new Shader("data/simple_blur.vs", "data/simple_blur.fs");
 	/*EGraphicCore::shadowmap = new Shader("data/shadowmap.vs", "data/shadowmap.fs");
 	EGraphicCore::shader_terrain = new Shader("data/terrain.vs", "data/terrain.fs");
 	EGraphicCore::lightmap_blur = new Shader("data/lightmap_blur.vs", "data/lightmap_blur.fs");
@@ -108,14 +110,27 @@ int main()
 	EGraphicCore::batch_shadowmap = new Batcher();
 	EGraphicCore::batch_terrain = new Batcher();
 
-	for (int i = 0; i < 5000; i++)
+	EGraphicCore::batch_PBR = new Batcher();
+
+	for (int i = 0; i < 1000; i++)
 	{
 		EGraphicCore::batch->fill_indices();
+		
 		//EGraphicCore::batch_shadowmap->fill_indices();
 		//EGraphicCore::batch_terrain->fill_indices();
 	}
 
+	std::cout << "indices count for {default}:" << std::to_string(EGraphicCore::batch->indices_id) << std::endl;
+
+	for (int i = 0; i < 1000; i++)
+	{
+		EGraphicCore::batch_PBR->fill_indices();
+	}
+
+	std::cout << "indices count for {PBR}:" << std::to_string(EGraphicCore::batch_PBR->indices_id) << std::endl;
+
 	EGraphicCore::batch->init();
+	EGraphicCore::batch_PBR->init_PBR();
 	//EGraphicCore::batch_shadowmap->init_shadowmap();
 	//EGraphicCore::batch_terrain->init_terrain();
 	//
@@ -133,8 +148,17 @@ int main()
 	EWindow::default_texture_atlas = new ETextureAtlas(4096, 4096);
 
 	EWindow::supermap_FBO = new ETextureAtlas(512, 512);
-	EWindow::supermap_FBO = new ETextureAtlas(512, 512);
+	//EWindow::supermap_FBO = new ETextureAtlas(512, 512);
 	EWindow::AO_shadow_FBO = new ETextureAtlas(1920, 1080, GL_RGBA16, GL_UNSIGNED_SHORT);
+
+	EWindow::skydome_light_FBO[0] = new ETextureAtlas(int(2048.0f),			int(2048.0f), GL_RGBA16, GL_UNSIGNED_SHORT);
+	EWindow::skydome_light_FBO[1] = new ETextureAtlas(int(2048.0f / 2.0f),	int(2048.0f / 2.0f), GL_RGBA16, GL_UNSIGNED_SHORT);
+	EWindow::skydome_light_FBO[2] = new ETextureAtlas(int(2048.0f / 4.0f),	int(2048.0f / 4.0f), GL_RGBA16, GL_UNSIGNED_SHORT);
+	EWindow::skydome_light_FBO[3] = new ETextureAtlas(int(2048.0f / 8.0f),	int(2048.0f / 8.0f), GL_RGBA16, GL_UNSIGNED_SHORT);
+	EWindow::skydome_light_FBO[4] = new ETextureAtlas(int(2048.0f / 16.0f),	int(2048.0f / 16.0f), GL_RGBA16, GL_UNSIGNED_SHORT);
+	EWindow::skydome_light_FBO[5] = new ETextureAtlas(int(2048.0f / 32.0f),	int(2048.0f / 32.0f), GL_RGBA16, GL_UNSIGNED_SHORT);
+	EWindow::skydome_light_FBO[6] = new ETextureAtlas(int(2048.0f / 64.0f),	int(2048.0f / 64.0f), GL_RGBA16, GL_UNSIGNED_SHORT);
+	EWindow::skydome_light_FBO[7] = new ETextureAtlas(int(2048.0f / 128.0f),int(2048.0f / 128.0f), GL_RGBA16, GL_UNSIGNED_SHORT);
 	/*
 	EWindow::shadow_FBO = new ETextureAtlas(1920, 1580);
 	EWindow::screen_FBO = new ETextureAtlas(1920, 1080);
@@ -200,6 +224,8 @@ int main()
 	EGraphicCore::gabarite_ERROR = ETextureAtlas::put_texture_to_atlas("data/textures/ERROR.png", EWindow::default_texture_atlas);
 	EGraphicCore::gabarite_radial_button = ETextureAtlas::put_texture_to_atlas("data/textures/radial_button.png", EWindow::default_texture_atlas);
 	EGraphicCore::gabarite_radial_button_dot = ETextureAtlas::put_texture_to_atlas("data/textures/radial_button_dot.png", EWindow::default_texture_atlas);
+	
+	EGraphicCore::gabarite_sun = ETextureAtlas::put_texture_to_atlas("data/textures/sun.png", EWindow::default_texture_atlas);
 
 	EGraphicCore::gabarite_small_wood_button_bg = ETextureAtlas::put_texture_to_atlas("data/textures/button_bg.png", EWindow::default_texture_atlas);
 

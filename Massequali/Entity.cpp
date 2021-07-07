@@ -154,6 +154,32 @@ void Entity::draw_entity_autobuilging_helping(Entity* _e, Batcher* _b, float _d)
 		if (!_e->autobuilding_group_list.empty())
 			for (AutobuildingGroup* _group : _e->autobuilding_group_list)
 			{
+
+				if (*_group->offset_z > 0.0f)
+				{
+					//std::cout << "blue z-shadow" << std::endl;
+					EGraphicCore::batch->setcolor_alpha(EColor::COLOR_DARK_BLUE, 0.1f);
+					EGraphicCore::batch->draw_gabarite
+					(
+						*_e->position_x + *_group->offset_x + *_group->pseudo_pos_x,
+						*_e->position_y + *_group->offset_y,
+						*_group->pseudo_size_x,
+						*_group->pseudo_size_y + 5.0f,
+						EGraphicCore::gabarite_white_pixel
+					);
+
+					EGraphicCore::batch->setcolor_alpha(EColor::COLOR_WHITE, 1.0f);
+
+					EGraphicCore::batch->draw_gabarite
+					(
+						*_e->position_x + *_group->offset_x + *_group->pseudo_pos_x,
+						*_e->position_y + *_group->offset_y,
+						3.0f,
+						*_group->offset_z,
+						EGraphicCore::gabarite_white_pixel
+					);
+				}
+
 				for (AutobuildingGroupElement* _element : _group->autobuilding_group_element_list)
 				{
 
@@ -203,11 +229,14 @@ void Entity::draw_entity_autobuilging_helping(Entity* _e, Batcher* _b, float _d)
 							(ExternalButtonAction::get_entity() != NULL)
 							&&
 							(ExternalButtonAction::get_entity() == _e)
-							&&
-							(*_group->is_catched)
 						)
 					{
-						EGraphicCore::batch->setcolor(EColor::COLOR_YELLOW);
+
+						if (*_group->is_catched)
+						{EGraphicCore::batch->setcolor(EColor::COLOR_YELLOW);}
+						else
+						{EGraphicCore::batch->setcolor_alpha(EColor::COLOR_ORANGE, 0.5f);}
+
 						EGraphicCore::batch->draw_gabarite
 						(
 							*_e->position_x + *_group->offset_x - 30.0f,
@@ -216,6 +245,31 @@ void Entity::draw_entity_autobuilging_helping(Entity* _e, Batcher* _b, float _d)
 							10.0f,
 							EGraphicCore::gabarite_white_pixel
 						);
+
+						if (*_group->offset_z > 0.0f)
+						{
+							EGraphicCore::batch->setcolor_alpha(EColor::COLOR_YELLOW, 0.1f);
+
+							EGraphicCore::batch->draw_gabarite
+							(
+								*_e->position_x + *_group->offset_x - 30.0f,
+								*_e->position_y + *_group->offset_y - 25.0f,
+								60.0f,
+								10.0f,
+								EGraphicCore::gabarite_white_pixel
+							);
+
+							EGraphicCore::batch->draw_rama
+							(
+								*_e->position_x + *_group->offset_x - 30.0f,
+								*_e->position_y + *_group->offset_y - 25.0f,
+								60.0f,
+								*_group->offset_z + 25.0f,
+								2.0f,
+								EGraphicCore::gabarite_white_pixel
+							);
+
+						}
 					}
 
 					if ((glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS))
@@ -241,9 +295,26 @@ void Entity::draw_entity_autobuilging_helping(Entity* _e, Batcher* _b, float _d)
 					EGraphicCore::batch->setcolor(EColor::COLOR_PINK);
 					draw_catched_element(_element, _e, _group, false);
 
-
+					EGraphicCore::batch->setcolor(EColor::COLOR_BLACK);
+					if (*_element->catched_mid)
+					{
+						EFont::active_font->draw
+						(
+							EGraphicCore::batch,
+								"x:"
+								+
+								EString::float_to_string(*_element->offset_x)
+								+
+								" y:"
+								+
+								EString::float_to_string(*_element->offset_y),
+							*_e->position_x + *_group->offset_x + *_element->offset_x + *_element->size_x / 2.0f,
+							*_e->position_y + *_group->offset_y + *_element->offset_y + *_e->position_z + *_group->offset_z + *_element->offset_z + *_element->size_y / 2.0f
+						);
+					}
 				}
 
+				/*
 				if
 				(
 					(_e == ExternalButtonAction::get_entity())
@@ -263,7 +334,7 @@ void Entity::draw_entity_autobuilging_helping(Entity* _e, Batcher* _b, float _d)
 					EGraphicCore::batch->setcolor(EColor::COLOR_GREEN);
 					EGraphicCore::batch->draw_gabarite(*_e->position_x + *_group->offset_x - 500.0f, *_e->position_y + *_group->offset_y + *_group->bottom_offset, 1000.0f, 3.0f, EGraphicCore::gabarite_white_pixel);
 					EGraphicCore::batch->draw_gabarite(*_e->position_x + *_group->offset_x - 500.0f, *_e->position_y + *_group->offset_y + *_group->up_offset, 1000.0f, 3.0f, EGraphicCore::gabarite_white_pixel);
-				}
+				}*/
 
 			}
 	}

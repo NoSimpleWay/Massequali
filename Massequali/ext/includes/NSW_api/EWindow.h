@@ -30,6 +30,8 @@ class EWindow;
 
 static bool is_catched_by_mouse(bool _is_catched, float _x, float _y, float _size_x, float _size_y, float _catch_size, int _mode);
 
+
+
 class EButton
 {
 public:
@@ -119,7 +121,7 @@ public:
 	BUTTON_ACTION action_on_input_finish;
 
 	std::vector<BUTTON_ACTION> action_on_slider_drag;
-	BUTTON_ACTION action_on_drop_list_select_element;
+	std::vector<BUTTON_ACTION> action_on_drop_list_select_element;
 
 	//std::vector < DefaultButtonActions::SimpleValueChanger* > simple_value_changer_list;
 
@@ -154,8 +156,8 @@ public:
 	float button_size_x = 100;
 	float button_size_y = 25;
 
-	float button_min_size_x = 100;
-	float button_min_size_y = 25;
+	float button_min_size_x = 5;
+	float button_min_size_y = 5;
 
 	std::string text = "";
 
@@ -396,6 +398,9 @@ public:
 
 	struct button_super_group
 	{
+		button_super_group(EWindow* _w);
+		~button_super_group();
+
 		std::vector <button_group*> button_group_list;
 
 		float* size_x = new float(0.0f);
@@ -409,6 +414,10 @@ public:
 		std::string* name = new std::string("");
 
 		bool* is_catched = new bool(false);
+
+		std::vector<EButton*> additional_button_list;
+
+		EButton* button_close = nullptr;
 	};
 
 	EButton(float _x, float _y, float _sx, float _sy, EWindow* _w, button_super_group* _bsg, button_group* _bg);
@@ -426,6 +435,7 @@ public:
 	int* selected_auto_align_mode = new int(0);
 
 	static bool is_not_outside_of_group(EButton* _b, button_super_group* _bsg, button_group* _bg);
+	static bool is_not_outside_of_super_group(EButton* _b, button_super_group* _bsg);
 
 	button_group* master_group;
 	button_super_group* master_super_group;
@@ -463,8 +473,8 @@ public:
 
 	struct ETwoDimensionGradient
 	{
-		float* value_x = new float(0.0f);
-		float* value_y = new float(0.0f);
+		float* value_x = new float(0.5f);
+		float* value_y = new float(0.5f);
 
 		EColor* color_x = new EColor(1.0f, 0.0f, 0.0f, 1.0f);
 		EColor* color_y = new EColor(0.0f, 0.0f, 1.0f, 1.0f);
@@ -476,11 +486,13 @@ public:
 
 		bool* is_catched = new bool(false);
 
+		bool* draw_gradient = new bool(true);
+
 	};
 
 	ETwoDimensionGradient* two_dimension_gradient;
 };
-
+static void external_button_action_close_master_button_super_group(EButton* _b, float _f);
 class EWindow
 {
 public:
@@ -572,6 +584,7 @@ public:
 
 	static ETextureAtlas* supermap_FBO;
 	static ETextureAtlas* AO_shadow_FBO;
+	static ETextureAtlas* skydome_light_FBO[8];
 
 	static ETextureAtlas* screen_FBO;
 

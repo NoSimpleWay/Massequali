@@ -32,6 +32,9 @@ EColorCollection* EColor::COLOR_SHADOW_TIME_SUNSET = new EColorCollection(0.0f, 
 
 EColorCollection* EColor::COLOR_LIME = new EColorCollection(0.6f, 1.0f, 0.5f, 1.0);
 
+EColorCollection* EColor::COLOR_LAMP = new EColorCollection(1.0f, 0.7843137383f, 0.3921568692f, 1.0f);
+
+
 EColor::EColor(float _r, float _g, float _b, float _a)
 {
 	red = _r;
