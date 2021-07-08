@@ -1536,9 +1536,17 @@ void EButton::default_draw(Batcher* _batch, float _d)
 		}
 	}
 
-	if (*side_text != "")
+	/*if (*side_text != "")
 	{
 		target_font->draw_with_background(*side_text, _batch, screen_position_x - 8.0f - EFont::get_width(target_font, *side_text), screen_position_y + ((button_size_y - 20.0f) / 2.0f + 0.0f), EColor::COLOR_LIGHT_GRAY, EColor::COLOR_DARK_GRAY);
+	}*/
+
+	//20:12:17 08.07.2021
+	//Jvnko Still Loves You
+	//Sewerslvt
+	if (*side_text != "")
+	{
+		target_font->draw_with_background(*side_text, _batch, screen_position_x, screen_position_y + button_size_y + 2.0f, EColor::COLOR_LIGHT_GRAY, EColor::COLOR_DARK_GRAY);
 	}
 
 	if (have_rama)
@@ -1598,11 +1606,12 @@ void EButton::default_draw(Batcher* _batch, float _d)
 
 	if (*is_radial_button)
 	{
-		float tsx = EFont::get_width(EFont::font_list.at(EFont::FONT_ENUM::FE_DOT), EString::float_to_string((slider_value * 100.0f) / 100.0f));
+		float tsx = EFont::get_width(EFont::font_list.at(EFont::FONT_ENUM::FE_DOT), EString::float_to_string(round(slider_value * 100.0f) / 100.0f));
 		//float tx
 		float tsy = *EGraphicCore::gabarite_radial_button->size_y + 3.0f;
 
 		float tx = (*EGraphicCore::gabarite_radial_button->size_x - tsx) / 2.0f;
+		tx = 5.0f;
 
 		_batch->setcolor(bg_color);
 		_batch->draw_gabarite(screen_position_x, screen_position_y, EGraphicCore::gabarite_radial_button);
@@ -2192,14 +2201,14 @@ bool EButton::is_not_outside_of_group(EButton* _b, button_super_group* _bsg, but
 			(_b->button_y_offset + _b->button_size_y >= *_bg->position_y + *_bsg->position_y - 40.0f)
 			)
 	{
-		_b->bg_color->set_color(EColor::COLOR_WHITE);
-		_b->have_icon = true;
+		//_b->bg_color->set_color(EColor::COLOR_WHITE);
+		//_b->have_icon = true;
 		return true;
 	}
 	else
 	{
-		_b->bg_color->set_color(EColor::COLOR_RED);
-		_b->have_icon = false;
+		//_b->bg_color->set_color(EColor::COLOR_RED);
+		//_b->have_icon = false;
 		return false;
 	}
 }

@@ -960,17 +960,17 @@ void EWindowMain::create_button_groups()
 	//world setting
 	just_created_button_super_group = new EButton::button_super_group(this);
 	button_group_list.push_back(just_created_button_super_group);
-	*just_created_button_super_group->position_x = 500.0f;
+	*just_created_button_super_group->position_x = 700.0f;
 	*just_created_button_super_group->position_y = 300.0f;
 
 	//group_texture_variants
 	just_created_button_group = new EButton::button_group();
 	just_created_button_super_group->button_group_list.push_back(just_created_button_group);
 
-	*just_created_button_group->can_be_stretched_x = false;
+	*just_created_button_group->can_be_stretched_x = true;
 	*just_created_button_group->can_be_stretched_y = false;
 
-	*just_created_button_group->size_x = 532.0f;
+	*just_created_button_group->size_x = 732.0f;
 	*just_created_button_group->size_y = 325.0f;
 	*just_created_button_group->can_be_moved_by_user = false;
 
@@ -986,7 +986,7 @@ void EWindowMain::create_button_groups()
 	but->drop_text.push_back("BLUR 8*8     [level 3]");
 	but->drop_text.push_back("BLUR 16*16   [level 4]");
 	but->drop_text.push_back("BLUR 32*32   [level 5]");
-	but->drop_text.push_back("BLUR 64*654  [level 6]");
+	but->drop_text.push_back("BLUR 64*64   [level 6]");
 	but->drop_text.push_back("BLUR 128*128 [level 7]");
 	but->drop_elements = 8;
 	but->text = but->drop_text.at(0);
@@ -1003,6 +1003,110 @@ void EWindowMain::create_button_groups()
 	but->two_dimension_gradient = just_created_td_gradient;
 	just_created_button_group->button_list.push_back(but);
 	*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_Y;
+	
+
+
+	but = new EButton (0.0f, 0.0f, 80.0f, 60.0f, this, just_created_button_super_group, just_created_button_group);
+	*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_X;
+	//but->is_slider = true;
+	*but->is_radial_button = true;
+	*but->maximum_value = 1.0f;
+	but->target_address_for_float = &EGraphicCore::sun_size;
+	but->action_on_slider_drag.push_back(&ExternalButtonAction::external_button_action_set_button_value);
+	just_created_button_group->button_list.push_back(but);
+	but->description_text = "Sun size";
+	*but->side_text = "Sun size";
+	but->text_color->set_color(EColor::COLOR_ORANGE);
+	but->bg_color->set_color(EColor::COLOR_ORANGE);
+	but->have_bg = false;
+	but->have_rama = true;
+	*but->is_consumable = true;
+
+	but = new EButton(0.0f, 0.0f, 80.0f, 60.0f, this, just_created_button_super_group, just_created_button_group);
+	*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_X;
+	//but->is_slider = true;
+	*but->is_radial_button = true;
+	*but->maximum_value = 100.0f;
+	but->slider_value_multiplier = 0.01f;
+	but->target_address_for_float = &EGraphicCore::sun_lum;
+	but->action_on_slider_drag.push_back(&ExternalButtonAction::external_button_action_set_button_value);
+	just_created_button_group->button_list.push_back(but);
+	but->description_text = "Sun bright";
+	*but->side_text = "Sun bright";
+	but->text_color->set_color(EColor::COLOR_YELLOW);
+	but->bg_color->set_color(EColor::COLOR_YELLOW);
+	but->have_bg = false;
+	but->have_rama = true;
+	*but->is_consumable = true;
+
+	but = new EButton(0.0f, 0.0f, 80.0f, 60.0f, this, just_created_button_super_group, just_created_button_group);
+	*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_X;
+	//but->is_slider = true;
+	*but->is_radial_button = true;
+	*but->maximum_value = 1.0f;
+	//but->target_address_for_float = &EGraphicCore::suskyn_lum;
+	but->target_address_for_float = &EGraphicCore::sky_lum;
+	but->action_on_slider_drag.push_back(&ExternalButtonAction::external_button_action_set_button_value);
+	just_created_button_group->button_list.push_back(but);
+	but->description_text = "Sky bright";
+	*but->side_text = "Sky bright";
+	but->text_color->set_color(EColor::COLOR_BLUE);
+	but->bg_color->set_color(EColor::COLOR_BLUE);
+	but->have_bg = false;
+	but->have_rama = true;
+	*but->is_consumable = true;
+
+	but = new EButton(0.0f, 0.0f, 80.0f, 60.0f, this, just_created_button_super_group, just_created_button_group);
+	*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_X;
+	//but->is_slider = true;
+	*but->is_radial_button = true;
+	*but->maximum_value = 1.0f;
+	//but->target_address_for_float = &EGraphicCore::suskyn_lum;
+	but->target_address_for_float = &EGraphicCore::ground_lum;
+	but->action_on_slider_drag.push_back(&ExternalButtonAction::external_button_action_set_button_value);
+	just_created_button_group->button_list.push_back(but);
+	but->description_text = "Ground bright";
+	*but->side_text = "Ground bright";
+	but->text_color->set_color(EColor::COLOR_GREEN);
+	but->bg_color->set_color(EColor::COLOR_GREEN);
+	but->have_bg = false;
+	but->have_rama = true;
+	*but->is_consumable = true;
+
+	but = new EButton(0.0f, 0.0f, 80.0f, 60.0f, this, just_created_button_super_group, just_created_button_group);
+	*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_X;
+	//but->is_slider = true;
+	*but->is_radial_button = true;
+	*but->maximum_value = 10.0f;
+	but->slider_value_multiplier = 0.1f;
+	//but->target_address_for_float = &EGraphicCore::suskyn_lum;
+	but->target_address_for_float = &EGraphicCore::blur_size;
+	but->action_on_slider_drag.push_back(&ExternalButtonAction::external_button_action_set_button_value);
+	just_created_button_group->button_list.push_back(but);
+	but->description_text = "Blur size";
+	*but->side_text = "Blur size";
+	but->have_rama = true;
+	*but->is_consumable = true;
+
+	but = new EButton(0.0f, 0.0f, 80.0f, 60.0f, this, just_created_button_super_group, just_created_button_group);
+	*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_X;
+	//but->is_slider = true;
+	*but->is_radial_button = true;
+	*but->maximum_value = 100.0f;
+	but->slider_value_multiplier = 0.1f;
+	//but->target_address_for_float = &EGraphicCore::suskyn_lum;
+	but->target_address_for_float = &EGraphicCore::brightness_multiplier;
+	but->action_on_slider_drag.push_back(&ExternalButtonAction::external_button_action_set_button_value);
+	just_created_button_group->button_list.push_back(but);
+	but->description_text = "Skydome light reflection multiplier";
+	*but->side_text = "Reflection";
+	but->have_rama = true;
+	*but->is_consumable = true;
+
+	but->text_color->set_color(EColor::COLOR_WHITE);
+	but->bg_color->set_color(EColor::COLOR_WHITE);
+	but->have_bg = false;
+
 
 
 
@@ -1457,6 +1561,8 @@ transformLoc = glGetUniformLocation(EGraphicCore::PBR_shader->ID, "transform");
 glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(EGraphicCore::matrix_transform));
 float true_height = 0.0f;
 
+glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "brightness_multiplier"), EGraphicCore::brightness_multiplier);
+
 glActiveTexture(GL_TEXTURE1);
 glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[EGraphicCore::selected_blur_level]->colorbuffer);
 EGraphicCore::PBR_shader->setInt("texture2", 1);
@@ -1478,12 +1584,12 @@ glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 			
 			if (*t_group->selected_direction_of_push == AutobuildingSpritePushDirection::AUTOBUILDING_SPRITE_PUSH_DIRECTION_WALL_Z)
 			{
-				true_height = *t_entity->position_y + *t_group->sprite_list.at(f)->offset_y + *t_entity->position_z + *t_group->sprite_list.at(f)->offset_z - *main_camera->position_y + EGraphicCore::SCR_HEIGHT / 2.0f;
+				true_height =*t_entity->position_z + *t_group->sprite_list.at(f)->offset_z;
 			}
 			else
 			if (*t_group->selected_direction_of_push == AutobuildingSpritePushDirection::AUTOBUILDING_SPRITE_PUSH_DIRECTION_ROOF_Y)
 			{
-				true_height = *t_entity->position_y + *t_group->sprite_list.at(f)->offset_y + *t_entity->position_z + *t_group->sprite_list.at(f)->offset_z - *main_camera->position_y + EGraphicCore::SCR_HEIGHT / 2.0f + 1000.0f;
+				true_height = *t_entity->position_y + *t_group->sprite_list.at(f)->offset_y + *t_entity->position_z + *t_group->sprite_list.at(f)->offset_z - *main_camera->position_y + EGraphicCore::SCR_HEIGHT / 2.0f + 1024.0f;
 			}
 
 			EGraphicCore::draw_sprite_PBR
@@ -2138,23 +2244,34 @@ void EWindowMain::reset_render()
 
 
 
-		//sky
-		glClearColor(0.04f, 0.040f, 0.40f, 1.0f);
+		
+		glClearColor(0.04f, 0.045f, 0.055f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		EGraphicCore::batch->setcolor(0.1f * EGraphicCore::sun_position_y, 0.104f * EGraphicCore::sun_position_y * EGraphicCore::sun_position_y, 0.11f * EGraphicCore::sun_position_y * EGraphicCore::sun_position_y, 1.0f);
-		EGraphicCore::batch->draw_gabarite(0.0f, 0.0f, 1.0f, 1.000f, EGraphicCore::gabarite_white_pixel);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendEquation(GL_FUNC_ADD);
+		/*//sky
+		EGraphicCore::batch->setcolor(0.095f, 0.098f, 0.1f, 1.0f);
+		EGraphicCore::batch->draw_gabarite(0.0f, 0.0f, 1.0f, 1.000f, EGraphicCore::gabarite_white_pixel);*/
+		//sky
+		EGraphicCore::batch->setcolor_lum(EColor::COLOR_WHITE, EGraphicCore::sky_lum);
+		EGraphicCore::batch->draw_gabarite(0.0f, 0.0f, 1.0f, 1.0f, EGraphicCore::gabarite_sky);
 
 		//sun
-		EGraphicCore::batch->setcolor(1.0f, 0.9f, 0.8f, 1.0f);
-		EGraphicCore::batch->draw_gabarite(EGraphicCore::sun_position_x - 0.025f * 1.0f, EGraphicCore::sun_position_y - 0.025f * 1.0f, 0.05f * 1.0f, 0.05f * 1.0f, EGraphicCore::gabarite_sun);
+		EGraphicCore::batch->setcolor(1.0f * EGraphicCore::sun_lum, 0.9f * EGraphicCore::sun_lum, 0.8f * EGraphicCore::sun_lum, 1.0f);
+		EGraphicCore::batch->draw_gabarite(EGraphicCore::sun_position_x - EGraphicCore::sun_size * 0.25f, EGraphicCore::sun_position_y - EGraphicCore::sun_size * 0.5f, EGraphicCore::sun_size * 0.5f, EGraphicCore::sun_size, EGraphicCore::gabarite_sun);
 
 		//ground (grass)
-		EGraphicCore::batch->setcolor(0.085f * EGraphicCore::sun_position_y, 0.084f * EGraphicCore::sun_position_y, 0.083f * EGraphicCore::sun_position_y, 1.0f);
-		EGraphicCore::batch->draw_gabarite(0.0f, 0.0f, 1.0f, 0.25f, EGraphicCore::gabarite_white_pixel);
+		EGraphicCore::batch->setcolor(0.85f * EGraphicCore::ground_lum, 0.80f * EGraphicCore::ground_lum, 0.75f * EGraphicCore::ground_lum, 1.0f);
+		EGraphicCore::batch->draw_gabarite(0.0f, 0.0f, 1.0f, 0.35f, EGraphicCore::gabarite_white_pixel);
 	EGraphicCore::batch->force_draw_call();
 
 	EGraphicCore::simple_blur->use();
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendEquation(GL_FUNC_ADD);
 	transformLoc = glGetUniformLocation(EGraphicCore::simple_blur->ID, "transform");
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(EGraphicCore::matrix_transform));
 
@@ -2162,11 +2279,11 @@ void EWindowMain::reset_render()
 
 	EGraphicCore::batch->setcolor(EColor::COLOR_WHITE);
 	
-
+	//blur skydome
 	for (int i = 0; i < 7; i++)
 	{
-		glUniform1f(glGetUniformLocation(EGraphicCore::simple_blur->ID, "blur_size_x"), 1.0f / skydome_light_FBO[i + 1]->size_x * (8.0f - i));
-		glUniform1f(glGetUniformLocation(EGraphicCore::simple_blur->ID, "blur_size_y"), 1.0f / skydome_light_FBO[i + 1]->size_y * (8.0f - i));
+		glUniform1f(glGetUniformLocation(EGraphicCore::simple_blur->ID, "blur_size_x"), (1.0f / skydome_light_FBO[i]->size_x) * (EGraphicCore::blur_size) );
+		glUniform1f(glGetUniformLocation(EGraphicCore::simple_blur->ID, "blur_size_y"), (1.0f / skydome_light_FBO[i]->size_y) * (EGraphicCore::blur_size) );
 		ETextureAtlas::draw_to_this_FBO(EWindow::skydome_light_FBO[i + 1], EWindow::skydome_light_FBO[i]);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);

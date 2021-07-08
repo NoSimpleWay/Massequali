@@ -137,10 +137,13 @@ void EFont::final_draw(Batcher* _batcher, string _s, float _x, float _y)
 		}
 		else
 		{
+			/*_batcher->setcolor(EColor::COLOR_PINK);
+			_batcher->draw_gabarite(_x + x_adding, _y - y_adding, real_size_x[target_symbol] * scale, real_size_y[target_symbol] * scale + 3.0f, EGraphicCore::gabarite_white_pixel);
+			_batcher->setcolor(EColor::COLOR_BLACK);*/
 			_batcher->draw_with_custom_uv
 			(
 				_x + x_adding + offset_x[target_symbol] * scale,
-				_y - (real_size_y[target_symbol] - 15.0f + offset_y[target_symbol]) * scale - y_adding,
+				round(_y - (real_size_y[target_symbol] - 15.0f + offset_y[target_symbol]) * scale - y_adding),
 
 				real_size_x[target_symbol] * scale,
 				real_size_y[target_symbol] * scale,

@@ -95,7 +95,7 @@ int main()
 	EGraphicCore::lightmap_spread = new Shader("data/lightmap_spread.vs", "data/lightmap_spread.fs");*/
 
 	EGraphicCore::ourShader->use();
-	glfwSwapInterval(1);
+	
 
 	glEnable(GL_BLEND);
 
@@ -151,14 +151,14 @@ int main()
 	//EWindow::supermap_FBO = new ETextureAtlas(512, 512);
 	EWindow::AO_shadow_FBO = new ETextureAtlas(1920, 1080, GL_RGBA16, GL_UNSIGNED_SHORT);
 
-	EWindow::skydome_light_FBO[0] = new ETextureAtlas(int(2048.0f),			int(2048.0f), GL_RGBA16, GL_UNSIGNED_SHORT);
-	EWindow::skydome_light_FBO[1] = new ETextureAtlas(int(2048.0f / 2.0f),	int(2048.0f / 2.0f), GL_RGBA16, GL_UNSIGNED_SHORT);
-	EWindow::skydome_light_FBO[2] = new ETextureAtlas(int(2048.0f / 4.0f),	int(2048.0f / 4.0f), GL_RGBA16, GL_UNSIGNED_SHORT);
-	EWindow::skydome_light_FBO[3] = new ETextureAtlas(int(2048.0f / 8.0f),	int(2048.0f / 8.0f), GL_RGBA16, GL_UNSIGNED_SHORT);
-	EWindow::skydome_light_FBO[4] = new ETextureAtlas(int(2048.0f / 16.0f),	int(2048.0f / 16.0f), GL_RGBA16, GL_UNSIGNED_SHORT);
-	EWindow::skydome_light_FBO[5] = new ETextureAtlas(int(2048.0f / 32.0f),	int(2048.0f / 32.0f), GL_RGBA16, GL_UNSIGNED_SHORT);
-	EWindow::skydome_light_FBO[6] = new ETextureAtlas(int(2048.0f / 64.0f),	int(2048.0f / 64.0f), GL_RGBA16, GL_UNSIGNED_SHORT);
-	EWindow::skydome_light_FBO[7] = new ETextureAtlas(int(2048.0f / 128.0f),int(2048.0f / 128.0f), GL_RGBA16, GL_UNSIGNED_SHORT);
+	EWindow::skydome_light_FBO[0] = new ETextureAtlas(int(1024.0f / 001.0f),	int(512.0f /	001.0f), GL_RGBA16, GL_FLOAT);
+	EWindow::skydome_light_FBO[1] = new ETextureAtlas(int(1024.0f / 002.0f),	int(512.0f /	002.0f), GL_RGBA16, GL_FLOAT);
+	EWindow::skydome_light_FBO[2] = new ETextureAtlas(int(1024.0f / 004.0f),	int(512.0f /	004.0f), GL_RGBA16, GL_FLOAT);
+	EWindow::skydome_light_FBO[3] = new ETextureAtlas(int(1024.0f / 008.0f),	int(512.0f /	008.0f), GL_RGBA16, GL_FLOAT);
+	EWindow::skydome_light_FBO[4] = new ETextureAtlas(int(1024.0f / 016.0f),	int(512.0f /	016.0f), GL_RGBA16, GL_FLOAT);
+	EWindow::skydome_light_FBO[5] = new ETextureAtlas(int(1024.0f / 032.0f),	int(512.0f /	032.0f), GL_RGBA16, GL_FLOAT);
+	EWindow::skydome_light_FBO[6] = new ETextureAtlas(int(1024.0f / 064.0f),	int(512.0f /	064.0f), GL_RGBA16, GL_FLOAT);
+	EWindow::skydome_light_FBO[7] = new ETextureAtlas(int(1024.0f / 128.0f),	int(512.0f /	128.0f), GL_RGBA16, GL_FLOAT);
 	/*
 	EWindow::shadow_FBO = new ETextureAtlas(1920, 1580);
 	EWindow::screen_FBO = new ETextureAtlas(1920, 1080);
@@ -225,7 +225,8 @@ int main()
 	EGraphicCore::gabarite_radial_button = ETextureAtlas::put_texture_to_atlas("data/textures/radial_button.png", EWindow::default_texture_atlas);
 	EGraphicCore::gabarite_radial_button_dot = ETextureAtlas::put_texture_to_atlas("data/textures/radial_button_dot.png", EWindow::default_texture_atlas);
 	
-	EGraphicCore::gabarite_sun = ETextureAtlas::put_texture_to_atlas("data/textures/sun.png", EWindow::default_texture_atlas);
+	EGraphicCore::gabarite_sun = ETextureAtlas::put_texture_to_atlas("data/textures/sun2.png", EWindow::default_texture_atlas);
+	EGraphicCore::gabarite_sky = ETextureAtlas::put_texture_to_atlas("data/textures/sky2.png", EWindow::default_texture_atlas);
 
 	EGraphicCore::gabarite_small_wood_button_bg = ETextureAtlas::put_texture_to_atlas("data/textures/button_bg.png", EWindow::default_texture_atlas);
 
@@ -256,11 +257,20 @@ int main()
 
 	while (!glfwWindowShouldClose(EWindow::main_window))
 	{
+		if (glfwGetKey(EWindow::main_window, GLFW_KEY_GRAVE_ACCENT) == GLFW_PRESS)
+		{
+			glfwSwapInterval(0);
+		}
+		else
+		{
+			glfwSwapInterval(1);
+		}
+
 		EWindow::stop = std::chrono::high_resolution_clock::now();
 		EWindow::start = std::chrono::high_resolution_clock::now();
 
 		start_id = 0;
-		EWindow::add_time_process("Begin");
+		EWindow::add_time_process("@_Begin_@");
 
 
 		glfwPollEvents();
@@ -363,20 +373,26 @@ int main()
 			EWindow::top_overlaped_group = _sg;
 		}
 
+		EWindow::add_time_process("__window pre process");
 		for (EWindow* w : EWindow::window_list)
 			if (w->is_active) { w->default_update(delta_time); }
 
+		EWindow::add_time_process("__window default update ");
 		for (EWindow* w : EWindow::window_list)
 			if (w->is_active) { w->update(delta_time); }
+			EWindow::add_time_process("__window update ");
 
 		for (EWindow* w : EWindow::window_list)
 			if (w->is_active)
 			{
 				w->default_draw(delta_time);
+				EWindow::add_time_process("__default draw ");
 				w->draw(delta_time);
-
+				EWindow::add_time_process("__draw");
 				w->default_draw_interface(delta_time);
+				EWindow::add_time_process("__default draw interface");
 				w->draw_interface(delta_time);
+				EWindow::add_time_process("draw interface");
 			}
 
 		if ((EButton::dragged_button != NULL) & (!EWindow::LMB))
@@ -386,7 +402,7 @@ int main()
 
 		EGraphicCore::batch->reinit();
 		EGraphicCore::batch->draw_call();
-
+		EWindow::add_time_process("__DRAW CALL ");
 		/*EGraphicCore::batch->reset();
 			EGraphicCore::batch->setcolor(EColor::COLOR_WHITE);
 			EGraphicCore::batch->draw_gabarite(0.0f, 0.0f, EGraphicCore::gabarite_full_atlas);
@@ -401,6 +417,8 @@ int main()
 
 		EWindow::scroll = 0;
 		//sleep(0.1);
+
+		EWindow::add_time_process("@_End_@");
 	}
 
 	return 0;

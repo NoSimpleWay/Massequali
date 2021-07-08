@@ -38,6 +38,15 @@ float EGraphicCore::correction_y = 0.1f;
 float EGraphicCore::sun_position_x = 0.5f;
 float EGraphicCore::sun_position_y = 0.5f;
 
+float EGraphicCore::sun_size = 0.05f;
+
+float EGraphicCore::sun_lum = 1.00f;
+float EGraphicCore::sky_lum = 0.05f;
+float EGraphicCore::ground_lum = 0.05f;
+
+float EGraphicCore::blur_size = 1.00f;
+float EGraphicCore::brightness_multiplier = 10.00f;
+
 int EGraphicCore::selected_blur_level = 0;
 
 std::vector<EGabarite*> EGraphicCore::gabarite_list;
@@ -55,6 +64,7 @@ EGabarite* EGraphicCore::gabarite_supermap_placeholder;
 EGabarite* EGraphicCore::gabarite_full_atlas;
 
 EGabarite* EGraphicCore::gabarite_sun;
+EGabarite* EGraphicCore::gabarite_sky;
 
 void EGraphicCore::reset_sprite_data(EGraphicCore::ESprite* _sprite)
 {

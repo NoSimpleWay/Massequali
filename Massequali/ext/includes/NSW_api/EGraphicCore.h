@@ -62,9 +62,21 @@ public:
 	static EGabarite* gabarite_full_atlas;
 
 	static EGabarite* gabarite_sun;
+	static EGabarite* gabarite_sky;
 
 	static float sun_position_x;
 	static float sun_position_y;
+
+	static float sun_size;
+
+	static float sun_lum;
+	static float sky_lum;
+	static float ground_lum;
+
+	static float blur_size;
+	static float brightness_multiplier;
+
+
 
 	static int selected_blur_level;
 

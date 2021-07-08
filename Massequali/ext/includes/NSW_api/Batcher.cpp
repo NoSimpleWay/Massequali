@@ -556,7 +556,7 @@ void Batcher::draw_sprite_PBR(float _x, float _y, float _w, float _h, float _lef
 
 	//uv reflection
 	vertices[id + 8] = 0.0f;
-	vertices[id + 9] = (_true_height + _h) / 1024.0f / 2.0f;
+	vertices[id + 9] = (_true_height + _h) / 1080.0f / 3.0f + 0.333f;
 
 
 
@@ -576,7 +576,7 @@ void Batcher::draw_sprite_PBR(float _x, float _y, float _w, float _h, float _lef
 
 	//uv reflection
 	vertices[id + 18] = 0.0f;
-	vertices[id + 19] = (_true_height) / 1024.0f / 2.0f;
+	vertices[id + 19] = (_true_height) / 1080.0f / 3.0f + 0.333f;
 
 
 
@@ -596,7 +596,7 @@ void Batcher::draw_sprite_PBR(float _x, float _y, float _w, float _h, float _lef
 
 	//uv reflection
 	vertices[id + 28] = 0.0f;
-	vertices[id + 29] = (_true_height) / 1024.0f / 2.0f;
+	vertices[id + 29] = (_true_height) / 1080.0f / 3.0f + 0.333f;
 
 	//#.
 	//..
@@ -614,7 +614,7 @@ void Batcher::draw_sprite_PBR(float _x, float _y, float _w, float _h, float _lef
 
 	//uv reflection
 	vertices[id + 38] = 0.0f;
-	vertices[id + 39] = (_true_height + _h) / 1024.0f / 2.0f;
+	vertices[id + 39] = (_true_height + _h) / 1080.0f / 3.0f + 0.333f;
 
 	id += 40;
 

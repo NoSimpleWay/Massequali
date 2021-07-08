@@ -194,13 +194,13 @@ void ETextureAtlas::draw_to_this_FBO(ETextureAtlas* _ta, ETextureAtlas* _ta2)
 {
 	glViewport(0, 0, _ta->size_x, _ta->size_y);
 	glBindFramebuffer(GL_FRAMEBUFFER, _ta->framebuffer);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);//texture filtering
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);//
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, _ta2->colorbuffer);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);//texture filtering
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);//
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
 
 	EGraphicCore::ourShader->setInt("texture1", 0);
 }
@@ -242,6 +242,8 @@ void ETextureAtlas::set_this_FBO_as_active(ETextureAtlas* _ta)
 	glBindTexture(GL_TEXTURE_2D, _ta->colorbuffer);
 	EGraphicCore::ourShader->setInt("texture1", 0);
 	EGraphicCore::batch->setcolor(EColor::COLOR_WHITE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
 }
 
 ETextureAtlas::ETextureAtlas(int _x, int _y, int _color_depth, int _byte_mode)

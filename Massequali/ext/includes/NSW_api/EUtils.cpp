@@ -136,18 +136,18 @@ std::string EString::float_to_string(float _f)
 
 	std::string subdata = "";
 
-	for (int i = 0; i < t.length(); i++)
+	/*for (int i = 0; i < t.length(); i++)
 	{
 		subdata += t.at(i);
 
-		//non-zero numbers after dot
+		//non-zero numbers before dot
 		if ((!dot_is_found) & (t.at(i) != '.'))
 		{
 			numbers_before_dot++;
 		}
 
 		//non-zero numbers after dot
-		if ((t.at(i) != '0') & (dot_is_found))
+		if ((t.at(i) != '.') & (dot_is_found))
 		{
 			numbers_after_dot++;
 
@@ -178,6 +178,16 @@ std::string EString::float_to_string(float _f)
 		{
 			dot_is_found = true;
 		}
+	}*/
+
+	int end_digit_id = 0;
+
+	//return t;
+	for (int i = t.length() - 1; i >= 0; i--)
+	{
+		if (t.at(i) == '.') { return t.substr(0, i); }
+		if (t.at(i) != '0') { return t.substr(0, i + 1); }
+		
 	}
 
 	return subdata;

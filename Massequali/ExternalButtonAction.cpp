@@ -695,6 +695,15 @@ void ExternalButtonAction::external_button_action_set_button_value(EButton* _b, 
 	{
 		*_b->target_address_for_string = _b->text;
 	}
+
+	if ((_b->target_address_for_float != NULL))
+	{
+		if ((_b->is_slider) || (*_b->is_radial_button))
+		{
+			*_b->target_address_for_float = _b->slider_value;
+		}
+	}
+
 }
 
 void ExternalButtonAction::external_button_action_set_button_constant_value(EButton* _b, float _f)
