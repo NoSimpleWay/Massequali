@@ -216,17 +216,17 @@ autobuilding_group_offset_and_size	-3	23	0	0	0
 direction_of_sprite_push	1
 autobuilding_group_name	tall_wall
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	-101	-16	0	215	645
+autobuilding_group_element_offset_and_size	-763	-16	0	877	645
 autobuilding_group_element_base_id	0
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	-83	-16	47	193	585
+autobuilding_group_element_offset_and_size	-746	-16	47	856	585
 autobuilding_group_element_base_id	1
 CREATE_NEW_AUTOBUILDING_GROUP
 autobuilding_group_offset_and_size	-3	-1	646	0	0
 direction_of_sprite_push	0
 autobuilding_group_name	tall_roof
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	-103	0	0	224	194
+autobuilding_group_element_offset_and_size	-769	0	0	890	194
 autobuilding_group_element_base_id	2
 PUT_ENTITY_TO_MAP
 CREATE_NEW_ENTITY

@@ -35,7 +35,7 @@ public:
 	struct AutobuildingBase
 	{
 		EGabarite* main_texture;
-		EGabarite* normal_map_texture;
+		EGabarite* normal_gloss_map_texture = NULL;
 
 		float* space_between_sprite_x = new float(0.0f);
 		float* space_between_sprite_y = new float(0.0f);

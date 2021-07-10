@@ -140,7 +140,7 @@ public:
 			reset();
 		}
 	}
-	void draw_sprite_PBR(float _x, float _y, float _w, float _h, float _left, float _right, float _down, float _up, EGabarite* _g, float _z);
+	void draw_sprite_PBR(float _x, float _y, float _w, float _h, float _left, float _right, float _down, float _up, EGabarite* _g, EGabarite* _nmg, float _z);
 
 	void draw_AO_shadow(float _x, float _y, float _size_x, float _size_y, float _size, EGabarite* _g);
 

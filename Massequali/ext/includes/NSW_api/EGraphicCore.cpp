@@ -44,8 +44,11 @@ float EGraphicCore::sun_lum = 1.00f;
 float EGraphicCore::sky_lum = 0.05f;
 float EGraphicCore::ground_lum = 0.05f;
 
-float EGraphicCore::blur_size = 1.00f;
+float EGraphicCore::blur_size = 2.00f;
+float EGraphicCore::blur_size_buffer = 1.00f;
 float EGraphicCore::brightness_multiplier = 10.00f;
+
+float EGraphicCore::gloss_input = 1.00f;
 
 int EGraphicCore::selected_blur_level = 0;
 

@@ -151,14 +151,11 @@ int main()
 	//EWindow::supermap_FBO = new ETextureAtlas(512, 512);
 	EWindow::AO_shadow_FBO = new ETextureAtlas(1920, 1080, GL_RGBA16, GL_UNSIGNED_SHORT);
 
-	EWindow::skydome_light_FBO[0] = new ETextureAtlas(int(1024.0f / 001.0f),	int(512.0f /	001.0f), GL_RGBA16, GL_FLOAT);
-	EWindow::skydome_light_FBO[1] = new ETextureAtlas(int(1024.0f / 002.0f),	int(512.0f /	002.0f), GL_RGBA16, GL_FLOAT);
-	EWindow::skydome_light_FBO[2] = new ETextureAtlas(int(1024.0f / 004.0f),	int(512.0f /	004.0f), GL_RGBA16, GL_FLOAT);
-	EWindow::skydome_light_FBO[3] = new ETextureAtlas(int(1024.0f / 008.0f),	int(512.0f /	008.0f), GL_RGBA16, GL_FLOAT);
-	EWindow::skydome_light_FBO[4] = new ETextureAtlas(int(1024.0f / 016.0f),	int(512.0f /	016.0f), GL_RGBA16, GL_FLOAT);
-	EWindow::skydome_light_FBO[5] = new ETextureAtlas(int(1024.0f / 032.0f),	int(512.0f /	032.0f), GL_RGBA16, GL_FLOAT);
-	EWindow::skydome_light_FBO[6] = new ETextureAtlas(int(1024.0f / 064.0f),	int(512.0f /	064.0f), GL_RGBA16, GL_FLOAT);
-	EWindow::skydome_light_FBO[7] = new ETextureAtlas(int(1024.0f / 128.0f),	int(512.0f /	128.0f), GL_RGBA16, GL_FLOAT);
+	for (int i = 0; i < 8; i++)
+	{
+		EWindow::skydome_light_FBO[i]			= new ETextureAtlas(int(2048.0f / pow(2.0f, i)), int(1024.0f / pow(2.0f, i)), GL_RGBA16, GL_UNSIGNED_SHORT);
+		EWindow::skydome_light_FBO_buffer[i]	= new ETextureAtlas(int(2048.0f / pow(2.0f, i)), int(1024.0f / pow(2.0f, i)), GL_RGBA16, GL_UNSIGNED_SHORT);
+	}
 	/*
 	EWindow::shadow_FBO = new ETextureAtlas(1920, 1580);
 	EWindow::screen_FBO = new ETextureAtlas(1920, 1080);
@@ -226,7 +223,7 @@ int main()
 	EGraphicCore::gabarite_radial_button_dot = ETextureAtlas::put_texture_to_atlas("data/textures/radial_button_dot.png", EWindow::default_texture_atlas);
 	
 	EGraphicCore::gabarite_sun = ETextureAtlas::put_texture_to_atlas("data/textures/sun2.png", EWindow::default_texture_atlas);
-	EGraphicCore::gabarite_sky = ETextureAtlas::put_texture_to_atlas("data/textures/sky2.png", EWindow::default_texture_atlas);
+	EGraphicCore::gabarite_sky = ETextureAtlas::put_texture_to_atlas("data/textures/sky3.png", EWindow::default_texture_atlas);
 
 	EGraphicCore::gabarite_small_wood_button_bg = ETextureAtlas::put_texture_to_atlas("data/textures/button_bg.png", EWindow::default_texture_atlas);
 
@@ -358,6 +355,24 @@ int main()
 
 		//update windows
 		EWindow::top_overlaped_group = NULL;
+
+		if
+		(
+			(EWindow::operable_button != NULL)
+			&&
+			(
+				(!EWindow::operable_button->is_active)
+				||
+				(
+					(EWindow::operable_button->master_super_group != NULL)
+					&&
+					(!*EWindow::operable_button->master_super_group->is_active)
+				)
+			)
+		)
+		{
+			EWindow::operable_button = NULL;
+		}
 
 		EButton::any_input = false;
 		EButton::any_overlap = false;

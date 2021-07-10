@@ -18,6 +18,7 @@ ETextureAtlas* EWindow::supermap_FBO;
 ETextureAtlas* EWindow::AO_shadow_FBO;
 
 ETextureAtlas* EWindow::skydome_light_FBO[8];
+ETextureAtlas* EWindow::skydome_light_FBO_buffer[8];
 
 
 ETextureAtlas* EWindow::screen_FBO;
@@ -78,6 +79,7 @@ bool EButton::any_overlap = false;
 
 std::vector <EWindow::massive_style*>	EWindow::list_of_massive_style;
 EButton::button_super_group*			EWindow::top_overlaped_group;
+EButton*								EWindow::operable_button;
 
 EButton::EButton()
 {
@@ -165,6 +167,16 @@ bool EButton::is_overlap()
 
 	//std::cout << Helper::x << " " << Helper::y << " " << std::endl;
 	//std::cout << "PIZDOS=" << EMouse::mouse_x<< endl;
+
+	if
+	(
+		(EWindow::operable_button != NULL)
+		&
+		(EWindow::operable_button != this)
+	)
+	{
+		return false;
+	}
 
 	float total_x = 0.0f;
 	float total_y = 0.0f;
@@ -592,6 +604,7 @@ void EButton::update(float _d)
 		if ((is_expanded) && (is_drop_list))
 		{
 			is_expanded = false;
+			
 		}
 
 		if (is_input_mode_active)
@@ -600,6 +613,9 @@ void EButton::update(float _d)
 			input_finish_event();
 
 			if (action_on_input_finish != NULL) { action_on_input_finish(this, _d); }
+
+			
+
 		}
 	}
 
@@ -848,6 +864,8 @@ void EButton::update(float _d)
 			//any_input = true;
 			if (input_auto_clear_text) { text = ""; }
 			is_input_mode_active = true;
+
+			
 		}
 
 		if ((is_slider) || (*is_radial_button)) { slider_activate = true; }
@@ -898,7 +916,7 @@ void EButton::update(float _d)
 				(glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
 				||
 				(glfwGetKey(EWindow::main_window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
-				)
+			)
 		{
 			shift_value *= 0.1f;
 		}
@@ -1007,15 +1025,41 @@ void EButton::update(float _d)
 			(slider_activate)
 			||
 			(is_expanded)
-			)
+		)
 	{
 		//text = "+";
 		EButton::any_input = true;
+		EWindow::operable_button = this;
 	}
-	else
-	{
+
+	//else
+		if
+		(
+			(EWindow::operable_button == this)
+			&
+			(
+				(
+					(
+						(is_slider)
+						||
+						(is_radial_button)
+					)
+					&
+					(!slider_activate)
+				)
+				||
+				((have_input_mode)&(!is_input_mode_active))
+				||
+				((is_drop_list)&(!is_expanded))
+				||
+				((two_dimension_gradient != NULL)&(!EWindow::LMB))
+			)
+		)
+		{
+			EWindow::operable_button = NULL;
+			//if (is_slider)
+		}
 		//text = "-";
-	}
 
 	if (!grid_region_list.empty())
 		for (EGridRegion* gr : grid_region_list)
@@ -1426,30 +1470,45 @@ void EButton::update(float _d)
 
 		if
 		(
-			(
-				(*two_dimension_gradient->is_catched)
-				||
-				(true)
-			)
-			&
-			(EWindow::LMB)
-			&
-			(is_overlap())
+			(EWindow::LMB)			
 		)
 		{
-			*two_dimension_gradient->value_x = (EWindow::mouse_x - screen_position_x) / button_size_x;
-			*two_dimension_gradient->value_y = (EWindow::mouse_y - screen_position_y) / button_size_y;
+			
+				if
+				(
+					(!*two_dimension_gradient->is_catched)
+					&
+					(is_overlap())
+				)
+				{
+					*two_dimension_gradient->value_x = (EWindow::mouse_x - screen_position_x) / button_size_x;
+					*two_dimension_gradient->value_y = (EWindow::mouse_y - screen_position_y) / button_size_y;
+
+					if (!action_on_td_gradient_drag.empty())
+					{
+						for (BUTTON_ACTION ba : action_on_td_gradient_drag)
+						{ba(this, _d);}
+					}
+				}
+
+				
+				if (*two_dimension_gradient->is_catched)
+				{
+					*two_dimension_gradient->value_x += get_mouse_speed_x() / button_size_x;
+					*two_dimension_gradient->value_y += get_mouse_speed_y() / button_size_y;
+
+					if (!action_on_td_gradient_drag.empty())
+					{
+						for (BUTTON_ACTION ba : action_on_td_gradient_drag)
+						{ba(this, _d);}
+					}
+				}
+			
 
 			EMath::clamp_value_float(two_dimension_gradient->value_x, 0.0f, 1.0f);
 			EMath::clamp_value_float(two_dimension_gradient->value_y, 0.0f, 1.0f);
 
-			if (!action_on_td_gradient_drag.empty())
-			{
-				for (BUTTON_ACTION ba : action_on_td_gradient_drag)
-				{
-					ba(this, _d);
-				}
-			}
+			
 		}
 	}
 }
@@ -1546,7 +1605,7 @@ void EButton::default_draw(Batcher* _batch, float _d)
 	//Sewerslvt
 	if (*side_text != "")
 	{
-		target_font->draw_with_background(*side_text, _batch, screen_position_x, screen_position_y + button_size_y + 2.0f, EColor::COLOR_LIGHT_GRAY, EColor::COLOR_DARK_GRAY);
+		target_font->draw_with_background(*side_text, _batch, screen_position_x, screen_position_y + button_size_y - 20.0f, EColor::COLOR_LIGHT_GRAY, EColor::COLOR_DARK_GRAY);
 	}
 
 	if (have_rama)
@@ -1608,16 +1667,16 @@ void EButton::default_draw(Batcher* _batch, float _d)
 	{
 		float tsx = EFont::get_width(EFont::font_list.at(EFont::FONT_ENUM::FE_DOT), EString::float_to_string(round(slider_value * 100.0f) / 100.0f));
 		//float tx
-		float tsy = *EGraphicCore::gabarite_radial_button->size_y + 3.0f;
+		float tsy = 5.0f;
 
 		float tx = (*EGraphicCore::gabarite_radial_button->size_x - tsx) / 2.0f;
-		tx = 5.0f;
+		tx = 35.0f;
 
 		_batch->setcolor(bg_color);
 		_batch->draw_gabarite(screen_position_x, screen_position_y, EGraphicCore::gabarite_radial_button);
 
 		_batch->setcolor_lum(EColor::COLOR_WHITE, 0.12f);
-		_batch->draw_gabarite(screen_position_x + tx, screen_position_y + tsy, tsx, 20.0f, EGraphicCore::gabarite_white_pixel);
+		_batch->draw_gabarite(screen_position_x + tx - 2.0f, screen_position_y + tsy - 2.0f, tsx + 5.0f, 25.0f, EGraphicCore::gabarite_white_pixel);
 
 		_batch->setcolor(text_color);
 		EFont::font_list.at(EFont::FONT_ENUM::FE_DOT)->draw(_batch, EString::float_to_string(round(slider_value * 100.0f) / 100.0f) + "", screen_position_x + tx, screen_position_y + tsy);
@@ -2305,7 +2364,9 @@ void EWindow::default_update(float _d)
 					(mouse_y >= *bsg->position_y + *bsg->size_y)
 					&
 					(mouse_y <= *bsg->position_y + *bsg->size_y + 20.0f)
-					)
+					&
+					(EWindow::top_overlaped_group == bsg)
+				)
 			{
 				if (!LMB) { *bsg->is_catched = true; }
 			}
@@ -2314,7 +2375,7 @@ void EWindow::default_update(float _d)
 				if (!LMB) { *bsg->is_catched = false; }
 			}
 
-			if ((LMB) & (*bsg->is_catched))
+			if ((LMB) & (*bsg->is_catched) & (EWindow::operable_button == NULL))
 			{
 				*bsg->position_x += mouse_speed_x;
 				*bsg->position_y += mouse_speed_y;
@@ -2451,6 +2512,7 @@ void EWindow::default_update(float _d)
 						if (*b->selected_auto_align_mode == EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_Y)
 						{
 							//b->text = EString::float_to_string(previvous_button_position_y);
+							b->button_x_offset = (previvous_button_position_x);
 							b->button_y_offset = (previvous_button_position_y + previvous_button_size_y);
 							//b->description_text = EString::float_to_string(previvous_button_position_y);
 
@@ -2733,9 +2795,6 @@ void EWindow::default_resize_event()
 
 void EWindow::default_draw_interface(float _d)
 {
-	EGraphicCore::batch->reinit();
-	EGraphicCore::batch->draw_call();
-
 	EGraphicCore::ourShader->use();
 	EGraphicCore::matrix_transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
 
@@ -2803,15 +2862,24 @@ void EWindow::default_draw_interface(float _d)
 	//float previvous_button_size_y = 0.0f;
 
 	//draw buttons on button group and update button group
-	EGraphicCore::batch->reinit();
-	EGraphicCore::batch->draw_call();
-	EGraphicCore::batch->reset();
+
 
 	for (EButton::button_super_group* bsg : button_group_list)
 		if (*bsg->is_active)
 		{
-			EGraphicCore::batch->setcolor_alpha(EColor::COLOR_BLACK, 0.5f);
-			EGraphicCore::batch->draw_gabarite(*bsg->position_x, *bsg->position_y, *bsg->size_x, *bsg->size_y, EGraphicCore::gabarite_white_pixel);
+			//EGraphicCore::batch->setcolor_alpha(EColor::COLOR_BLACK, 0.5f);
+			if (EWindow::top_overlaped_group == bsg)
+			{
+				EGraphicCore::batch->setcolor_alpha(EColor::COLOR_LIGHT_GRAY, 0.9f);
+			}
+			else
+			{
+				EGraphicCore::batch->setcolor_alpha(EColor::COLOR_DARK_GRAY, 0.75f);
+			}
+
+
+			EGraphicCore::batch->draw_gabarite_screen_space(*bsg->position_x, *bsg->position_y, *bsg->size_x, *bsg->size_y, EWindow::list_of_massive_style.at(0)->background);
+			//EGraphicCore::batch->draw_gabarite(*bsg->position_x, *bsg->position_y, *bsg->size_x, *bsg->size_y, EGraphicCore::gabarite_white_pixel);
 
 			if (*bsg->is_catched)
 			{
@@ -2822,12 +2890,11 @@ void EWindow::default_draw_interface(float _d)
 			if (EWindow::top_overlaped_group == bsg)
 			{
 				EGraphicCore::batch->setcolor(EColor::COLOR_DARK_GREEN);
-				EGraphicCore::batch->draw_rama(*bsg->position_x, *bsg->position_y, *bsg->size_x, *bsg->size_y, 1.0f, EGraphicCore::gabarite_white_pixel);;
+				EGraphicCore::batch->draw_rama(*bsg->position_x, *bsg->position_y, *bsg->size_x, *bsg->size_y, 2.0f, EGraphicCore::gabarite_white_pixel);;
 			}
 
-			EGraphicCore::batch->reinit();
-			EGraphicCore::batch->draw_call();
-			EGraphicCore::batch->reset();
+			EGraphicCore::batch->force_draw_call();
+
 			glEnable(GL_SCISSOR_TEST);
 			for (EButton::button_group* bg : bsg->button_group_list)
 			{
@@ -2835,14 +2902,17 @@ void EWindow::default_draw_interface(float _d)
 				float total_y = *bsg->position_y + *bg->position_y;
 
 				glScissor(total_x - 3.0f, total_y - 3.0f, *bg->size_x + 6.0f, *bg->size_y + 6.0f);
+				//glScissor(0.0f, total_y - 3.0f, *bg->size_x + 6.0f, *bg->size_y + 6.0f);
 
 				/*
 				EGraphicCore::batch->setcolor_alpha(EColor::COLOR_GRAY, 0.9f);
 				EGraphicCore::batch->draw_gabarite(*bsg->position_x + *bg->position_x, *bsg->position_y + *bg->position_y, *bg->size_x, *bg->size_y, EGraphicCore::gabarite_white_pixel);
 				*/
 
-				EGraphicCore::batch->setcolor_alpha(EColor::COLOR_WHITE, 1.0f);
-				EGraphicCore::batch->draw_gabarite_screen_space(total_x, total_y, *bg->size_x, *bg->size_y, EWindow::list_of_massive_style.at(0)->background);
+
+				//EGraphicCore::batch->
+				//EGraphicCore::batch->setcolor_alpha(EColor::COLOR_WHITE, 1.0f);
+				//EGraphicCore::batch->draw_gabarite_screen_space(total_x, total_y, *bg->size_x, *bg->size_y, EWindow::list_of_massive_style.at(0)->background);
 
 				EGraphicCore::batch->setcolor_alpha(EColor::COLOR_BLUE, 0.9f);
 				if (*bg->right_side_catched)
@@ -2892,6 +2962,10 @@ void EWindow::default_draw_interface(float _d)
 				EGraphicCore::batch->reset();
 			}
 
+			EGraphicCore::batch->force_draw_call();
+
+			//draw text pass
+			glDisable(GL_SCISSOR_TEST);
 			for (EButton::button_group* bg : bsg->button_group_list)
 			{
 				for (EButton* but : bg->button_list)
@@ -2907,10 +2981,8 @@ void EWindow::default_draw_interface(float _d)
 				//text pass without scissors
 			}
 
-			glDisable(GL_SCISSOR_TEST);
-			EGraphicCore::batch->reinit();
-			EGraphicCore::batch->draw_call();
-			EGraphicCore::batch->reset();
+			
+			
 
 			for (EButton* but : bsg->additional_button_list)
 				if (but->is_active)
@@ -2918,6 +2990,8 @@ void EWindow::default_draw_interface(float _d)
 					but->default_draw(EGraphicCore::batch, _d);
 					but->additional_draw(EGraphicCore::batch, _d);
 				}
+
+			EGraphicCore::batch->force_draw_call();
 		}
 
 	//draw graphic for button group
@@ -3087,7 +3161,7 @@ bool EWindow::is_group_overlapped_by_mouse(EButton::button_super_group* _group)
 			&
 			(EWindow::mouse_y >= *_group->position_y)
 			&
-			(EWindow::mouse_y <= *_group->position_y + *_group->size_y + 10.0f)
+			(EWindow::mouse_y <= *_group->position_y + *_group->size_y + 20.0f)
 		)
 	{
 		return true;
@@ -3222,6 +3296,44 @@ bool is_catched_by_mouse(bool _is_catched, float _x, float _y, float _size_x, fl
 	}
 
 	return _is_catched;
+}
+
+float get_mouse_speed_x()
+{
+	if
+		(
+			(glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+			||
+			(glfwGetKey(EWindow::main_window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
+		)
+	{
+		return EWindow::mouse_speed_x * 0.1f;
+	}
+	else
+	{
+		return EWindow::mouse_speed_x;
+	}
+
+	return 0.0f;
+}
+
+float get_mouse_speed_y()
+{
+	if
+		(
+			(glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+			||
+			(glfwGetKey(EWindow::main_window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
+			)
+	{
+		return EWindow::mouse_speed_y * 0.1f;
+	}
+	else
+	{
+		return EWindow::mouse_speed_y;
+	}
+
+	return 0.0f;
 }
 
 void external_button_action_close_master_button_super_group(EButton* _b, float _f)

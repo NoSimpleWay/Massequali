@@ -873,7 +873,7 @@ void EWindowMain::create_button_groups()
 					but->mode_list.push_back(new int(PolygonDrawMode::POLYGON_DRAW_MODE_NORMAL_MAP));
 					but->have_bg = false;
 					*but->is_double_click = true;
-					but->action_on_left_double_click.push_back(ExternalButtonAction::external_button_action_open_select_texture_window_for_vertex_editor);
+					but->action_on_left_double_click.push_back(ExternalButtonAction::external_button_action_select_texture_window_for_vertex_editor);
 
 					Batcher::EPolygonMassive* just_created_polygon_massive = new Batcher::EPolygonMassive();
 					but->polygon_massive = just_created_polygon_massive;
@@ -967,12 +967,14 @@ void EWindowMain::create_button_groups()
 	just_created_button_group = new EButton::button_group();
 	just_created_button_super_group->button_group_list.push_back(just_created_button_group);
 
-	*just_created_button_group->can_be_stretched_x = true;
+	*just_created_button_group->can_be_stretched_x = false;
 	*just_created_button_group->can_be_stretched_y = false;
 
-	*just_created_button_group->size_x = 732.0f;
+	*just_created_button_group->size_x = 232.0f;
 	*just_created_button_group->size_y = 325.0f;
 	*just_created_button_group->can_be_moved_by_user = false;
+
+
 
 	but = new EButton(0.0f, 300.0f, 200.0f, 20.0f, this, just_created_button_super_group, just_created_button_group);
 	*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_FREE;
@@ -992,6 +994,8 @@ void EWindowMain::create_button_groups()
 	but->text = but->drop_text.at(0);
 	*but->is_consumable = false;
 
+	
+
 	//*just_created_button_super_group->position_x = 500.0f;
 	but = new EButton(0.0f, 0.0f, 200.0f, 100.0f, this, just_created_button_super_group, just_created_button_group);
 	but->have_icon = true;
@@ -1004,9 +1008,11 @@ void EWindowMain::create_button_groups()
 	just_created_button_group->button_list.push_back(but);
 	*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_Y;
 	
+	just_created_button_group = new EButton::button_group();
+	just_created_button_super_group->button_group_list.push_back(just_created_button_group);
+	*just_created_button_group->selected_push_method = EButton::GroupPushMethod::GROUP_PUSH_METHOD_ADD_X;
 
-
-	but = new EButton (0.0f, 0.0f, 80.0f, 60.0f, this, just_created_button_super_group, just_created_button_group);
+	but = new EButton (0.0f, 0.0f, 100.0f, 60.0f, this, just_created_button_super_group, just_created_button_group);
 	*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_X;
 	//but->is_slider = true;
 	*but->is_radial_button = true;
@@ -1018,12 +1024,11 @@ void EWindowMain::create_button_groups()
 	*but->side_text = "Sun size";
 	but->text_color->set_color(EColor::COLOR_ORANGE);
 	but->bg_color->set_color(EColor::COLOR_ORANGE);
-	but->have_bg = false;
 	but->have_rama = true;
 	*but->is_consumable = true;
 
-	but = new EButton(0.0f, 0.0f, 80.0f, 60.0f, this, just_created_button_super_group, just_created_button_group);
-	*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_X;
+	but = new EButton(0.0f, 0.0f, 100.0f, 60.0f, this, just_created_button_super_group, just_created_button_group);
+	*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_Y;
 	//but->is_slider = true;
 	*but->is_radial_button = true;
 	*but->maximum_value = 100.0f;
@@ -1035,12 +1040,11 @@ void EWindowMain::create_button_groups()
 	*but->side_text = "Sun bright";
 	but->text_color->set_color(EColor::COLOR_YELLOW);
 	but->bg_color->set_color(EColor::COLOR_YELLOW);
-	but->have_bg = false;
 	but->have_rama = true;
 	*but->is_consumable = true;
 
-	but = new EButton(0.0f, 0.0f, 80.0f, 60.0f, this, just_created_button_super_group, just_created_button_group);
-	*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_X;
+	but = new EButton(0.0f, 0.0f, 100.0f, 60.0f, this, just_created_button_super_group, just_created_button_group);
+	*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_RESET_Y_AND_ADD_X;
 	//but->is_slider = true;
 	*but->is_radial_button = true;
 	*but->maximum_value = 1.0f;
@@ -1052,11 +1056,11 @@ void EWindowMain::create_button_groups()
 	*but->side_text = "Sky bright";
 	but->text_color->set_color(EColor::COLOR_BLUE);
 	but->bg_color->set_color(EColor::COLOR_BLUE);
-	but->have_bg = false;
+	//but->have_bg = false;
 	but->have_rama = true;
 	*but->is_consumable = true;
 
-	but = new EButton(0.0f, 0.0f, 80.0f, 60.0f, this, just_created_button_super_group, just_created_button_group);
+	but = new EButton(0.0f, 0.0f, 100.0f, 60.0f, this, just_created_button_super_group, just_created_button_group);
 	*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_X;
 	//but->is_slider = true;
 	*but->is_radial_button = true;
@@ -1069,11 +1073,10 @@ void EWindowMain::create_button_groups()
 	*but->side_text = "Ground bright";
 	but->text_color->set_color(EColor::COLOR_GREEN);
 	but->bg_color->set_color(EColor::COLOR_GREEN);
-	but->have_bg = false;
 	but->have_rama = true;
 	*but->is_consumable = true;
 
-	but = new EButton(0.0f, 0.0f, 80.0f, 60.0f, this, just_created_button_super_group, just_created_button_group);
+	but = new EButton(0.0f, 0.0f, 100.0f, 60.0f, this, just_created_button_super_group, just_created_button_group);
 	*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_X;
 	//but->is_slider = true;
 	*but->is_radial_button = true;
@@ -1087,8 +1090,27 @@ void EWindowMain::create_button_groups()
 	*but->side_text = "Blur size";
 	but->have_rama = true;
 	*but->is_consumable = true;
+	but->text_color->set_color(EColor::COLOR_WHITE);
+	but->bg_color->set_color(EColor::COLOR_WHITE);
 
-	but = new EButton(0.0f, 0.0f, 80.0f, 60.0f, this, just_created_button_super_group, just_created_button_group);
+	but = new EButton(0.0f, 0.0f, 100.0f, 60.0f, this, just_created_button_super_group, just_created_button_group);
+	*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_Y;
+	//but->is_slider = true;
+	*but->is_radial_button = true;
+	*but->maximum_value = 10.0f;
+	but->slider_value_multiplier = 0.1f;
+	//but->target_address_for_float = &EGraphicCore::suskyn_lum;
+	but->target_address_for_float = &EGraphicCore::blur_size_buffer;
+	but->action_on_slider_drag.push_back(&ExternalButtonAction::external_button_action_set_button_value);
+	just_created_button_group->button_list.push_back(but);
+	but->description_text = "Blur size[2]";
+	*but->side_text = "Blur size[2]";
+	but->have_rama = true;
+	*but->is_consumable = true;
+	but->text_color->set_color(EColor::COLOR_WHITE);
+	but->bg_color->set_color(EColor::COLOR_WHITE);
+
+	but = new EButton(0.0f, 0.0f, 100.0f, 60.0f, this, just_created_button_super_group, just_created_button_group);
 	*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_X;
 	//but->is_slider = true;
 	*but->is_radial_button = true;
@@ -1102,10 +1124,28 @@ void EWindowMain::create_button_groups()
 	*but->side_text = "Reflection";
 	but->have_rama = true;
 	*but->is_consumable = true;
+	but->text_color->set_color(EColor::COLOR_WHITE);
+	but->bg_color->set_color(EColor::COLOR_WHITE);
+
+	but = new EButton(0.0f, 0.0f, 100.0f, 60.0f, this, just_created_button_super_group, just_created_button_group);
+	*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_Y;
+	//but->is_slider = true;
+	*but->is_radial_button = true;
+	*but->maximum_value = 1.0f;
+	but->slider_value_multiplier = 1.0f;
+	//but->target_address_for_float = &EGraphicCore::suskyn_lum;
+	but->target_address_for_float = &EGraphicCore::gloss_input;
+	but->action_on_slider_drag.push_back(&ExternalButtonAction::external_button_action_set_button_value);
+	just_created_button_group->button_list.push_back(but);
+	but->description_text = "Force gloss on object";
+	*but->side_text = "Gloss";
+	but->have_rama = true;
+	*but->is_consumable = true;
+	but->text_color->set_color(EColor::COLOR_WHITE);
+	but->bg_color->set_color(EColor::COLOR_WHITE);
 
 	but->text_color->set_color(EColor::COLOR_WHITE);
 	but->bg_color->set_color(EColor::COLOR_WHITE);
-	but->have_bg = false;
 
 
 
@@ -1164,7 +1204,7 @@ void EWindowMain::draw(float _d)
 	//EGraphicCore::batch->setcolor(EColor::COLOR_GRAY);
 	//EGraphicCore::batch->draw_gabarite(0.0f, 0.0f, 2000.0f, 2000.0f, EGraphicCore::gabarite_white_pixel);
 	//EWindow::add_time_process("Draw alt info on ground");
-	EWindow::add_time_process("Reset render");
+	//EWindow::add_time_process("Reset render");
 
 	if (glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
 	for (int i = cluster_draw_start_y; i <= cluster_draw_end_y; i++)
@@ -1563,9 +1603,33 @@ float true_height = 0.0f;
 
 glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "brightness_multiplier"), EGraphicCore::brightness_multiplier);
 
+glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "input_gloss"), EGraphicCore::gloss_input);
+
 glActiveTexture(GL_TEXTURE1);
-glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[EGraphicCore::selected_blur_level]->colorbuffer);
-EGraphicCore::PBR_shader->setInt("texture2", 1);
+glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[0]->colorbuffer);//1
+EGraphicCore::PBR_shader->setInt("SD_array[0]", 1);
+
+glActiveTexture(GL_TEXTURE2);
+glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[1]->colorbuffer);//1/2
+EGraphicCore::PBR_shader->setInt("SD_array[1]", 2);
+
+glActiveTexture(GL_TEXTURE3);
+glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[2]->colorbuffer);//1/4
+EGraphicCore::PBR_shader->setInt("SD_array[2]", 3);
+
+glActiveTexture(GL_TEXTURE4);
+glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[3]->colorbuffer);//1/8
+EGraphicCore::PBR_shader->setInt("SD_array[3]", 4);
+
+glActiveTexture(GL_TEXTURE5);
+glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[4]->colorbuffer);//1/16
+EGraphicCore::PBR_shader->setInt("SD_array[4]", 5);
+
+glActiveTexture(GL_TEXTURE6);
+glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[5]->colorbuffer);//1/32
+EGraphicCore::PBR_shader->setInt("SD_array[5]", 6);
+
+
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -2203,6 +2267,8 @@ void EWindowMain::reset_render()
 	
 	*/
 	generate_AO_shadow();
+
+	EWindow::add_time_process("Generate AO shadow");
 	
 	EGraphicCore::ourShader->use();
 	ETextureAtlas::set_this_FBO_as_active(EWindow::AO_shadow_FBO);
@@ -2217,13 +2283,13 @@ void EWindowMain::reset_render()
 		transformLoc = glGetUniformLocation(EGraphicCore::ourShader->ID, "transform");
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(EGraphicCore::matrix_transform));
 
-		//EGraphicCore::batch->draw_rect(0.0f, 0.0f, 2.0f, 2.0f);
+		EGraphicCore::batch->draw_rect(0.0f, 0.0f, 2.0f, 2.0f);
 		EGraphicCore::batch->reinit();
 		EGraphicCore::batch->draw_call();
 		EGraphicCore::batch->reset();
 
 
-
+		EWindow::add_time_process("Draw AO shaodw");
 	ETextureAtlas::draw_to_this_FBO(EWindow::skydome_light_FBO[0], EWindow::default_texture_atlas);
 	EGraphicCore::batch->reset();
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -2282,17 +2348,28 @@ void EWindowMain::reset_render()
 	//blur skydome
 	for (int i = 0; i < 7; i++)
 	{
-		glUniform1f(glGetUniformLocation(EGraphicCore::simple_blur->ID, "blur_size_x"), (1.0f / skydome_light_FBO[i]->size_x) * (EGraphicCore::blur_size) );
-		glUniform1f(glGetUniformLocation(EGraphicCore::simple_blur->ID, "blur_size_y"), (1.0f / skydome_light_FBO[i]->size_y) * (EGraphicCore::blur_size) );
-		ETextureAtlas::draw_to_this_FBO(EWindow::skydome_light_FBO[i + 1], EWindow::skydome_light_FBO[i]);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
-		EGraphicCore::batch->draw_rect(0.0f, 0.0f, 1.0f, 1.0f);
+		glUniform1f(glGetUniformLocation(EGraphicCore::simple_blur->ID, "blur_size_x"), (1.0f / skydome_light_FBO[i]->size_x) * (EGraphicCore::blur_size_buffer) );
+		glUniform1f(glGetUniformLocation(EGraphicCore::simple_blur->ID, "blur_size_y"), (1.0f / skydome_light_FBO[i]->size_y) * (EGraphicCore::blur_size_buffer) );
+			ETextureAtlas::draw_to_this_FBO(EWindow::skydome_light_FBO_buffer[i + 1], EWindow::skydome_light_FBO[i]);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
+			EGraphicCore::batch->draw_rect(0.0f, 0.0f, 1.0f, 1.0f);
+		EGraphicCore::batch->force_draw_call();
+
+		glUniform1f(glGetUniformLocation(EGraphicCore::simple_blur->ID, "blur_size_x"), (1.0f / skydome_light_FBO[i]->size_x) * (EGraphicCore::blur_size));
+			glUniform1f(glGetUniformLocation(EGraphicCore::simple_blur->ID, "blur_size_y"), (1.0f / skydome_light_FBO[i]->size_y) * (EGraphicCore::blur_size));
+			ETextureAtlas::draw_to_this_FBO(EWindow::skydome_light_FBO[i + 1], EWindow::skydome_light_FBO_buffer[i + 1]);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
+			EGraphicCore::batch->draw_rect(0.0f, 0.0f, 1.0f, 1.0f);
 		EGraphicCore::batch->force_draw_call();
 	}
 
+	EWindow::add_time_process("Prepare skydome reflection");
 
 
 	EGraphicCore::ourShader->use();
@@ -2643,6 +2720,8 @@ void EWindowMain::load_map(std::string _name)
 			if ((EFile::data_array[i] == "autobuilding_base_main_texture") & (jc_base != NULL))
 			{
 				i++; jc_base->main_texture = ETextureAtlas::put_texture_to_atlas(EFile::data_array[i], EWindow::default_texture_atlas);
+
+				jc_base->normal_gloss_map_texture = ETextureAtlas::get_normal_gloss_map_from_regular_texture_path(jc_base->main_texture->name, EWindow::default_texture_atlas);
 			}
 
 			if ((EFile::data_array[i] == "autobuilding_base_space_between_sprites") & (jc_base != NULL))
@@ -3025,6 +3104,7 @@ void EWindowMain::generate_building(Entity* _e)
 						*selected_sprite->size_y = round(wall_full_size_y * wall_fragment_y);
 
 						selected_sprite->texture_gabarite = a_element->autobuilding_base->main_texture;
+						selected_sprite->normal_gloss_map_gabarite = a_element->autobuilding_base->normal_gloss_map_texture;
 
 						selected_sprite_id++;
 					}
@@ -3112,6 +3192,7 @@ void EWindowMain::generate_building(Entity* _e)
 						*selected_sprite->size_y = round(wall_full_size_y * wall_fragment_y);
 
 						selected_sprite->texture_gabarite = a_element->autobuilding_base->main_texture;
+						selected_sprite->normal_gloss_map_gabarite = a_element->autobuilding_base->normal_gloss_map_texture;
 
 						selected_sprite_id++;
 					}
@@ -3196,6 +3277,7 @@ void EWindowMain::generate_building(Entity* _e)
 						*selected_sprite->size_y = round(wall_full_size_y * wall_fragment_y);
 
 						selected_sprite->texture_gabarite = a_element->autobuilding_base->main_texture;
+						selected_sprite->normal_gloss_map_gabarite = a_element->autobuilding_base->normal_gloss_map_texture;
 
 						selected_sprite_id++;
 					}
@@ -3283,6 +3365,7 @@ void EWindowMain::generate_building(Entity* _e)
 						*selected_sprite->size_y = round(wall_full_size_y * wall_fragment_y);
 
 						selected_sprite->texture_gabarite = a_element->autobuilding_base->main_texture;
+						selected_sprite->normal_gloss_map_gabarite = a_element->autobuilding_base->normal_gloss_map_texture;
 
 						selected_sprite_id++;
 					}
@@ -3367,6 +3450,7 @@ void EWindowMain::generate_building(Entity* _e)
 						*selected_sprite->size_y = round(wall_full_size_y * wall_fragment_y);
 
 						selected_sprite->texture_gabarite = a_element->autobuilding_base->main_texture;
+						selected_sprite->normal_gloss_map_gabarite = a_element->autobuilding_base->normal_gloss_map_texture;
 
 						selected_sprite_id++;
 					}
@@ -3451,6 +3535,7 @@ void EWindowMain::generate_building(Entity* _e)
 						*selected_sprite->size_y = round(wall_full_size_y * wall_fragment_y);
 
 						selected_sprite->texture_gabarite = a_element->autobuilding_base->main_texture;
+						selected_sprite->normal_gloss_map_gabarite = a_element->autobuilding_base->normal_gloss_map_texture;
 
 						selected_sprite_id++;
 					}
@@ -3540,6 +3625,7 @@ void EWindowMain::generate_building(Entity* _e)
 						*selected_sprite->size_y = round(wall_full_size_y * wall_fragment_y);
 
 						selected_sprite->texture_gabarite = a_element->autobuilding_base->main_texture;
+						selected_sprite->normal_gloss_map_gabarite = a_element->autobuilding_base->normal_gloss_map_texture;
 
 						selected_sprite_id++;
 					}
@@ -3623,6 +3709,7 @@ void EWindowMain::generate_building(Entity* _e)
 						*selected_sprite->size_y = round(wall_full_size_y * wall_fragment_y);
 
 						selected_sprite->texture_gabarite = a_element->autobuilding_base->main_texture;
+						selected_sprite->normal_gloss_map_gabarite = a_element->autobuilding_base->normal_gloss_map_texture;
 
 						selected_sprite_id++;
 					}
@@ -3708,6 +3795,7 @@ void EWindowMain::generate_building(Entity* _e)
 						*selected_sprite->size_y = round(wall_full_size_y * wall_fragment_y);
 
 						selected_sprite->texture_gabarite = a_element->autobuilding_base->main_texture;
+						selected_sprite->normal_gloss_map_gabarite = a_element->autobuilding_base->normal_gloss_map_texture;
 
 						selected_sprite_id++;
 					}

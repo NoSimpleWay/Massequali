@@ -12,7 +12,7 @@ public:
 	static void external_button_action_add_new_autobuilding_base(EButton* _b, float _f);
 
 	static void external_button_action_open_select_texture_window_for_autobuilding_base(EButton* _b, float _f);
-	static void external_button_action_open_select_texture_window_for_vertex_editor(EButton* _b, float _f);
+	static void external_button_action_select_texture_window_for_vertex_editor(EButton* _b, float _f);
 
 	static void external_button_action_select_texture_for_autobuilding_region(EButton* _b, float _f);
 	static void external_button_action_select_texture_for_vertex_editor(EButton* _b, float _f);

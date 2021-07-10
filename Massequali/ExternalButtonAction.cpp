@@ -402,7 +402,7 @@ void ExternalButtonAction::external_button_action_open_select_texture_window_for
 		}
 }
 
-void ExternalButtonAction::external_button_action_open_select_texture_window_for_vertex_editor(EButton* _b, float _f)
+void ExternalButtonAction::external_button_action_select_texture_window_for_vertex_editor(EButton* _b, float _f)
 {
 	*EWindowMain::super_group_texture_collection_link->is_active = true;
 
@@ -459,7 +459,18 @@ void ExternalButtonAction::external_button_action_select_texture_for_autobuildin
 		{
 			external_button_action_select_autobuilding_group(EWindowMain::button_group_autobuilding_group->selected_button, 0.0f);
 		}
+
+		if (get_selected_autobuilding_base(get_entity()) != NULL)
+		{
+			get_selected_autobuilding_base(get_entity())->normal_gloss_map_texture = ETextureAtlas::get_normal_gloss_map_from_regular_texture_path(_b->gabarite->name, EWindow::default_texture_atlas);
+			//get_selected_autobuilding_base(get_entity())->normal_gloss_map_texture = _b->gabarite;
+
+			//if (get_selected_autobuilding_base(get_entity())->main_texture != NULL)
+			//{std::cout << "loaded texture: " << get_selected_autobuilding_base(get_entity())->main_texture->name << std::endl; }
+		}
 	}
+
+
 }
 
 void ExternalButtonAction::external_button_action_select_texture_for_vertex_editor(EButton* _b, float _f)

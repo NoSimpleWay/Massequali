@@ -30,7 +30,8 @@ class EWindow;
 
 static bool is_catched_by_mouse(bool _is_catched, float _x, float _y, float _size_x, float _size_y, float _catch_size, int _mode);
 
-
+static float get_mouse_speed_x();
+static float get_mouse_speed_y();
 
 class EButton
 {
@@ -192,7 +193,7 @@ public:
 
 	EGabarite* gabarite = NULL;
 
-	bool have_icon = false;
+	bool have_icon = true;
 	EColor* icon_color = new EColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 	int position_by_window_mode_x = Enums::PositionMode::LEFT;
@@ -273,7 +274,7 @@ public:
 	bool have_rama = false;
 	int rama_thikness = 2;
 	EColor* rama_color = new EColor(0.0f, 0.0f, 0.0f, 1.0f);
-	EColor* bg_color = new EColor(0.8f, 0.8f, 0.8f, 0.75f);
+	EColor* bg_color = new EColor(0.8f, 0.85f, 0.9f, 1.0f);
 	EColor* text_color = new EColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	int catched_element = 0;
@@ -291,7 +292,7 @@ public:
 	EColor* rama_color_default = new EColor(1.0f, 1.0f, 1.0f, 1.0f);
 	EColor* rama_color_deactivated = new EColor(0.5f, 0.5f, 0.5f, 0.5f);
 
-	EColor* bg_color_default = new EColor(0.5f, 0.5f, 0.5f, 0.25f);
+	EColor* bg_color_default = new EColor(0.8f, 0.8f, 0.8f, 0.25f);
 	EColor* bg_color_deactivated = new EColor(0.1f, 0.1f, 0.1f, 0.1f);
 
 	void activate();
@@ -584,7 +585,9 @@ public:
 
 	static ETextureAtlas* supermap_FBO;
 	static ETextureAtlas* AO_shadow_FBO;
+
 	static ETextureAtlas* skydome_light_FBO[8];
+	static ETextureAtlas* skydome_light_FBO_buffer[8];
 
 	static ETextureAtlas* screen_FBO;
 
@@ -613,6 +616,8 @@ public:
 
 	int align_x;
 	int align_y;
+
+	static EButton* operable_button;
 
 	struct button_array
 	{

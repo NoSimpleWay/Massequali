@@ -26,4 +26,5 @@ public:
 	~ETextureAtlas();
 
 	static EGabarite* get_supermap_from_regular_texture_path(std::string _s, ETextureAtlas* _a);
+	static EGabarite* get_normal_gloss_map_from_regular_texture_path(std::string _s, ETextureAtlas* _a);
 };

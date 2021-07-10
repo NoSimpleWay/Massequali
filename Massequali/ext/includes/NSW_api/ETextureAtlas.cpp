@@ -315,3 +315,25 @@ EGabarite* ETextureAtlas::get_supermap_from_regular_texture_path(std::string _s,
 		return EGraphicCore::gabarite_supermap_placeholder;
 	}
 }
+
+EGabarite* ETextureAtlas::get_normal_gloss_map_from_regular_texture_path(std::string _s, ETextureAtlas* _a)
+{
+	FILE* file;
+	errno_t err;
+	//								name			".png" is 4 char
+	std::string path_to_normal_gloss_map = _s.substr(0, _s.length() - 4) + "#normal_gloss_map.png";
+
+	if (err = fopen_s(&file, path_to_normal_gloss_map.c_str(), "r") == 0)
+	{
+		err = fclose(file);
+
+		//logger(path_to_supermap + " exist");
+		return ETextureAtlas::put_texture_to_atlas(path_to_normal_gloss_map, _a);
+	}
+	else
+	{
+		//logger(path_to_supermap + " not exist");
+		//return EGraphicCore::gabarite_white_pixel;
+		return ETextureAtlas::put_texture_to_atlas("data/textures/normal_gloss_placeholder.png", _a);
+	}
+}

@@ -136,17 +136,21 @@ void Batcher::init_PBR()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	// position attribute
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 10 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 12 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 	// color attribute
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 10 * sizeof(float), (void*)(2 * sizeof(float)));
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 12 * sizeof(float), (void*)(2 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 	// texture coord attribute
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 10 * sizeof(float), (void*)(6 * sizeof(float)));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 12 * sizeof(float), (void*)(6 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 	// global illumination reflection UV
-	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 10 * sizeof(float), (void*)(8 * sizeof(float)));
+	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 12 * sizeof(float), (void*)(8 * sizeof(float)));
 	glEnableVertexAttribArray(3);
+
+	// normal gloss map UV
+	glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, 12 * sizeof(float), (void*)(10 * sizeof(float)));
+	glEnableVertexAttribArray(4);
 }
 
 void Batcher::draw_rect_position(float _x, float _y, float _x2, float _y2)
@@ -532,12 +536,15 @@ void Batcher::draw_gabarite(float _x, float _y, float _w, float _h, EGabarite* _
 //void Batcher::draw_sprite(float _x, float _y, float _w, float _h, float _left, float _right, float _down, float _up, EGabarite* _g)
 
 
-void Batcher::draw_sprite_PBR(float _x, float _y, float _w, float _h, float _left, float _right, float _down, float _up, EGabarite* _g, float _true_height)
+void Batcher::draw_sprite_PBR(float _x, float _y, float _w, float _h, float _left, float _right, float _down, float _up, EGabarite* _g, EGabarite* _nmg, float _true_height)
 {
 	//std::cout << "filled rect" << std::endl;
 
 	//.#
 	//..
+
+	if (_nmg == NULL) { std::cout << "ti ebanutyi?" << std::endl; }
+	//std::cout << "zaebal: " << _nmg->name << std::endl;
 
 	//position
 	vertices[id + 0] = (_x + _w);
@@ -558,65 +565,81 @@ void Batcher::draw_sprite_PBR(float _x, float _y, float _w, float _h, float _lef
 	vertices[id + 8] = 0.0f;
 	vertices[id + 9] = (_true_height + _h) / 1080.0f / 3.0f + 0.333f;
 
+	//normal gloss
+	vertices[id + 10] = *_nmg->x2 - _right;
+	vertices[id + 11] = *_nmg->y2 - _up;
+
 
 
 	//..
 	//.#
-	vertices[id + 10] = (_x + _w);
-	vertices[id + 11] = _y;
+	vertices[id + 12] = (_x + _w);
+	vertices[id + 13] = _y;
 	//vertices[id + 10] = 0;
 
-	vertices[id + 12] = batch_color_r;
-	vertices[id + 13] = batch_color_g;
-	vertices[id + 14] = batch_color_b;
-	vertices[id + 15] = batch_color_a;
+	vertices[id + 14] = batch_color_r;
+	vertices[id + 15] = batch_color_g;
+	vertices[id + 16] = batch_color_b;
+	vertices[id + 17] = batch_color_a;
 
-	vertices[id + 16] = *_g->x2 - _right;
-	vertices[id + 17] = *_g->y + _down;
+	vertices[id + 18] = *_g->x2 - _right;
+	vertices[id + 19] = *_g->y + _down;
 
 	//uv reflection
-	vertices[id + 18] = 0.0f;
-	vertices[id + 19] = (_true_height) / 1080.0f / 3.0f + 0.333f;
+	vertices[id + 20] = 0.0f;
+	vertices[id + 21] = (_true_height) / 1080.0f / 3.0f + 0.333f;
 
+	//normal gloss
+	vertices[id + 22] = *_nmg->x2 - _right;
+	vertices[id + 23] = *_nmg->y + _down;
 
 
 	//..
 	//#.
-	vertices[id + 20] = _x;
-	vertices[id + 21] = _y;
+	vertices[id + 24] = _x;
+	vertices[id + 25] = _y;
 	//vertices[id + 18] = 0;
 
-	vertices[id + 22] = batch_color_r;
-	vertices[id + 23] = batch_color_g;
-	vertices[id + 24] = batch_color_b;
-	vertices[id + 25] = batch_color_a;
+	vertices[id + 26] = batch_color_r;
+	vertices[id + 27] = batch_color_g;
+	vertices[id + 28] = batch_color_b;
+	vertices[id + 29] = batch_color_a;
 
-	vertices[id + 26] = *_g->x + _left;
-	vertices[id + 27] = *_g->y + _down;
+	vertices[id + 30] = *_g->x + _left;
+	vertices[id + 31] = *_g->y + _down;
 
 	//uv reflection
-	vertices[id + 28] = 0.0f;
-	vertices[id + 29] = (_true_height) / 1080.0f / 3.0f + 0.333f;
+	vertices[id + 32] = 0.0f;
+	vertices[id + 33] = (_true_height) / 1080.0f / 3.0f + 0.333f;
+
+
+	//normal gloss
+	vertices[id + 34] = *_nmg->x + _left;
+	vertices[id + 35] = *_nmg->y + _down;
 
 	//#.
 	//..
-	vertices[id + 30] = _x;
-	vertices[id + 31] = (_y + _h);
+	vertices[id + 36] = _x;
+	vertices[id + 37] = (_y + _h);
 	//vertices[id + 26] = 0;
 
-	vertices[id + 32] = batch_color_r;
-	vertices[id + 33] = batch_color_g;
-	vertices[id + 34] = batch_color_b;
-	vertices[id + 35] = batch_color_a;
+	vertices[id + 38] = batch_color_r;
+	vertices[id + 39] = batch_color_g;
+	vertices[id + 40] = batch_color_b;
+	vertices[id + 41] = batch_color_a;
 
-	vertices[id + 36] = *_g->x + _left;
-	vertices[id + 37] = *_g->y2 - _up;
+	vertices[id + 42] = *_g->x + _left;
+	vertices[id + 43] = *_g->y2 - _up;
 
 	//uv reflection
-	vertices[id + 38] = 0.0f;
-	vertices[id + 39] = (_true_height + _h) / 1080.0f / 3.0f + 0.333f;
+	vertices[id + 44] = 0.0f;
+	vertices[id + 45] = (_true_height + _h) / 1080.0f / 3.0f + 0.333f;
 
-	id += 40;
+	//normal gloss
+	vertices[id + 46] = *_nmg->x + _left;
+	vertices[id + 47] = *_nmg->y2 - _up;
+
+	id += 48;
 
 	if (id > batch_force_draw_call)
 	{
@@ -2388,7 +2411,7 @@ void Batcher::draw_call_shadowmap()
 void Batcher::draw_call_PBR()
 {
 	glBindVertexArray(VAO);
-	glDrawElements(GL_TRIANGLES, 6 * id / 40, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, 6 * id / 48, GL_UNSIGNED_INT, 0);
 }
 
 void Batcher::reset()

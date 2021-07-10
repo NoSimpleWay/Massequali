@@ -74,7 +74,10 @@ public:
 	static float ground_lum;
 
 	static float blur_size;
+	static float blur_size_buffer;
 	static float brightness_multiplier;
+
+	static float gloss_input;
 
 
 
@@ -86,7 +89,7 @@ public:
 	struct ESprite
 	{
 		EGabarite* texture_gabarite = NULL;
-		EGabarite* normal_map_gabarite = NULL;
+		EGabarite* normal_gloss_map_gabarite = NULL;
 
 		float* offset_x = new float(0.0f);
 		float* offset_y = new float(0.0f);
@@ -116,10 +119,17 @@ public:
 
 	static void draw_sprite_regular(sprite_array* _sprite_array, Batcher* _batch, float _offset_x, float _offset_y, float _offset_z);
 
-	__inline static void draw_sprite_PBR(EGraphicCore::ESprite* _sprite, Batcher* _batch, float _offset_x, float _offset_y, float _offset_z, float _true_height)
+	static void draw_sprite_PBR(EGraphicCore::ESprite* _sprite, Batcher* _batch, float _offset_x, float _offset_y, float _offset_z, float _true_height)
 	{
-		if ((_sprite != NULL) && (_sprite->texture_gabarite != NULL))
+		if ((_sprite != NULL) && (_sprite->texture_gabarite != NULL) && (_sprite->normal_gloss_map_gabarite != NULL))
 		{
+
+			//std::cout << "zalupa: " << _sprite->normal_gloss_map_gabarite->name << std::endl;
+			/*if (_sprite->normal_gloss_map_gabarite == NULL)
+			{
+				_sprite->normal_gloss_map_gabarite = _sprite->texture_gabarite;
+			}*/
+
 			_batch->setcolor(EColor::COLOR_WHITE);
 			_batch->draw_sprite_PBR
 			(
@@ -135,6 +145,7 @@ public:
 				*_sprite->fragment_up,
 
 				_sprite->texture_gabarite,
+				_sprite->normal_gloss_map_gabarite,
 				_true_height
 			);
 			//_batch->draw_gabarite(_offset_x + *spr->offset_x, _offset_y + *spr->offset_y + _offset_z + *spr->offset_z, spr->texture_gabarite);
