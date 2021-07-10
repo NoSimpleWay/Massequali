@@ -222,8 +222,9 @@ int main()
 	EGraphicCore::gabarite_radial_button = ETextureAtlas::put_texture_to_atlas("data/textures/radial_button.png", EWindow::default_texture_atlas);
 	EGraphicCore::gabarite_radial_button_dot = ETextureAtlas::put_texture_to_atlas("data/textures/radial_button_dot.png", EWindow::default_texture_atlas);
 	
-	EGraphicCore::gabarite_sun = ETextureAtlas::put_texture_to_atlas("data/textures/sun2.png", EWindow::default_texture_atlas);
-	EGraphicCore::gabarite_sky = ETextureAtlas::put_texture_to_atlas("data/textures/sky3.png", EWindow::default_texture_atlas);
+	EGraphicCore::gabarite_sun		 = ETextureAtlas::put_texture_to_atlas("data/textures/sun2.png", EWindow::default_texture_atlas);
+	EGraphicCore::gabarite_sky		 = ETextureAtlas::put_texture_to_atlas("data/textures/sky3.png", EWindow::default_texture_atlas);
+	EGraphicCore::gabarite_panorama	 = ETextureAtlas::put_texture_to_atlas("data/textures/panorama.png", EWindow::default_texture_atlas);
 
 	EGraphicCore::gabarite_small_wood_button_bg = ETextureAtlas::put_texture_to_atlas("data/textures/button_bg.png", EWindow::default_texture_atlas);
 
@@ -386,6 +387,14 @@ int main()
 		)
 		{
 			EWindow::top_overlaped_group = _sg;
+
+			
+		}
+
+		for (EWindow* w : EWindow::window_list)
+		if ((EWindow::top_overlaped_group != NULL) & (EWindow::LMB))
+		{
+			send_this_button_group_to_top(w, EWindow::top_overlaped_group);
 		}
 
 		EWindow::add_time_process("__window pre process");

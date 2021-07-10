@@ -38,15 +38,15 @@ float EGraphicCore::correction_y = 0.1f;
 float EGraphicCore::sun_position_x = 0.5f;
 float EGraphicCore::sun_position_y = 0.5f;
 
-float EGraphicCore::sun_size = 0.05f;
+float EGraphicCore::sun_size = 0.025f;
 
 float EGraphicCore::sun_lum = 1.00f;
 float EGraphicCore::sky_lum = 0.05f;
 float EGraphicCore::ground_lum = 0.05f;
 
-float EGraphicCore::blur_size = 2.00f;
-float EGraphicCore::blur_size_buffer = 1.00f;
-float EGraphicCore::brightness_multiplier = 10.00f;
+float EGraphicCore::blur_size = 4.00f;
+float EGraphicCore::blur_size_buffer = 2.00f;
+float EGraphicCore::brightness_multiplier = 20.00f;
 
 float EGraphicCore::gloss_input = 1.00f;
 
@@ -68,6 +68,7 @@ EGabarite* EGraphicCore::gabarite_full_atlas;
 
 EGabarite* EGraphicCore::gabarite_sun;
 EGabarite* EGraphicCore::gabarite_sky;
+EGabarite* EGraphicCore::gabarite_panorama;
 
 void EGraphicCore::reset_sprite_data(EGraphicCore::ESprite* _sprite)
 {

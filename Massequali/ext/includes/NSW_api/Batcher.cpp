@@ -563,7 +563,7 @@ void Batcher::draw_sprite_PBR(float _x, float _y, float _w, float _h, float _lef
 
 	//uv reflection
 	vertices[id + 8] = 0.0f;
-	vertices[id + 9] = (_true_height + _h) / 1080.0f / 3.0f + 0.333f;
+	vertices[id + 9] = (_true_height + _h) / 1080.0f;
 
 	//normal gloss
 	vertices[id + 10] = *_nmg->x2 - _right;
@@ -587,7 +587,7 @@ void Batcher::draw_sprite_PBR(float _x, float _y, float _w, float _h, float _lef
 
 	//uv reflection
 	vertices[id + 20] = 0.0f;
-	vertices[id + 21] = (_true_height) / 1080.0f / 3.0f + 0.333f;
+	vertices[id + 21] = (_true_height) / 1080.0f;
 
 	//normal gloss
 	vertices[id + 22] = *_nmg->x2 - _right;
@@ -610,7 +610,7 @@ void Batcher::draw_sprite_PBR(float _x, float _y, float _w, float _h, float _lef
 
 	//uv reflection
 	vertices[id + 32] = 0.0f;
-	vertices[id + 33] = (_true_height) / 1080.0f / 3.0f + 0.333f;
+	vertices[id + 33] = (_true_height) / 1080.0f;
 
 
 	//normal gloss
@@ -633,7 +633,7 @@ void Batcher::draw_sprite_PBR(float _x, float _y, float _w, float _h, float _lef
 
 	//uv reflection
 	vertices[id + 44] = 0.0f;
-	vertices[id + 45] = (_true_height + _h) / 1080.0f / 3.0f + 0.333f;
+	vertices[id + 45] = (_true_height + _h) / 1080.0f;
 
 	//normal gloss
 	vertices[id + 46] = *_nmg->x + _left;

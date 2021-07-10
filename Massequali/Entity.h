@@ -129,8 +129,8 @@ public:
 class ECamera
 {
 public:
-	float* position_x = new float(0.0f);
-	float* position_y = new float(0.0f);
+	float* position_x = new float(500.0f);
+	float* position_y = new float(800.0f);
 
 	float* speed_x = new float(0.0f);
 	float* speed_y = new float(0.0f);

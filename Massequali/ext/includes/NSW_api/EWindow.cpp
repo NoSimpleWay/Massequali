@@ -3336,6 +3336,17 @@ float get_mouse_speed_y()
 	return 0.0f;
 }
 
+void send_this_button_group_to_top (EWindow* _w, EButton::button_super_group* _group)
+{
+	for (int i = 0; i < _w->button_group_list.size() - 1; i++)
+	{
+		if ((_w->button_group_list.at(i) == _group) & (!*_w->button_group_list.at(i + 1)->inmovable_on_list))
+		{
+			swap(_w->button_group_list.at(i), _w->button_group_list.at(i + 1));
+		}
+	}
+}
+
 void external_button_action_close_master_button_super_group(EButton* _b, float _f)
 {
 	if (_b->master_super_group != NULL)

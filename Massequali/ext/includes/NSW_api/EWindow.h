@@ -33,6 +33,8 @@ static bool is_catched_by_mouse(bool _is_catched, float _x, float _y, float _siz
 static float get_mouse_speed_x();
 static float get_mouse_speed_y();
 
+
+
 class EButton
 {
 public:
@@ -419,6 +421,8 @@ public:
 		std::vector<EButton*> additional_button_list;
 
 		EButton* button_close = nullptr;
+
+		bool* inmovable_on_list = new bool(false);
 	};
 
 	EButton(float _x, float _y, float _sx, float _sy, EWindow* _w, button_super_group* _bsg, button_group* _bg);
@@ -493,7 +497,10 @@ public:
 
 	ETwoDimensionGradient* two_dimension_gradient;
 };
+
 static void external_button_action_close_master_button_super_group(EButton* _b, float _f);
+void send_this_button_group_to_top (EWindow* _w, EButton::button_super_group* _group);
+
 class EWindow
 {
 public:

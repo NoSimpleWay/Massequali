@@ -80,6 +80,8 @@ EWindowMain::EWindowMain()
 		cluster_static		[j][i] = new ECluster();
 		cluster_non_static	[j][i] = new ECluster();
 	}
+
+	load_map("test");
 }
 
 void saveImage(char* filepath, GLFWwindow* w)
@@ -815,40 +817,7 @@ void EWindowMain::create_button_groups()
 	*but->can_be_selected = false;
 	but->action_on_left_click.push_back(&ExternalButtonAction::external_button_action_add_new_group_for_autobuilding);
 	but->text = "Add new order";
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	/////////////menu save|load|other
-	just_created_button_super_group = new EButton::button_super_group(this);
-	button_group_list.push_back(just_created_button_super_group);
-
-	*just_created_button_super_group->size_x = 300.0f;
-	*just_created_button_super_group->size_y = 30.0f;
-	//button_group_list.push_back(just_created_button_super_group);
-
-	just_created_button_group = new EButton::button_group();
-	just_created_button_super_group->button_group_list.push_back(just_created_button_group);
-	*just_created_button_group->size_x = 300.0f;
-	*just_created_button_group->size_y = 30.0f;
-	*just_created_button_group->can_be_stretched_x = false;
-	*just_created_button_group->can_be_stretched_y = false;
-
-	but = new EButton(0.0f, 0.0f, 50.0f, 15.0f, this, just_created_button_super_group, just_created_button_group);
-	just_created_button_group->button_list.push_back(but);
-	*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_X;
-	but->action_on_left_click.push_back(&ExternalButtonAction::external_button_action_save_map);
-	but->text = "Save";
-
-	but = new EButton(0.0f, 0.0f, 50.0f, 15.0f, this, just_created_button_super_group, just_created_button_group);
-	just_created_button_group->button_list.push_back(but);
-	*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_X;
-	but->action_on_left_click.push_back(&ExternalButtonAction::external_button_action_load_map);
-	but->text = "Load";
-
-	but = new EButton(0.0f, 0.0f, 70.0f, 15.0f, this, just_created_button_super_group, just_created_button_group);
-		just_created_button_group->button_list.push_back(but);
-		*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_X;
-		but->action_on_left_click.push_back(&ExternalButtonAction::external_button_action_create_new_entity);
-		but->text = "New Entity";
+	
 
 
 	/////////////vertex editor
@@ -1147,7 +1116,43 @@ void EWindowMain::create_button_groups()
 	but->text_color->set_color(EColor::COLOR_WHITE);
 	but->bg_color->set_color(EColor::COLOR_WHITE);
 
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+	/////////////menu save|load|other
+	just_created_button_super_group = new EButton::button_super_group(this);
+	button_group_list.push_back(just_created_button_super_group);
+
+	*just_created_button_super_group->size_x = 300.0f;
+	*just_created_button_super_group->size_y = 30.0f;
+
+	*just_created_button_super_group->inmovable_on_list = true;
+
+	//button_group_list.push_back(just_created_button_super_group);
+
+	just_created_button_group = new EButton::button_group();
+	just_created_button_super_group->button_group_list.push_back(just_created_button_group);
+	*just_created_button_group->size_x = 300.0f;
+	*just_created_button_group->size_y = 30.0f;
+	*just_created_button_group->can_be_stretched_x = false;
+	*just_created_button_group->can_be_stretched_y = false;
+
+	but = new EButton(0.0f, 0.0f, 50.0f, 15.0f, this, just_created_button_super_group, just_created_button_group);
+	just_created_button_group->button_list.push_back(but);
+	*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_X;
+	but->action_on_left_click.push_back(&ExternalButtonAction::external_button_action_save_map);
+	but->text = "Save";
+
+	but = new EButton(0.0f, 0.0f, 50.0f, 15.0f, this, just_created_button_super_group, just_created_button_group);
+	just_created_button_group->button_list.push_back(but);
+	*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_X;
+	but->action_on_left_click.push_back(&ExternalButtonAction::external_button_action_load_map);
+	but->text = "Load";
+
+	but = new EButton(0.0f, 0.0f, 70.0f, 15.0f, this, just_created_button_super_group, just_created_button_group);
+	just_created_button_group->button_list.push_back(but);
+	*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_X;
+	but->action_on_left_click.push_back(&ExternalButtonAction::external_button_action_create_new_entity);
+	but->text = "New Entity";
 
 
 
@@ -1605,29 +1610,40 @@ glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "brightness_multi
 
 glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "input_gloss"), EGraphicCore::gloss_input);
 
+glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "sun_position_x"), EGraphicCore::sun_position_x);
+glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "sun_position_y"), EGraphicCore::sun_position_y);
+
+glActiveTexture(GL_TEXTURE0);
+glBindTexture(GL_TEXTURE_2D, EWindow::default_texture_atlas->colorbuffer);
+EGraphicCore::PBR_shader->setInt("texture1", 0);
+
 glActiveTexture(GL_TEXTURE1);
-glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[0]->colorbuffer);//1
-EGraphicCore::PBR_shader->setInt("SD_array[0]", 1);
+glBindTexture(GL_TEXTURE_2D, EWindow::default_texture_atlas->colorbuffer);
+EGraphicCore::PBR_shader->setInt("normal_gloss_map_texture", 1);
 
 glActiveTexture(GL_TEXTURE2);
-glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[1]->colorbuffer);//1/2
-EGraphicCore::PBR_shader->setInt("SD_array[1]", 2);
+glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[0]->colorbuffer);//1
+EGraphicCore::PBR_shader->setInt("SD_array[0]", 2);
 
 glActiveTexture(GL_TEXTURE3);
-glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[2]->colorbuffer);//1/4
-EGraphicCore::PBR_shader->setInt("SD_array[2]", 3);
+glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[1]->colorbuffer);//1/2
+EGraphicCore::PBR_shader->setInt("SD_array[1]", 3);
 
 glActiveTexture(GL_TEXTURE4);
-glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[3]->colorbuffer);//1/8
-EGraphicCore::PBR_shader->setInt("SD_array[3]", 4);
+glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[2]->colorbuffer);//1/4
+EGraphicCore::PBR_shader->setInt("SD_array[2]", 4);
 
 glActiveTexture(GL_TEXTURE5);
-glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[4]->colorbuffer);//1/16
-EGraphicCore::PBR_shader->setInt("SD_array[4]", 5);
+glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[3]->colorbuffer);//1/8
+EGraphicCore::PBR_shader->setInt("SD_array[3]", 5);
 
 glActiveTexture(GL_TEXTURE6);
+glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[4]->colorbuffer);//1/16
+EGraphicCore::PBR_shader->setInt("SD_array[4]", 6);
+
+glActiveTexture(GL_TEXTURE7);
 glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[5]->colorbuffer);//1/32
-EGraphicCore::PBR_shader->setInt("SD_array[5]", 6);
+EGraphicCore::PBR_shader->setInt("SD_array[5]", 7);
 
 
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
@@ -1653,8 +1669,10 @@ glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 			else
 			if (*t_group->selected_direction_of_push == AutobuildingSpritePushDirection::AUTOBUILDING_SPRITE_PUSH_DIRECTION_ROOF_Y)
 			{
-				true_height = *t_entity->position_y + *t_group->sprite_list.at(f)->offset_y + *t_entity->position_z + *t_group->sprite_list.at(f)->offset_z - *main_camera->position_y + EGraphicCore::SCR_HEIGHT / 2.0f + 1024.0f;
+				true_height = *t_entity->position_y + *t_group->sprite_list.at(f)->offset_y + *t_entity->position_z + *t_group->sprite_list.at(f)->offset_z - *main_camera->position_y + EGraphicCore::SCR_HEIGHT / 2.0f;
 			}
+
+
 
 			EGraphicCore::draw_sprite_PBR
 			(
@@ -2326,11 +2344,21 @@ void EWindowMain::reset_render()
 
 		//sun
 		EGraphicCore::batch->setcolor(1.0f * EGraphicCore::sun_lum, 0.9f * EGraphicCore::sun_lum, 0.8f * EGraphicCore::sun_lum, 1.0f);
-		EGraphicCore::batch->draw_gabarite(EGraphicCore::sun_position_x - EGraphicCore::sun_size * 0.25f, EGraphicCore::sun_position_y - EGraphicCore::sun_size * 0.5f, EGraphicCore::sun_size * 0.5f, EGraphicCore::sun_size, EGraphicCore::gabarite_sun);
+		EGraphicCore::batch->draw_gabarite
+		(
+			(EGraphicCore::sun_position_x * 1.4f - 0.2f) - EGraphicCore::sun_size * 0.25f,
+			(EGraphicCore::sun_position_y * 1.4f - 0.2f) - EGraphicCore::sun_size * 0.5f,
+			EGraphicCore::sun_size * 0.5f,
+			EGraphicCore::sun_size,
+			EGraphicCore::gabarite_sun
+		);
 
 		//ground (grass)
-		EGraphicCore::batch->setcolor(0.85f * EGraphicCore::ground_lum, 0.80f * EGraphicCore::ground_lum, 0.75f * EGraphicCore::ground_lum, 1.0f);
-		EGraphicCore::batch->draw_gabarite(0.0f, 0.0f, 1.0f, 0.35f, EGraphicCore::gabarite_white_pixel);
+		//EGraphicCore::batch->setcolor(0.85f * EGraphicCore::ground_lum, 0.80f * EGraphicCore::ground_lum, 0.75f * EGraphicCore::ground_lum, 1.0f);
+		//EGraphicCore::batch->draw_gabarite(0.0f, 0.0f, 1.0f, 0.45f, EGraphicCore::gabarite_white_pixel
+
+		EGraphicCore::batch->setcolor(1.0f * EGraphicCore::ground_lum, 1.00f * EGraphicCore::ground_lum, 1.00f * EGraphicCore::ground_lum, 1.0f);
+		EGraphicCore::batch->draw_gabarite(0.0f, 0.3f, 1.0f, 0.2f, EGraphicCore::gabarite_panorama);
 	EGraphicCore::batch->force_draw_call();
 
 	EGraphicCore::simple_blur->use();

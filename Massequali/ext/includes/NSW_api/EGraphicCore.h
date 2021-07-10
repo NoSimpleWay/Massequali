@@ -63,6 +63,7 @@ public:
 
 	static EGabarite* gabarite_sun;
 	static EGabarite* gabarite_sky;
+	static EGabarite* gabarite_panorama;
 
 	static float sun_position_x;
 	static float sun_position_y;
