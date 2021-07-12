@@ -968,7 +968,7 @@ void EWindowMain::create_button_groups()
 	//*just_created_button_super_group->position_x = 500.0f;
 	but = new EButton(0.0f, 0.0f, 200.0f, 100.0f, this, just_created_button_super_group, just_created_button_group);
 	but->have_icon = true;
-	but->gabarite = ETextureAtlas::put_texture_to_atlas("data/textures/button_texture_sun_position.png", EWindow::default_texture_atlas);
+	but->gabarite = ETextureAtlas::put_texture_to_atlas("data/textures/button_texture_sun_position[3].png", EWindow::default_texture_atlas);
 	just_created_td_gradient = new EButton::ETwoDimensionGradient();
 	*just_created_td_gradient->draw_gradient = false;
 	but->action_on_td_gradient_drag.push_back(&ExternalButtonAction::external_button_action_change_sun_position);
@@ -1587,7 +1587,7 @@ EGraphicCore::matrix_transform = glm::translate
 	(
 		-1.0f + round(EGraphicCore::SCR_WIDTH / 2.0f - *main_camera->position_x) * EGraphicCore::correction_x,
 		-1.0f + round(EGraphicCore::SCR_HEIGHT / 2.0f - *main_camera->position_y) * EGraphicCore::correction_y,
-		0.0f
+		-1.0f
 	)
 );
 
@@ -1598,7 +1598,7 @@ EGraphicCore::matrix_transform = glm::scale
 	(
 		EGraphicCore::correction_x * *main_camera->zoom,
 		EGraphicCore::correction_y * *main_camera->zoom,
-		1.0f
+		EGraphicCore::correction_y * *main_camera->zoom
 	)
 );
 
@@ -1612,6 +1612,11 @@ glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "input_gloss"), E
 
 glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "sun_position_x"), EGraphicCore::sun_position_x);
 glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "sun_position_y"), EGraphicCore::sun_position_y);
+
+
+glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "sun_zenith"), EGraphicCore::sun_zenith_factor);
+
+//glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "screen_offset_x"), main_camera->position_x);
 
 glActiveTexture(GL_TEXTURE0);
 glBindTexture(GL_TEXTURE_2D, EWindow::default_texture_atlas->colorbuffer);
@@ -1669,7 +1674,7 @@ glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 			else
 			if (*t_group->selected_direction_of_push == AutobuildingSpritePushDirection::AUTOBUILDING_SPRITE_PUSH_DIRECTION_ROOF_Y)
 			{
-				true_height = *t_entity->position_y + *t_group->sprite_list.at(f)->offset_y + *t_entity->position_z + *t_group->sprite_list.at(f)->offset_z - *main_camera->position_y + EGraphicCore::SCR_HEIGHT / 2.0f;
+				true_height = *t_entity->position_y + *t_group->sprite_list.at(f)->offset_y - *main_camera->position_y + EGraphicCore::SCR_HEIGHT / 2.0f;
 			}
 
 
@@ -1787,11 +1792,11 @@ void EWindowMain::update(float _d)
 	EWindow::add_time_process("===--- update begin ---===");
 	if (_d > 0.1) { _d = 0.1f; }
 
-	cluster_draw_start_x = floor((*main_camera->position_x - EGraphicCore::SCR_WIDTH / 2.0f) / ECluster::CLUSTER_SIZE_X) - 5; cluster_draw_start_x = max(cluster_draw_start_x, 0);
-	cluster_draw_start_y = floor((*main_camera->position_y - EGraphicCore::SCR_HEIGHT / 2.0f) / ECluster::CLUSTER_SIZE_Y) - 5; cluster_draw_start_y = max(cluster_draw_start_y, 0);
+	cluster_draw_start_x = floor((*main_camera->position_x - EGraphicCore::SCR_WIDTH / 2.0f) / *main_camera->zoom / ECluster::CLUSTER_SIZE_X) - 5; cluster_draw_start_x = max(cluster_draw_start_x, 0);
+	cluster_draw_start_y = floor((*main_camera->position_y - EGraphicCore::SCR_HEIGHT / 2.0f) / *main_camera->zoom / ECluster::CLUSTER_SIZE_Y) - 5; cluster_draw_start_y = max(cluster_draw_start_y, 0);
 
-	cluster_draw_end_x = floor((*main_camera->position_x + EGraphicCore::SCR_WIDTH / 2.0f) / ECluster::CLUSTER_SIZE_X) + 5; cluster_draw_end_x = min(cluster_draw_end_x, ECluster::CLUSTED_DIM_X);
-	cluster_draw_end_y = floor((*main_camera->position_y + EGraphicCore::SCR_HEIGHT / 2.0f) / ECluster::CLUSTER_SIZE_Y) + 5; cluster_draw_end_y = min(cluster_draw_end_y, ECluster::CLUSTED_DIM_Y);
+	cluster_draw_end_x = floor((*main_camera->position_x + EGraphicCore::SCR_WIDTH / 2.0f) / *main_camera->zoom / ECluster::CLUSTER_SIZE_X) + 5; cluster_draw_end_x = min(cluster_draw_end_x, ECluster::CLUSTED_DIM_X - 1);
+	cluster_draw_end_y = floor((*main_camera->position_y + EGraphicCore::SCR_HEIGHT / 2.0f) / *main_camera->zoom / ECluster::CLUSTER_SIZE_Y) + 5; cluster_draw_end_y = min(cluster_draw_end_y, ECluster::CLUSTED_DIM_Y - 1);
 
 	std::vector <Entity*>* t_vec;
 
@@ -2263,13 +2268,16 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 
 void EWindowMain::reset_render()
 {
+	EGraphicCore::sun_zenith_factor = abs(EGraphicCore::sun_position_y - 0.66f) * 3.0f;
+	EGraphicCore::sun_zenith_factor = (1.0f - EGraphicCore::sun_zenith_factor) * 2.0f;
+	EMath::clamp_value_float(&EGraphicCore::sun_zenith_factor, 0.0f, 1.0f);
 
 	glClearColor(EColor::COLOR_LAZURE_SHADOW->color_red, EColor::COLOR_LAZURE_SHADOW->color_green, EColor::COLOR_LAZURE_SHADOW->color_blue, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	EGraphicCore::AO_shader->use();
 		EGraphicCore::matrix_transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-		EGraphicCore::matrix_transform = glm::translate(EGraphicCore::matrix_transform, glm::vec3(-1.0f - EGraphicCore::correction_x / 2.0f * 0.0f + round(EGraphicCore::SCR_WIDTH / 2.0f - *main_camera->position_x) * EGraphicCore::correction_x, -1.0f - EGraphicCore::correction_y / 2.0f * 0.0f + round(EGraphicCore::SCR_HEIGHT / 2.0f - *main_camera->position_y) * EGraphicCore::correction_y, 0.0f));
+		EGraphicCore::matrix_transform = glm::translate(EGraphicCore::matrix_transform, glm::vec3(-1.0f + round(EGraphicCore::SCR_WIDTH / 2.0f - *main_camera->position_x) * EGraphicCore::correction_x, -1.0f + round(EGraphicCore::SCR_HEIGHT / 2.0f - *main_camera->position_y) * EGraphicCore::correction_y, 0.0f));
 		EGraphicCore::matrix_transform = glm::scale(EGraphicCore::matrix_transform, glm::vec3(EGraphicCore::correction_x * *main_camera->zoom, EGraphicCore::correction_y * *main_camera->zoom, 1.0f));
 		transformLoc = glGetUniformLocation(EGraphicCore::AO_shader->ID, "transform");
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(EGraphicCore::matrix_transform));
@@ -2292,8 +2300,18 @@ void EWindowMain::reset_render()
 	ETextureAtlas::set_this_FBO_as_active(EWindow::AO_shadow_FBO);
 
 	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendFunc(GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA);
 	glBlendEquation(GL_FUNC_ADD);
+
+		glClearColor
+		(
+				sqrt(EGraphicCore::sun_zenith_factor),
+				EGraphicCore::sun_zenith_factor,
+				EGraphicCore::sun_zenith_factor * EGraphicCore::sun_zenith_factor,
+				1.0f
+		);
+
+		glClear(GL_COLOR_BUFFER_BIT);
 
 		EGraphicCore::matrix_transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
 		EGraphicCore::matrix_transform = glm::translate(EGraphicCore::matrix_transform, glm::vec3(-1.0f, -1.0f, 0.0f));
@@ -2305,6 +2323,8 @@ void EWindowMain::reset_render()
 		EGraphicCore::batch->reinit();
 		EGraphicCore::batch->draw_call();
 		EGraphicCore::batch->reset();
+
+			
 
 
 		EWindow::add_time_process("Draw AO shaodw");
@@ -2329,8 +2349,9 @@ void EWindowMain::reset_render()
 
 
 		
+		/*
 		glClearColor(0.04f, 0.045f, 0.055f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT);*/
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -2338,12 +2359,37 @@ void EWindowMain::reset_render()
 		/*//sky
 		EGraphicCore::batch->setcolor(0.095f, 0.098f, 0.1f, 1.0f);
 		EGraphicCore::batch->draw_gabarite(0.0f, 0.0f, 1.0f, 1.000f, EGraphicCore::gabarite_white_pixel);*/
+
+		
+		
+
+		float
+			sun_zenith_factor_sun = abs(EGraphicCore::sun_position_y - 0.66f) * 3.0f;
+			sun_zenith_factor_sun = (1.0f - sun_zenith_factor_sun) * 2.0f;
+			EMath::clamp_value_float(&sun_zenith_factor_sun, 0.0f, 1.0f);
+
 		//sky
-		EGraphicCore::batch->setcolor_lum(EColor::COLOR_WHITE, EGraphicCore::sky_lum);
+		EGraphicCore::batch->setcolor
+		(
+			sqrt(EGraphicCore::sun_zenith_factor) * EGraphicCore::sky_lum,
+			EGraphicCore::sun_zenith_factor * EGraphicCore::sky_lum,
+			EGraphicCore::sun_zenith_factor * EGraphicCore::sun_zenith_factor * EGraphicCore::sky_lum,
+			1.0f
+		);
 		EGraphicCore::batch->draw_gabarite(0.0f, 0.0f, 1.0f, 1.0f, EGraphicCore::gabarite_sky);
 
+
+
 		//sun
-		EGraphicCore::batch->setcolor(1.0f * EGraphicCore::sun_lum, 0.9f * EGraphicCore::sun_lum, 0.8f * EGraphicCore::sun_lum, 1.0f);
+		EGraphicCore::batch->setcolor
+		(
+			1.0f * EGraphicCore::sun_lum * sqrt(sun_zenith_factor_sun),
+			0.8f * EGraphicCore::sun_lum * sun_zenith_factor_sun,
+			0.5f * EGraphicCore::sun_lum * sun_zenith_factor_sun * sun_zenith_factor_sun,
+			1.0f
+		);
+
+
 		EGraphicCore::batch->draw_gabarite
 		(
 			(EGraphicCore::sun_position_x * 1.4f - 0.2f) - EGraphicCore::sun_size * 0.25f,
@@ -2357,8 +2403,14 @@ void EWindowMain::reset_render()
 		//EGraphicCore::batch->setcolor(0.85f * EGraphicCore::ground_lum, 0.80f * EGraphicCore::ground_lum, 0.75f * EGraphicCore::ground_lum, 1.0f);
 		//EGraphicCore::batch->draw_gabarite(0.0f, 0.0f, 1.0f, 0.45f, EGraphicCore::gabarite_white_pixel
 
-		EGraphicCore::batch->setcolor(1.0f * EGraphicCore::ground_lum, 1.00f * EGraphicCore::ground_lum, 1.00f * EGraphicCore::ground_lum, 1.0f);
-		EGraphicCore::batch->draw_gabarite(0.0f, 0.3f, 1.0f, 0.2f, EGraphicCore::gabarite_panorama);
+		EGraphicCore::batch->setcolor
+		(
+			sqrt(EGraphicCore::sun_zenith_factor)* EGraphicCore::sky_lum,
+			EGraphicCore::sun_zenith_factor* EGraphicCore::sky_lum,
+			EGraphicCore::sun_zenith_factor* EGraphicCore::sun_zenith_factor* EGraphicCore::sky_lum,
+			1.0f
+		);
+		EGraphicCore::batch->draw_gabarite(0.0f, 0.0f, 1.0f, 0.5f, EGraphicCore::gabarite_panorama);
 	EGraphicCore::batch->force_draw_call();
 
 	EGraphicCore::simple_blur->use();
@@ -2469,6 +2521,11 @@ void EWindowMain::update_selected_entity_list()
 		else
 		{
 			group_grid_entity_list_link->button_list.at(i)->is_active = false;
+		}
+
+		if (!selected_entities.empty())
+		{
+			group_grid_entity_list_link->selected_button = group_grid_entity_list_link->button_list.at(0);
 		}
 	}
 }
@@ -2722,7 +2779,7 @@ void EWindowMain::load_map(std::string _name)
 			if (EFile::data_array[i] == "CREATE_NEW_ENTITY")
 			{
 				jc_entity = new Entity();
-				std::cout << "______created new entity" << endl;
+				//std::cout << "______created new entity" << endl;
 			}
 
 			if ((EFile::data_array[i] == "entity_position") & (jc_entity != NULL))
@@ -2742,7 +2799,7 @@ void EWindowMain::load_map(std::string _name)
 
 				jc_entity->autobuilding_base_list.push_back(jc_base);
 
-				std::cout << "______created new base" << endl;
+				//std::cout << "______created new base" << endl;
 			}
 
 			if ((EFile::data_array[i] == "autobuilding_base_main_texture") & (jc_base != NULL))
@@ -2763,15 +2820,15 @@ void EWindowMain::load_map(std::string _name)
 				jc_grid_region = new EButton::EGridRegion();
 				jc_base->grid_region.push_back(jc_grid_region);
 
-				std::cout << "______created new grid region" << endl;
+				//std::cout << "______created new grid region" << endl;
 			}
 
 			if ((EFile::data_array[i] == "grid_region_position_and_size") & (jc_grid_region != NULL))
 			{
-				i++; *jc_grid_region->position_x = EMath::to_float(EFile::data_array[i]);	std::cout << "#_____set grid pos x [" << std::to_string(*jc_grid_region->position_x) << "]" << endl;
-				i++; *jc_grid_region->position_y = EMath::to_float(EFile::data_array[i]);	std::cout << "#_____set grid pos y [" << std::to_string(*jc_grid_region->position_y) << "]" << endl;
-				i++; *jc_grid_region->size_x = EMath::to_float(EFile::data_array[i]);		std::cout << "#_____set grid size x [" << std::to_string(*jc_grid_region->size_x) << "]" << endl;
-				i++; *jc_grid_region->size_y = EMath::to_float(EFile::data_array[i]);		std::cout << "#_____set grid size y [" << std::to_string(*jc_grid_region->size_y) << "]" << endl;
+				i++; *jc_grid_region->position_x = EMath::to_float(EFile::data_array[i]);	//std::cout << "#_____set grid pos x [" << std::to_string(*jc_grid_region->position_x) << "]" << endl;
+				i++; *jc_grid_region->position_y = EMath::to_float(EFile::data_array[i]);	//std::cout << "#_____set grid pos y [" << std::to_string(*jc_grid_region->position_y) << "]" << endl;
+				i++; *jc_grid_region->size_x = EMath::to_float(EFile::data_array[i]);		//std::cout << "#_____set grid size x [" << std::to_string(*jc_grid_region->size_x) << "]" << endl;
+				i++; *jc_grid_region->size_y = EMath::to_float(EFile::data_array[i]);		//std::cout << "#_____set grid size y [" << std::to_string(*jc_grid_region->size_y) << "]" << endl;
 			}
 
 			if ((EFile::data_array[i] == "grid_region_subdivision") & (jc_grid_region != NULL))
@@ -2787,7 +2844,7 @@ void EWindowMain::load_map(std::string _name)
 				jc_group->master_entity = jc_entity;
 				jc_entity->autobuilding_group_list.push_back(jc_group);
 
-				std::cout << "______created new group" << endl;
+				//std::cout << "______created new group" << endl;
 			}
 
 			if ((EFile::data_array[i] == "autobuilding_group_offset_and_size") & (jc_group != NULL))
@@ -2815,7 +2872,7 @@ void EWindowMain::load_map(std::string _name)
 				jc_group_element = new Entity::AutobuildingGroupElement();
 				jc_group->autobuilding_group_element_list.push_back(jc_group_element);
 
-				std::cout << "______created new group element" << endl;
+				//std::cout << "______created new group element" << endl;
 			}
 
 			if ((EFile::data_array[i] == "autobuilding_group_element_offset_and_size") & (jc_group_element != NULL))
@@ -3104,6 +3161,8 @@ void EWindowMain::generate_building(Entity* _e)
 
 							*selected_sprite->offset_z = *a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_DOWN)->size_y;
 							*selected_sprite->offset_z += yy * (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y) + *a_group->offset_z + *a_element->offset_z;
+
+							*selected_sprite->size_z = round(wall_full_size_y * wall_fragment_y);
 						}
 
 						if (*a_group->selected_direction_of_push == AutobuildingSpritePushDirection::AUTOBUILDING_SPRITE_PUSH_DIRECTION_ROOF_Y)
@@ -3113,6 +3172,8 @@ void EWindowMain::generate_building(Entity* _e)
 
 							 *selected_sprite->offset_y = *a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_DOWN)->size_y;
 							 *selected_sprite->offset_y += yy * (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y) + *a_group->offset_y + *a_element->offset_y;
+
+							 *selected_sprite->size_y = round(wall_full_size_y * wall_fragment_y);
 
 						}
 						convert_size_to_fragment
@@ -3129,7 +3190,6 @@ void EWindowMain::generate_building(Entity* _e)
 						);
 
 						*selected_sprite->size_x = round(wall_full_size_x * wall_fragment_x);
-						*selected_sprite->size_y = round(wall_full_size_y * wall_fragment_y);
 
 						selected_sprite->texture_gabarite = a_element->autobuilding_base->main_texture;
 						selected_sprite->normal_gloss_map_gabarite = a_element->autobuilding_base->normal_gloss_map_texture;
@@ -3191,6 +3251,7 @@ void EWindowMain::generate_building(Entity* _e)
 
 							*selected_sprite->offset_z = 0.0f;
 							*selected_sprite->offset_z += yy * (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y) + *a_group->offset_z + *a_element->offset_z;
+							*selected_sprite->size_z = round(wall_full_size_y * wall_fragment_y);
 						}
 						
 						if (*a_group->selected_direction_of_push == AutobuildingSpritePushDirection::AUTOBUILDING_SPRITE_PUSH_DIRECTION_ROOF_Y)
@@ -3200,6 +3261,7 @@ void EWindowMain::generate_building(Entity* _e)
 
 							*selected_sprite->offset_y = 0.0f;
 							*selected_sprite->offset_y += yy * (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y) + *a_group->offset_y + *a_element->offset_y;
+							*selected_sprite->size_y = round(wall_full_size_y * wall_fragment_y);
 						}
 						
 
@@ -3217,7 +3279,7 @@ void EWindowMain::generate_building(Entity* _e)
 						);
 
 						*selected_sprite->size_x = round(wall_full_size_x * wall_fragment_x);
-						*selected_sprite->size_y = round(wall_full_size_y * wall_fragment_y);
+						
 
 						selected_sprite->texture_gabarite = a_element->autobuilding_base->main_texture;
 						selected_sprite->normal_gloss_map_gabarite = a_element->autobuilding_base->normal_gloss_map_texture;
@@ -3278,6 +3340,8 @@ void EWindowMain::generate_building(Entity* _e)
 
 							*selected_sprite->offset_z = *a_element->size_y - *a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_UP)->size_y;
 							*selected_sprite->offset_z += yy * (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y) + *a_group->offset_z + *a_element->offset_z;
+
+							*selected_sprite->size_z = round(wall_full_size_y * wall_fragment_y);
 						}
 
 						if (*a_group->selected_direction_of_push == AutobuildingSpritePushDirection::AUTOBUILDING_SPRITE_PUSH_DIRECTION_ROOF_Y)
@@ -3287,6 +3351,8 @@ void EWindowMain::generate_building(Entity* _e)
 
 							*selected_sprite->offset_y = *a_element->size_y - *a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_UP)->size_y;
 							*selected_sprite->offset_y += yy * (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y) + *a_group->offset_y + *a_element->offset_y;
+
+							*selected_sprite->size_y = round(wall_full_size_y * wall_fragment_y);
 						}
 						convert_size_to_fragment
 						(
@@ -3302,7 +3368,7 @@ void EWindowMain::generate_building(Entity* _e)
 						);
 
 						*selected_sprite->size_x = round(wall_full_size_x * wall_fragment_x);
-						*selected_sprite->size_y = round(wall_full_size_y * wall_fragment_y);
+						
 
 						selected_sprite->texture_gabarite = a_element->autobuilding_base->main_texture;
 						selected_sprite->normal_gloss_map_gabarite = a_element->autobuilding_base->normal_gloss_map_texture;
@@ -3366,6 +3432,8 @@ void EWindowMain::generate_building(Entity* _e)
 
 							*selected_sprite->offset_z = *a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_LEFT)->position_y;
 							*selected_sprite->offset_z += yy * (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y) + *a_group->offset_z + *a_element->offset_z;
+
+							*selected_sprite->size_z = round(wall_full_size_y * wall_fragment_y);
 						}
 
 						if (*a_group->selected_direction_of_push == AutobuildingSpritePushDirection::AUTOBUILDING_SPRITE_PUSH_DIRECTION_ROOF_Y)
@@ -3375,6 +3443,8 @@ void EWindowMain::generate_building(Entity* _e)
 
 							*selected_sprite->offset_y = *a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_LEFT)->position_y;
 							*selected_sprite->offset_y += yy * (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y) + *a_group->offset_y + *a_element->offset_y;
+
+							*selected_sprite->size_y = round(wall_full_size_y * wall_fragment_y);
 						}
 						convert_size_to_fragment
 						(
@@ -3390,7 +3460,7 @@ void EWindowMain::generate_building(Entity* _e)
 						);
 
 						*selected_sprite->size_x = round(wall_full_size_x * wall_fragment_x);
-						*selected_sprite->size_y = round(wall_full_size_y * wall_fragment_y);
+						
 
 						selected_sprite->texture_gabarite = a_element->autobuilding_base->main_texture;
 						selected_sprite->normal_gloss_map_gabarite = a_element->autobuilding_base->normal_gloss_map_texture;
@@ -3451,6 +3521,8 @@ void EWindowMain::generate_building(Entity* _e)
 
 							*selected_sprite->offset_z = 0.0f;
 							*selected_sprite->offset_z += yy * (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y) + *a_group->offset_z + *a_element->offset_z;
+
+							*selected_sprite->size_z = round(wall_full_size_y * wall_fragment_y);
 						}
 						
 						if (*a_group->selected_direction_of_push == AutobuildingSpritePushDirection::AUTOBUILDING_SPRITE_PUSH_DIRECTION_ROOF_Y)
@@ -3460,6 +3532,8 @@ void EWindowMain::generate_building(Entity* _e)
 
 							*selected_sprite->offset_y = 0.0f;
 							*selected_sprite->offset_y += yy * (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y) + *a_group->offset_y + *a_element->offset_y;
+
+							*selected_sprite->size_y = round(wall_full_size_y * wall_fragment_y);
 						}
 						convert_size_to_fragment
 						(
@@ -3475,7 +3549,7 @@ void EWindowMain::generate_building(Entity* _e)
 						);
 
 						*selected_sprite->size_x = round(wall_full_size_x * wall_fragment_x);
-						*selected_sprite->size_y = round(wall_full_size_y * wall_fragment_y);
+						
 
 						selected_sprite->texture_gabarite = a_element->autobuilding_base->main_texture;
 						selected_sprite->normal_gloss_map_gabarite = a_element->autobuilding_base->normal_gloss_map_texture;
@@ -3536,6 +3610,8 @@ void EWindowMain::generate_building(Entity* _e)
 
 							*selected_sprite->offset_z = *a_element->size_y - *a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_LEFT_UP_CORNER)->size_y;
 							*selected_sprite->offset_z += yy * (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y) + *a_group->offset_z + *a_element->offset_z;
+
+							*selected_sprite->size_z = round(wall_full_size_y * wall_fragment_y);
 						}
 
 						if (*a_group->selected_direction_of_push == AutobuildingSpritePushDirection::AUTOBUILDING_SPRITE_PUSH_DIRECTION_ROOF_Y)
@@ -3545,6 +3621,8 @@ void EWindowMain::generate_building(Entity* _e)
 
 							*selected_sprite->offset_y = *a_element->size_y - *a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_LEFT_UP_CORNER)->size_y;
 							*selected_sprite->offset_y += yy * (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y) + *a_group->offset_y + *a_element->offset_y;
+
+							*selected_sprite->size_y = round(wall_full_size_y * wall_fragment_y);
 						}
 						convert_size_to_fragment
 						(
@@ -3560,7 +3638,7 @@ void EWindowMain::generate_building(Entity* _e)
 						);
 
 						*selected_sprite->size_x = round(wall_full_size_x * wall_fragment_x);
-						*selected_sprite->size_y = round(wall_full_size_y * wall_fragment_y);
+						
 
 						selected_sprite->texture_gabarite = a_element->autobuilding_base->main_texture;
 						selected_sprite->normal_gloss_map_gabarite = a_element->autobuilding_base->normal_gloss_map_texture;
@@ -3625,6 +3703,8 @@ void EWindowMain::generate_building(Entity* _e)
 
 							*selected_sprite->offset_z = *a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_RIGHT)->position_y;
 							*selected_sprite->offset_z += yy * (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y) + *a_group->offset_z + *a_element->offset_z;
+
+							*selected_sprite->size_z = round(wall_full_size_y * wall_fragment_y);
 						}
 
 						if (*a_group->selected_direction_of_push == AutobuildingSpritePushDirection::AUTOBUILDING_SPRITE_PUSH_DIRECTION_ROOF_Y)
@@ -3634,6 +3714,8 @@ void EWindowMain::generate_building(Entity* _e)
 
 							*selected_sprite->offset_y = *a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_RIGHT)->position_y;
 							*selected_sprite->offset_y += yy * (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y) + *a_group->offset_y + *a_element->offset_y;
+
+							*selected_sprite->size_y = round(wall_full_size_y * wall_fragment_y);
 						}
 
 						convert_size_to_fragment
@@ -3650,7 +3732,7 @@ void EWindowMain::generate_building(Entity* _e)
 						);
 
 						*selected_sprite->size_x = round(wall_full_size_x * wall_fragment_x);
-						*selected_sprite->size_y = round(wall_full_size_y * wall_fragment_y);
+						
 
 						selected_sprite->texture_gabarite = a_element->autobuilding_base->main_texture;
 						selected_sprite->normal_gloss_map_gabarite = a_element->autobuilding_base->normal_gloss_map_texture;
@@ -3711,6 +3793,8 @@ void EWindowMain::generate_building(Entity* _e)
 
 							*selected_sprite->offset_z = 0.0f;
 							*selected_sprite->offset_z += yy * (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y) + *a_group->offset_z + *a_element->offset_z;
+
+							*selected_sprite->size_z = round(wall_full_size_y * wall_fragment_y);
 						}
 						if (*a_group->selected_direction_of_push == AutobuildingSpritePushDirection::AUTOBUILDING_SPRITE_PUSH_DIRECTION_ROOF_Y)
 						{
@@ -3719,6 +3803,8 @@ void EWindowMain::generate_building(Entity* _e)
 
 							*selected_sprite->offset_y = 0.0f;
 							*selected_sprite->offset_y += yy * (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y) + *a_group->offset_y + *a_element->offset_y;
+
+							*selected_sprite->size_y = round(wall_full_size_y * wall_fragment_y);
 						}
 						convert_size_to_fragment
 						(
@@ -3734,7 +3820,6 @@ void EWindowMain::generate_building(Entity* _e)
 						);
 
 						*selected_sprite->size_x = round(wall_full_size_x * wall_fragment_x);
-						*selected_sprite->size_y = round(wall_full_size_y * wall_fragment_y);
 
 						selected_sprite->texture_gabarite = a_element->autobuilding_base->main_texture;
 						selected_sprite->normal_gloss_map_gabarite = a_element->autobuilding_base->normal_gloss_map_texture;
@@ -3795,6 +3880,8 @@ void EWindowMain::generate_building(Entity* _e)
 
 							*selected_sprite->offset_z = *a_element->size_y - *a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_RIGHT_UP_CORNER)->size_y;
 							*selected_sprite->offset_z += yy * (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y) + *a_group->offset_z + *a_element->offset_z;
+
+							*selected_sprite->size_z = round(wall_full_size_y * wall_fragment_y);
 						}
 
 						if (*a_group->selected_direction_of_push == AutobuildingSpritePushDirection::AUTOBUILDING_SPRITE_PUSH_DIRECTION_ROOF_Y)
@@ -3804,6 +3891,8 @@ void EWindowMain::generate_building(Entity* _e)
 
 							*selected_sprite->offset_y = *a_element->size_y - *a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_RIGHT_UP_CORNER)->size_y;
 							*selected_sprite->offset_y += yy * (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y) + *a_group->offset_y + *a_element->offset_y;
+
+							*selected_sprite->size_y = round(wall_full_size_y * wall_fragment_y);
 						}
 
 						convert_size_to_fragment
@@ -3820,7 +3909,6 @@ void EWindowMain::generate_building(Entity* _e)
 						);
 
 						*selected_sprite->size_x = round(wall_full_size_x * wall_fragment_x);
-						*selected_sprite->size_y = round(wall_full_size_y * wall_fragment_y);
 
 						selected_sprite->texture_gabarite = a_element->autobuilding_base->main_texture;
 						selected_sprite->normal_gloss_map_gabarite = a_element->autobuilding_base->normal_gloss_map_texture;

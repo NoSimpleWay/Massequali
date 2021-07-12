@@ -1,5 +1,82 @@
 CREATE_NEW_ENTITY
-entity_position	993	647	0
+entity_position	817.041992	726.155884	1
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/cystern.png
+autobuilding_base_space_between_sprites	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	81	7	5
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	7	81	203	5
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	210	81	7	5
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	7	81
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	7	0	203	81
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	210	0	7	81
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	7	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	7	0	203	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	210	0	7	0
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/truck_back02(cystern).png
+autobuilding_base_space_between_sprites	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	70	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	70	147	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	147	70	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	70
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	147	70
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	147	0	0	70
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	147	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	147	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_GROUP
+autobuilding_group_offset_and_size	2	-3	0	0	0
+direction_of_sprite_push	1
+autobuilding_group_name	!
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	-78	-19	0	159	88
+autobuilding_group_element_base_id	0
+CREATE_NEW_AUTOBUILDING_GROUP
+autobuilding_group_offset_and_size	147	10	0	0	0
+direction_of_sprite_push	1
+autobuilding_group_name	!
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	-66.5	-35.5	0	145	68.5
+autobuilding_group_element_base_id	1
+PUT_ENTITY_TO_MAP
+CREATE_NEW_ENTITY
+entity_position	1748	693	0
 CREATE_NEW_AUTOBUILDING_BASE
 autobuilding_base_main_texture	data/textures/beton_001.png
 autobuilding_base_space_between_sprites	0	0
@@ -80,47 +157,7 @@ direction_of_sprite_push	0
 autobuilding_group_name	!
 PUT_ENTITY_TO_MAP
 CREATE_NEW_ENTITY
-entity_position	294.041992	793.155884	0
-CREATE_NEW_AUTOBUILDING_BASE
-autobuilding_base_main_texture	data/textures/cystern.png
-autobuilding_base_space_between_sprites	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	81	7	5
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	7	81	203	5
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	210	81	7	5
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	0	7	81
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	7	0	203	81
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	210	0	7	81
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	0	7	0
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	7	0	203	0
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	210	0	7	0
-grid_region_subdivision	0	0
-CREATE_NEW_AUTOBUILDING_GROUP
-autobuilding_group_offset_and_size	1	3	0	0	0
-direction_of_sprite_push	1
-autobuilding_group_name	!
-CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	-76	0	0	159	88
-autobuilding_group_element_base_id	0
-PUT_ENTITY_TO_MAP
-CREATE_NEW_ENTITY
-entity_position	826	943	0
+entity_position	830	962	0
 CREATE_NEW_AUTOBUILDING_BASE
 autobuilding_base_main_texture	data/textures/beton_bright_more_lighten[2].png
 autobuilding_base_space_between_sprites	0	0
@@ -212,156 +249,76 @@ CREATE_NEW_GRID_REGION
 grid_region_position_and_size	99	0	3	24
 grid_region_subdivision	0	0
 CREATE_NEW_AUTOBUILDING_BASE
-autobuilding_base_main_texture	data/textures/terrain_c18_pavement_1.png
+autobuilding_base_main_texture	data/textures/beton_waffle.png
 autobuilding_base_space_between_sprites	0	0
 CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	0	0	0
+grid_region_position_and_size	0	69	5	5
 grid_region_subdivision	0	0
 CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	0	0	0
+grid_region_position_and_size	5	69	64	5
 grid_region_subdivision	0	0
 CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	0	0	0
+grid_region_position_and_size	69	69	5	5
 grid_region_subdivision	0	0
 CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	0	0	0
+grid_region_position_and_size	0	5	5	64
 grid_region_subdivision	0	0
 CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	0	0	0
+grid_region_position_and_size	5	5	64	64
+grid_region_subdivision	1	1
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	69	5	5	64
 grid_region_subdivision	0	0
 CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	0	0	0
+grid_region_position_and_size	0	0	5	5
 grid_region_subdivision	0	0
 CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	0	0	0
+grid_region_position_and_size	5	0	64	5
 grid_region_subdivision	0	0
 CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	0	0	0
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	0	0	0
+grid_region_position_and_size	69	0	5	5
 grid_region_subdivision	0	0
 CREATE_NEW_AUTOBUILDING_GROUP
-autobuilding_group_offset_and_size	169	42	0	0	0
+autobuilding_group_offset_and_size	149	43	0	0	0
 direction_of_sprite_push	1
-autobuilding_group_name	tall_wall_2
+autobuilding_group_name	waffle_wall
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	-74	-11	0	135	487
-autobuilding_group_element_base_id	0
-CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	-54	-18	50	118	407
-autobuilding_group_element_base_id	1
+autobuilding_group_element_offset_and_size	-42	-14	0	89	616
+autobuilding_group_element_base_id	3
 CREATE_NEW_AUTOBUILDING_GROUP
-autobuilding_group_offset_and_size	-3	23	0	0	0
+autobuilding_group_offset_and_size	-1	26	0	0	0
 direction_of_sprite_push	1
 autobuilding_group_name	tall_wall
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	-763	-16	0	877	645
+autobuilding_group_element_offset_and_size	-98	-16	0	212	645
 autobuilding_group_element_base_id	0
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	-746	-16	47	856	585
+autobuilding_group_element_offset_and_size	-84	-16	47	194	585
 autobuilding_group_element_base_id	1
 CREATE_NEW_AUTOBUILDING_GROUP
-autobuilding_group_offset_and_size	-3	-1	646	0	0
+autobuilding_group_offset_and_size	150	9	628	0	0
 direction_of_sprite_push	0
 autobuilding_group_name	tall_roof
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	-769	0	0	890	456
+autobuilding_group_element_offset_and_size	-253	0	0	508	818
 autobuilding_group_element_base_id	2
-PUT_ENTITY_TO_MAP
-CREATE_NEW_ENTITY
-entity_position	1442	1125	0
-CREATE_NEW_AUTOBUILDING_BASE
-autobuilding_base_main_texture	data/textures/Checker.png
-autobuilding_base_space_between_sprites	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	63	1	1
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	1	63	62	1
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	63	63	1	1
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	1	1	62
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	1	1	62	62
-grid_region_subdivision	1	1
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	63	1	1	62
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	0	1	1
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	1	0	62	1
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	63	0	1	1
-grid_region_subdivision	0	0
 CREATE_NEW_AUTOBUILDING_GROUP
-autobuilding_group_offset_and_size	0	0	0	0	0
+autobuilding_group_offset_and_size	276	24	0	0	0
 direction_of_sprite_push	1
 autobuilding_group_name	!
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	-340	0	0	690	201
+autobuilding_group_element_offset_and_size	-87	-14	0	211	635
 autobuilding_group_element_base_id	0
-CREATE_NEW_AUTOBUILDING_GROUP
-autobuilding_group_offset_and_size	0	0	0	0	0
-direction_of_sprite_push	0
-autobuilding_group_name	!
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	-346	191	0	703	314
-autobuilding_group_element_base_id	0
+autobuilding_group_element_offset_and_size	-73	30	0	186	578
+autobuilding_group_element_base_id	1
 CREATE_NEW_AUTOBUILDING_GROUP
 autobuilding_group_offset_and_size	0	0	0	0	0
 direction_of_sprite_push	0
 autobuilding_group_name	!
 PUT_ENTITY_TO_MAP
 CREATE_NEW_ENTITY
-entity_position	2073.10791	1119.12854	0
-CREATE_NEW_AUTOBUILDING_BASE
-autobuilding_base_main_texture	data/textures/wall_white_marble_001_v3.png
-autobuilding_base_space_between_sprites	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	79	1	1
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	1	79	78	1
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	79	79	1	1
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	1	1	78
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	1	1	78	78
-grid_region_subdivision	1	1
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	79	1	1	78
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	0	1	1
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	1	0	78	1
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	79	0	1	1
-grid_region_subdivision	0	0
-CREATE_NEW_AUTOBUILDING_GROUP
-autobuilding_group_offset_and_size	0	0	0	0	0
-direction_of_sprite_push	1
-autobuilding_group_name	!
-CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	-239	0	0	480	738
-autobuilding_group_element_base_id	0
-PUT_ENTITY_TO_MAP
-CREATE_NEW_ENTITY
-entity_position	1115	1311	0
+entity_position	1156	1002	0
 CREATE_NEW_AUTOBUILDING_BASE
 autobuilding_base_main_texture	data/textures/bricked_wall.png
 autobuilding_base_space_between_sprites	0	0
@@ -526,13 +483,104 @@ CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
 autobuilding_group_element_offset_and_size	-77	2	7	51.5	49
 autobuilding_group_element_base_id	4
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	44.5	-6	0	15.25	45.5
+autobuilding_group_element_offset_and_size	44.5	-0.5	3	15.25	45.5
 autobuilding_group_element_base_id	2
 CREATE_NEW_AUTOBUILDING_GROUP
 autobuilding_group_offset_and_size	6	-4	84	0	0
 direction_of_sprite_push	0
 autobuilding_group_name	garage_roof
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	-100	-8	0	201	321
+autobuilding_group_element_offset_and_size	-100	-12.5	0	198	325.5
 autobuilding_group_element_base_id	1
+PUT_ENTITY_TO_MAP
+CREATE_NEW_ENTITY
+entity_position	2167.10791	1061.12854	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/panel.png
+autobuilding_base_space_between_sprites	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	59	5	5
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	5	59	54	5
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	59	59	5	5
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	5	5	54
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	5	5	54	54
+grid_region_subdivision	1	1
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	59	5	5	54
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	5	5
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	5	0	54	5
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	59	0	5	5
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_GROUP
+autobuilding_group_offset_and_size	0	0	0	0	0
+direction_of_sprite_push	1
+autobuilding_group_name	!
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	-239	0	0	480	738
+autobuilding_group_element_base_id	0
+PUT_ENTITY_TO_MAP
+CREATE_NEW_ENTITY
+entity_position	1670	1291	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/Checker.png
+autobuilding_base_space_between_sprites	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	63	1	1
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	1	63	62	1
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	63	63	1	1
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	1	1	62
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	1	1	62	62
+grid_region_subdivision	1	1
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	63	1	1	62
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	1	1
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	1	0	62	1
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	63	0	1	1
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_GROUP
+autobuilding_group_offset_and_size	0	0	0	0	0
+direction_of_sprite_push	1
+autobuilding_group_name	!
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	-340	0	0	690	201
+autobuilding_group_element_base_id	0
+CREATE_NEW_AUTOBUILDING_GROUP
+autobuilding_group_offset_and_size	0	0	0	0	0
+direction_of_sprite_push	0
+autobuilding_group_name	!
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	-346	191	0	703	314
+autobuilding_group_element_base_id	0
+CREATE_NEW_AUTOBUILDING_GROUP
+autobuilding_group_offset_and_size	0	0	0	0	0
+direction_of_sprite_push	0
+autobuilding_group_name	!
 PUT_ENTITY_TO_MAP

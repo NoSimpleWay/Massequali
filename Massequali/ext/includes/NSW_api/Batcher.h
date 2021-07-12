@@ -140,7 +140,7 @@ public:
 			reset();
 		}
 	}
-	void draw_sprite_PBR(float _x, float _y, float _w, float _h, float _left, float _right, float _down, float _up, EGabarite* _g, EGabarite* _nmg, float _z);
+	void draw_sprite_PBR(float _x, float _y, float _z, float _size_x, float _size_y, float _size_z, float _left, float _right, float _down, float _up, EGabarite* _g, EGabarite* _nmg, float _true_height);
 
 	void draw_AO_shadow(float _x, float _y, float _size_x, float _size_y, float _size, EGabarite* _g);
 
@@ -200,6 +200,7 @@ public:
 	void setcolor(EColorCollection* _color);
 
 	void setcolor_lum(EColorCollection* _color, float _lum);
+	void setcolor_lum_RGB(EColorCollection* _color, float _lum);
 	void setcolor_alpha(EColorCollection* _color, float _a);
 	void setcolor_lumalpha(EColorCollection* _color, float _lum, float _a);
 	void draw_rama(float _x, float _y, float _sx, float _sy, float _t, EGabarite* _g);

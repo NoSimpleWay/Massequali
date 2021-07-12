@@ -65,6 +65,8 @@ public:
 	static EGabarite* gabarite_sky;
 	static EGabarite* gabarite_panorama;
 
+	static float sun_zenith_factor;
+
 	static float sun_position_x;
 	static float sun_position_y;
 
@@ -104,8 +106,9 @@ public:
 		float* fragment_down = new float(0.0f);
 		float* fragment_up = new float(0.0f);
 
-		float* size_x = new float(10.0f);
-		float* size_y = new float(10.0f);
+		float* size_x = new float(0.0f);
+		float* size_y = new float(0.0f);
+		float* size_z = new float(0.0f);
 
 		~ESprite();
 	};
@@ -135,10 +138,12 @@ public:
 			_batch->draw_sprite_PBR
 			(
 				_offset_x + *_sprite->offset_x,
-				_offset_y + *_sprite->offset_y + _offset_z + *_sprite->offset_z,
+				_offset_y + *_sprite->offset_y,
+				_offset_z + *_sprite->offset_z,
 
 				*_sprite->size_x,
 				*_sprite->size_y,
+				*_sprite->size_z,
 
 				*_sprite->fragment_left,
 				*_sprite->fragment_right,

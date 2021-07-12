@@ -155,7 +155,14 @@ void Entity::draw_entity_autobuilging_helping(Entity* _e, Batcher* _b, float _d)
 			for (AutobuildingGroup* _group : _e->autobuilding_group_list)
 			{
 
-				if (*_group->offset_z > 0.0f)
+				if
+					(
+						(*_group->offset_z > 0.0f)
+						&
+						(glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
+						&
+						(ExternalButtonAction::get_selected_autobuilding_group(_e) != NULL)
+					)
 				{
 					//std::cout << "blue z-shadow" << std::endl;
 					EGraphicCore::batch->setcolor_alpha(EColor::COLOR_DARK_BLUE, 0.1f);

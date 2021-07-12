@@ -70,6 +70,8 @@ EGabarite* EGraphicCore::gabarite_sun;
 EGabarite* EGraphicCore::gabarite_sky;
 EGabarite* EGraphicCore::gabarite_panorama;
 
+float EGraphicCore::sun_zenith_factor;
+
 void EGraphicCore::reset_sprite_data(EGraphicCore::ESprite* _sprite)
 {
 	*_sprite->fragment_x = 1.0f;
@@ -85,6 +87,11 @@ void EGraphicCore::reset_sprite_data(EGraphicCore::ESprite* _sprite)
 	*_sprite->fragment_right = 0.0f;
 
 	_sprite->texture_gabarite = NULL;
+
+	*_sprite->size_x = 0.0f;
+	*_sprite->size_y = 0.0f;
+	*_sprite->size_z = 0.0f;
+
 }
 
 void EGraphicCore::load_texture(char const* _path, int _id)
@@ -221,6 +228,7 @@ EGraphicCore::ESprite::~ESprite()
 
 	delete size_x;
 	delete size_y;
+	delete size_z;
 
 	delete texture_gabarite;
 }

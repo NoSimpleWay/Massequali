@@ -224,7 +224,7 @@ int main()
 	
 	EGraphicCore::gabarite_sun		 = ETextureAtlas::put_texture_to_atlas("data/textures/sun2.png", EWindow::default_texture_atlas);
 	EGraphicCore::gabarite_sky		 = ETextureAtlas::put_texture_to_atlas("data/textures/sky3.png", EWindow::default_texture_atlas);
-	EGraphicCore::gabarite_panorama	 = ETextureAtlas::put_texture_to_atlas("data/textures/panorama.png", EWindow::default_texture_atlas);
+	EGraphicCore::gabarite_panorama	 = ETextureAtlas::put_texture_to_atlas("data/textures/panorama[3].png", EWindow::default_texture_atlas);
 
 	EGraphicCore::gabarite_small_wood_button_bg = ETextureAtlas::put_texture_to_atlas("data/textures/button_bg.png", EWindow::default_texture_atlas);
 

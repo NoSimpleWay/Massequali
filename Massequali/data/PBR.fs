@@ -7,6 +7,7 @@ in vec4 ourColor;
 in vec2 TexCoord;
 in vec2 ReflectionTexCoord;
 in vec2 NormalGlossMapTexCoord;
+in vec3 WorldPosition;
 
 // texture samplers
 uniform sampler2D texture1;
@@ -16,13 +17,21 @@ uniform sampler2D SD_array[6];
 
 
 
+uniform float brightness_multiplier = 10.0f;
+uniform float input_gloss = 1.0f;
+uniform float sun_position_x;
+uniform float sun_position_y;
+
+uniform float sun_zenith;
+
+uniform float screen_offset_x;
+uniform float screen_offset_y;
 
 float c_r;
 float c_g;
 float c_b;
 
-uniform float brightness_multiplier = 10.0f;
-uniform float input_gloss = 1.0f;
+
 
 float level = 0.0f;
 int glossy_flat = 0;
@@ -41,12 +50,12 @@ float matte_result_sky = 0.0f;
 float normal_x;
 float normal_y;
 
-uniform float sun_position_x;
-uniform float sun_position_y;
 
 float angle_x;
 float angle_y;
 float total_angle;
+
+
 
 void main()
 {
@@ -64,8 +73,9 @@ void main()
 	interpolation_A = 1.0f - interpolation_B;
 	
 	
-	normal_x = (texture(normal_gloss_map_texture, NormalGlossMapTexCoord).r - 0.5f) * 0.333f;
-	normal_y = (texture(normal_gloss_map_texture, NormalGlossMapTexCoord).g - 0.5f) * 0.333f;
+	normal_x = (texture(normal_gloss_map_texture, NormalGlossMapTexCoord).r - 0.5f) * 2.0f;
+	normal_y = (texture(normal_gloss_map_texture, NormalGlossMapTexCoord).g - 0.5f) * 2.0f;
+	//normal_y = 0.333f;
 	
 	angle_x = 1.0f-
 	min
@@ -102,8 +112,20 @@ void main()
 	total_angle = min(angle_x, angle_y);
 	
 	//reflect_coord = vec2(gl_FragCoord.x / 1920.0f * 0.3f + 0.3f + normal_x, gl_FragCoord.y / 1080.0f * 0.3f + 0.3f + normal_y);
-	reflect_coord = vec2(gl_FragCoord.x / 1920.0f * 0.3333f + 0.3333f + normal_x, ReflectionTexCoord.y * 0.3333f + normal_y  + 0.3333f);
-
+	reflect_coord =
+	vec2
+	(
+		gl_FragCoord.x / 1920.0f * 0.3333f + 0.3333f + normal_x * 0.333f,
+		(WorldPosition.y * abs(normal_y) + WorldPosition.z * (1.0f - abs(normal_y)))  * 0.3333f + 0.3333f + normal_y * 0.333f
+	);
+	
+	/*
+	reflect_coord =
+	vec2
+	(
+	gl_FragCoord.x / 1920.0f * 0.3333f + 0.3333f + normal_x * 1.0f,
+	ReflectionTexCoord.y * 0.3333f + 0.3333f + normal_y * 1.0f
+	);*/
 	
 	
 	
@@ -128,9 +150,9 @@ void main()
 	if (glossy_flat == 2)
 	// linearly interpolate between both textures (80% container, 20% awesomeface)
 	{
-		c_r = clamp ((texture(SD_array[2], reflect_coord).r * interpolation_A + texture(SD_array[3], reflect_coord).r * interpolation_B) * brightness_multiplier, 0.0f, 1.5f);
-		c_g = clamp ((texture(SD_array[2], reflect_coord).g * interpolation_A + texture(SD_array[3], reflect_coord).g * interpolation_B) * brightness_multiplier, 0.0f, 1.4f);
-		c_b = clamp ((texture(SD_array[2], reflect_coord).b * interpolation_A + texture(SD_array[3], reflect_coord).b * interpolation_B) * brightness_multiplier, 0.0f, 1.3f);
+		c_r = clamp ((texture(SD_array[2], reflect_coord).r * interpolation_A + texture(SD_array[3], reflect_coord).r * interpolation_B) * brightness_multiplier, 0.0f, 2.0f);
+		c_g = clamp ((texture(SD_array[2], reflect_coord).g * interpolation_A + texture(SD_array[3], reflect_coord).g * interpolation_B) * brightness_multiplier, 0.0f, 1.9f);
+		c_b = clamp ((texture(SD_array[2], reflect_coord).b * interpolation_A + texture(SD_array[3], reflect_coord).b * interpolation_B) * brightness_multiplier, 0.0f, 1.8f);
 	}                                                                                                                                                                   
 	                                                                                                                                                                    
 	if (glossy_flat == 3)                                                                                                                                               
@@ -172,11 +194,19 @@ void main()
 	*
 	vec4
 	(
-		c_r * gloss_result + matte_result_sun * 1.1f + matte_result_sky	* 0.75f,
-		c_g * gloss_result + matte_result_sun * 1.05 + matte_result_sky	* 0.78f,
-		c_b * gloss_result + matte_result_sun * 1.0f + matte_result_sky	* 0.80f,
+		c_r * gloss_result + (matte_result_sun * 1.1f + matte_result_sky	* 0.55f) * sqrt(sun_zenith),
+		c_g * gloss_result + (matte_result_sun * 1.05 + matte_result_sky	* 0.575f) * sun_zenith,
+		c_b * gloss_result + (matte_result_sun * 1.0f + matte_result_sky	* 0.6f) * sun_zenith * sun_zenith,
 	1.0f
 	);
+	
+	/*
+	FragColor.r = WorldPosition.x;
+	FragColor.g = WorldPosition.y;
+	FragColor.b = WorldPosition.z;*/
+	
+	
+	//FragColor = vec4(normal_y,normal_y,normal_y,1.0f);
 	//FragColor = vec4(glossy_flat,glossy_flat,glossy_flat,1.0f);
 	
 	//FragColor.rgb = vec3(ReflectionTexCoord.y);
