@@ -16,7 +16,7 @@ uniform mat4 transform;
 
 void main()
 {
-	gl_Position = transform * vec4(aPos.x, aPos.y, aPos.z, 1.0);
+	gl_Position = transform * vec4(aPos.x, aPos.y + aPos.z, 1.0, 1.0);
 	
 	ourColor = aColor;
 	TexCoord = vec2(aTexCoord.x, aTexCoord.y);
@@ -27,10 +27,10 @@ void main()
 	=
 	vec3
 	(
-		(gl_Position.x + 1.0f) / 2.0f,
-		(gl_Position.y + 1.0f) / 2.0f,
-		(gl_Position.z + 1.0f) / 2.0f
+		aPos[0],
+		aPos[1],
+		aPos[2]
 	);
 	
-	gl_Position = transform * vec4(aPos.x, aPos.y + aPos.z, 1.0, 1.0);
+	
 }

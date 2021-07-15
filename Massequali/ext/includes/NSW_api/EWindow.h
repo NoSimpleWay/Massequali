@@ -24,6 +24,10 @@
 
 //#include "NSW_api/EWindowTest.h"
 
+const int key_array_size = 512;
+
+
+
 class EWindowMain;
 class EWindow;
 
@@ -504,6 +508,7 @@ void send_this_button_group_to_top (EWindow* _w, EButton::button_super_group* _g
 class EWindow
 {
 public:
+	static bool key_pressed_array[512];
 	void default_update(float _d);
 
 	static void catch_right_side(EButton::button_group* bg, EButton::button_super_group* bsg);

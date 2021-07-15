@@ -523,6 +523,8 @@ void ExternalButtonAction::external_button_action_add_selected_region_to_autobui
 			}
 		}
 
+		just_created_autobuilding_entity_element->master_group = get_selected_autobuilding_group(get_entity());
+
 		EButton::update_data_id_for_buttons(EWindowMain::button_group_autobuilding_group_element);
 	}
 	else
@@ -625,7 +627,7 @@ void ExternalButtonAction::external_button_action_select_autobuilding_group(EBut
 		{
 			for (Entity::AutobuildingGroupElement* a_element : get_selected_autobuilding_group(get_entity())->autobuilding_group_element_list)
 			{
-				*a_element->highlight_time = 0.5f;
+				*a_element->highlight_time = 0.2f;
 			}
 			//get_entity()->autobuilding_group_list;
 		}
@@ -652,10 +654,29 @@ void ExternalButtonAction::external_button_action_select_autobuilding_group_elem
 {
 	if (valid_entity_select())
 	{
-		if (get_selected_autobuilding_group_element(get_entity()) != NULL, "external_button_action_select_autobuilding_group_element")
+		if (get_selected_autobuilding_group_element(get_entity() , "external_button_action_select_autobuilding_group_element") != NULL)
 		{
-			*get_selected_autobuilding_group_element(get_entity())->highlight_time = 0.5f;
+			*get_selected_autobuilding_group_element(get_entity())->highlight_time = 1.0f;
 		}
+	}
+}
+
+void ExternalButtonAction::external_button_action_remove_autobuilding_group(EButton* _b, float _f)
+{
+	if (valid_entity_select())
+	{
+		get_entity()->autobuilding_group_list.erase
+		(
+			get_entity()
+			->
+			autobuilding_group_list.begin()
+			+
+			_b->data_id
+		);
+
+		_b->is_active = false;
+
+		EButton::update_data_id_for_buttons(EWindowMain::button_group_autobuilding_group_element);
 	}
 }
 

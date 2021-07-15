@@ -29,8 +29,8 @@ Batcher* EGraphicCore::batch_PBR;
 
 glm::mat4 EGraphicCore::matrix_transform;
 
-int EGraphicCore::SCR_WIDTH = 1000;
-int EGraphicCore::SCR_HEIGHT = 800;
+int EGraphicCore::SCR_WIDTH = 1920;
+int EGraphicCore::SCR_HEIGHT = 1080;
 
 float EGraphicCore::correction_x = 0.1f;
 float EGraphicCore::correction_y = 0.1f;

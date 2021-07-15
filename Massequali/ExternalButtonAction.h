@@ -28,6 +28,7 @@ public:
 
 	//remove
 	//////////////////////
+	static void external_button_action_remove_autobuilding_group(EButton* _b, float _f);
 	static void external_button_action_remove_autobuilding_group_element(EButton* _b, float _f);
 	static void external_button_action_remove_autobuilding_base(EButton* _b, float _f);
 

@@ -30,6 +30,8 @@ unsigned int EWindow::transformLoc;
 double EWindow::mouse_x = 0;
 double EWindow::mouse_y = 0;
 
+bool EWindow::key_pressed_array[512];
+
 int EWindow::saved_pos_x = 0;
 int EWindow::saved_pos_y = 0;
 
@@ -80,6 +82,7 @@ bool EButton::any_overlap = false;
 std::vector <EWindow::massive_style*>	EWindow::list_of_massive_style;
 EButton::button_super_group*			EWindow::top_overlaped_group;
 EButton*								EWindow::operable_button;
+
 
 EButton::EButton()
 {

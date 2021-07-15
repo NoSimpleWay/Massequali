@@ -142,7 +142,7 @@ void Entity::draw_entity_autobuilging_helping(Entity* _e, Batcher* _b, float _d)
 						EGraphicCore::gabarite_white_pixel
 					);
 
-					*_element->highlight_time -= _d;
+					*_element->highlight_time -= _d * 5.0f;
 				}
 			}
 
@@ -246,31 +246,31 @@ void Entity::draw_entity_autobuilging_helping(Entity* _e, Batcher* _b, float _d)
 
 						EGraphicCore::batch->draw_gabarite
 						(
-							*_e->position_x + *_group->offset_x - 30.0f,
-							*_e->position_y + *_e->position_z + *_group->offset_y + *_group->offset_z - 25.0f,
-							60.0f,
-							10.0f,
+							*_e->position_x + *_group->offset_x + *_group->pseudo_pos_x,
+							*_e->position_y + *_e->position_z + *_group->offset_y + *_group->offset_z - 20.0f,
+							*_group->pseudo_size_x,
+							20.0f,
 							EGraphicCore::gabarite_white_pixel
 						);
 
 						if (*_group->offset_z > 0.0f)
 						{
-							EGraphicCore::batch->setcolor_alpha(EColor::COLOR_YELLOW, 0.1f);
+							EGraphicCore::batch->setcolor_alpha(EColor::COLOR_YELLOW, 0.5f);
 
 							EGraphicCore::batch->draw_gabarite
 							(
-								*_e->position_x + *_group->offset_x - 30.0f,
-								*_e->position_y + *_group->offset_y - 25.0f,
-								60.0f,
-								10.0f,
+								*_e->position_x + *_group->offset_x + *_group->pseudo_pos_x,
+								*_e->position_y + *_group->offset_y - 20.0f,
+								*_group->pseudo_size_x,
+								20.0f,
 								EGraphicCore::gabarite_white_pixel
 							);
 
 							EGraphicCore::batch->draw_rama
 							(
-								*_e->position_x + *_group->offset_x - 30.0f,
-								*_e->position_y + *_group->offset_y - 25.0f,
-								60.0f,
+								*_e->position_x + *_group->offset_x + *_group->pseudo_pos_x,
+								*_e->position_y + *_group->offset_y - 20.0f,
+								*_group->pseudo_size_x,
 								*_group->offset_z + 25.0f,
 								2.0f,
 								EGraphicCore::gabarite_white_pixel

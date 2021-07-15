@@ -47,6 +47,7 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_SAMPLES, 4);
 
 #ifdef __APPLE__
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // uncomment this statement to fix compilation on OS X
@@ -54,7 +55,7 @@ int main()
 
 // glfw window creation
 // --------------------
-	EWindow::main_window = glfwCreateWindow(EGraphicCore::SCR_WIDTH, EGraphicCore::SCR_HEIGHT, "Window name", NULL, NULL);
+	EWindow::main_window = glfwCreateWindow(EGraphicCore::SCR_WIDTH, EGraphicCore::SCR_HEIGHT, "Window name", glfwGetPrimaryMonitor(), NULL);
 
 	if (EWindow::main_window == NULL)
 	{
@@ -253,16 +254,11 @@ int main()
 	std::vector <float> fff(1000);
 	float start_id;
 
+	glfwSwapInterval(0);
+	
 	while (!glfwWindowShouldClose(EWindow::main_window))
 	{
-		if (glfwGetKey(EWindow::main_window, GLFW_KEY_GRAVE_ACCENT) == GLFW_PRESS)
-		{
-			glfwSwapInterval(0);
-		}
-		else
-		{
-			glfwSwapInterval(1);
-		}
+		
 
 		EWindow::stop = std::chrono::high_resolution_clock::now();
 		EWindow::start = std::chrono::high_resolution_clock::now();
@@ -270,14 +266,46 @@ int main()
 		start_id = 0;
 		EWindow::add_time_process("@_Begin_@");
 
+		
+		
+		//key_pressed_array[GLFW_KEY_W] = true;
+
+		
 
 		glfwPollEvents();
 
+		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_W) == GLFW_PRESS)) { EWindow::key_pressed_array[GLFW_KEY_W] = true; }
+		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_W) == GLFW_RELEASE)) { EWindow::key_pressed_array[GLFW_KEY_W] = false; }
+
+		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_A) == GLFW_PRESS)) { EWindow::key_pressed_array[GLFW_KEY_A] = true; }
+		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_A) == GLFW_RELEASE)) { EWindow::key_pressed_array[GLFW_KEY_A] = false; }
+
+		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_S) == GLFW_PRESS)) { EWindow::key_pressed_array[GLFW_KEY_S] = true; }
+		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_S) == GLFW_RELEASE)) { EWindow::key_pressed_array[GLFW_KEY_S] = false; }
+
+		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_D) == GLFW_PRESS)) { EWindow::key_pressed_array[GLFW_KEY_D] = true; }
+		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_D) == GLFW_RELEASE)) { EWindow::key_pressed_array[GLFW_KEY_D] = false; }
+		
 		clock_t time = clock();
 		delta_time = (time - saved_time_for_delta) / 1000.0;
 		saved_time_for_delta = time;
 
 		delta_time /= 1.0f;//
+
+		//std::cout << "delta:" << std::to_string(delta_time) << std::endl;
+
+
+
+		
+		if (glfwGetKey(EWindow::main_window, GLFW_KEY_GRAVE_ACCENT) == GLFW_PRESS)
+		{
+			
+			glfwSwapInterval(0);
+		}
+		else
+		{
+			glfwSwapInterval(1);
+		}
 
 		if (delta_time > 0.5f) { delta_time = 0.5f; }
 
@@ -397,13 +425,19 @@ int main()
 			send_this_button_group_to_top(w, EWindow::top_overlaped_group);
 		}
 
+		
 		EWindow::add_time_process("__window pre process");
 		for (EWindow* w : EWindow::window_list)
 			if (w->is_active) { w->default_update(delta_time); }
 
 		EWindow::add_time_process("__window default update ");
+
 		for (EWindow* w : EWindow::window_list)
+		{
+			
 			if (w->is_active) { w->update(delta_time); }
+			
+		}
 			EWindow::add_time_process("__window update ");
 
 		for (EWindow* w : EWindow::window_list)
@@ -433,6 +467,9 @@ int main()
 		EGraphicCore::batch->reinit();
 		EGraphicCore::batch->draw_call();*/
 
+		//glFlush();
+		
+		//gl_flush();
 		glfwSwapBuffers(EWindow::main_window);
 
 		processInput(EWindow::main_window);
@@ -442,7 +479,13 @@ int main()
 		EWindow::scroll = 0;
 		//sleep(0.1);
 
+		if (delta_time < 1.0f / 70.0f)
+		{
+			//Sleep((DWORD)((1.0f / 70.0f - delta_time) * 1000.0f));
+		}
+
 		EWindow::add_time_process("@_End_@");
+		
 	}
 
 	return 0;

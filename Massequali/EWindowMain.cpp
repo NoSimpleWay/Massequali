@@ -732,6 +732,8 @@ void EWindowMain::create_button_groups()
 	*button_group_autobuilding_group_element->can_be_stretched_y = true;
 	*button_group_autobuilding_group_element->can_be_moved_by_user = false;
 
+
+	//group element
 	for (int i = 0; i < 10; i++)
 	{
 		but = new EButton(0.0f, 0.0f, 50.0f, 50.0f);
@@ -763,6 +765,7 @@ void EWindowMain::create_button_groups()
 	*button_group_autobuilding_group->can_be_stretched_y = true;
 	*button_group_autobuilding_group->can_be_moved_by_user = false;
 
+	//group
 	for (int i = 0; i < 10; i++)
 	{
 		but = new EButton(0.0f, 0.0f, 100.0f, 20.0f);
@@ -777,6 +780,7 @@ void EWindowMain::create_button_groups()
 		but->action_on_left_click.push_back(&ExternalButtonAction::external_button_action_select_autobuilding_group);
 
 		but->action_on_left_double_click.push_back(&ExternalButtonAction::external_button_action_set_button_constant_value);
+		but->action_on_right_click.push_back(&ExternalButtonAction::external_button_action_remove_autobuilding_group);
 		*but->target_value_for_bool = true;
 		but->target_address_for_bool = &but->is_input_mode_active;
 		*but->is_double_click = true;
@@ -1616,11 +1620,15 @@ glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "sun_position_y")
 
 glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "sun_zenith"), EGraphicCore::sun_zenith_factor);
 
-//glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "screen_offset_x"), main_camera->position_x);
+glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "screen_offset_x"), -*main_camera->position_x + EGraphicCore::SCR_WIDTH	/ 2.0f);
+glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "screen_offset_y"), -*main_camera->position_y + EGraphicCore::SCR_HEIGHT / 2.0f);
 
 glActiveTexture(GL_TEXTURE0);
 glBindTexture(GL_TEXTURE_2D, EWindow::default_texture_atlas->colorbuffer);
 EGraphicCore::PBR_shader->setInt("texture1", 0);
+
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);//texture filtering
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);//
 
 glActiveTexture(GL_TEXTURE1);
 glBindTexture(GL_TEXTURE_2D, EWindow::default_texture_atlas->colorbuffer);
@@ -1789,6 +1797,7 @@ EWindow::add_time_process("batch draw call [helpers]");
 
 void EWindowMain::update(float _d)
 {
+	
 	EWindow::add_time_process("===--- update begin ---===");
 	if (_d > 0.1) { _d = 0.1f; }
 
@@ -1957,20 +1966,30 @@ void EWindowMain::update(float _d)
 		is_entity_selection_started = false;
 	}
 
-	if (EWindow::top_overlaped_group == NULL)
-	{
-		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_W) == GLFW_PRESS)) { *main_camera->speed_y += _d * 200.0f; }
-		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_S) == GLFW_PRESS)) { *main_camera->speed_y -= _d * 200.0f; }
+	//*main_camera->speed_x = 0.0f;
+	//*main_camera->speed_y = 0.0f;
+	*main_camera->speed_x /= pow(1000.0f, _d);
+	*main_camera->speed_y /= pow(1000.0f, _d);
 
-		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_D) == GLFW_PRESS)) { *main_camera->speed_x += _d * 200.0f; }
-		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_A) == GLFW_PRESS)) { *main_camera->speed_x -= _d * 200.0f; }
+
+
+	//if (!key_pressed_array[GLFW_KEY_W]) { std::cout << "YOU FUCKING DOLBOYOB?[camera control]" << std::endl; }
+	if (EWindow::operable_button == NULL)
+	{
+
+		//if (!key_pressed_array[GLFW_KEY_W]) { std::cout << &key_pressed_array[GLFW_KEY_W] << std::endl; }
+
+		if (key_pressed_array[GLFW_KEY_W])		{ *main_camera->speed_y = round(1000.0f);	}
+		if (key_pressed_array[GLFW_KEY_S])		{ *main_camera->speed_y = round(-1000.0f);	}
+
+		if (key_pressed_array[GLFW_KEY_D])		{ *main_camera->speed_x = round(1000.0f);	}
+		if (key_pressed_array[GLFW_KEY_A])		{ *main_camera->speed_x = round(-1000.0f); }
 	}
 
-	*main_camera->position_x += *main_camera->speed_x;
-	*main_camera->position_y += *main_camera->speed_y;
+	*main_camera->position_x += (*main_camera->speed_x * _d);
+	*main_camera->position_y += (*main_camera->speed_y * _d);
 
-	*main_camera->speed_x *= pow(0.0001f, _d);
-	*main_camera->speed_y *= pow(0.0001f, _d);
+
 	/*
 	if (*main_camera->speed_x > 0.0f) { *main_camera->speed_x -= _d * 50.0f; } else { *main_camera->speed_x += _d * 50.0f; }
 	if (*main_camera->speed_y > 0.0f) { *main_camera->speed_y -= _d * 50.0f; } else { *main_camera->speed_y += _d * 50.0f; }
@@ -1999,7 +2018,13 @@ void EWindowMain::entity_selection_process(std::vector<Entity*> _v)
 
 void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 {
+	
 	float catch_size = 5.0f;
+
+	bool any_catch = false;
+
+	Entity::AutobuildingGroupElement* last_matched_element = NULL;
+
 	for (Entity* e : _v)
 	{
 		for (Entity::AutobuildingGroup* a_group : e->autobuilding_group_list)
@@ -2011,16 +2036,16 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 					&&
 					(ExternalButtonAction::get_selected_autobuilding_group(e) == a_group)
 					&
-					(get_real_world_position_x_by_mouse(main_camera) >= *e->position_x + *a_group->offset_x - 30.0f)
+					(get_real_world_position_x_by_mouse(main_camera) >= *e->position_x + *a_group->offset_x + *a_group->pseudo_pos_x)
 					&
-					(get_real_world_position_x_by_mouse(main_camera) <= *e->position_x + *a_group->offset_x + 30.0f)
+					(get_real_world_position_x_by_mouse(main_camera) <= *e->position_x + *a_group->offset_x + *a_group->pseudo_pos_x + *a_group->pseudo_size_x)
 					&
-					(get_real_world_position_y_by_mouse(main_camera) >= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z - 30.0f)
+					(get_real_world_position_y_by_mouse(main_camera) >= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z - 20.0f)
 					&
-					(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z + 30.0f)
-					)
+					(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z)
+				)
 			{
-				if (!LMB) { *a_group->is_catched = true; }
+				if (!LMB) { *a_group->is_catched = true; any_catch = true; }
 			}
 			else
 			{
@@ -2031,6 +2056,7 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 			{
 				if (LMB)
 				{
+					any_catch = true;
 					if (glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
 					{
 						*a_group->offset_z += mouse_speed_y;
@@ -2044,6 +2070,7 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 				}
 			}
 
+			//catches
 			for (Entity::AutobuildingGroupElement* a_element : a_group->autobuilding_group_element_list)
 			{
 				/*std::cout
@@ -2059,6 +2086,7 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 				"]"
 				<<
 				std::endl;*/
+				//any_catch = false;
 
 				if
 					(
@@ -2067,12 +2095,16 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 								(ExternalButtonAction::get_selected_autobuilding_group_element(e) != NULL)
 								&&
 								(ExternalButtonAction::get_selected_autobuilding_group_element(e) == a_element)
-								)
+								&&
+								(ExternalButtonAction::get_selected_autobuilding_group(e) != NULL)
+								&&
+								(ExternalButtonAction::get_selected_autobuilding_group(e) == a_group)
+							)
 							||
 							(ExternalButtonAction::get_selected_autobuilding_group_element(e) == NULL)
 							||
 							(glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) != GLFW_PRESS)
-							)
+						)
 						&
 						(
 							(
@@ -2084,9 +2116,8 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 							(
 								(ExternalButtonAction::get_entity() == NULL)
 							)*/
-							)
-
 						)
+					)
 				{
 					if
 						(
@@ -2094,12 +2125,12 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 							&
 							(get_real_world_position_x_by_mouse(main_camera) <= *e->position_x + *a_group->offset_x + *a_element->offset_x + catch_size)
 							&
-							(get_real_world_position_y_by_mouse(main_camera) >= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_y + *a_element->offset_y + *a_element->offset_z - catch_size)
+							(get_real_world_position_y_by_mouse(main_camera) >= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z + *a_element->offset_y + *a_element->offset_z - catch_size)
 							&
-							(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_y + *a_element->offset_y + *a_element->size_y + *a_element->offset_z + catch_size)
+							(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z + *a_element->offset_y + *a_element->size_y + *a_element->offset_z + catch_size)
 							)
 					{
-						if (!LMB) { *a_element->catched_left_side = true; }
+						if (!LMB) { *a_element->catched_left_side = true; any_catch = true; }
 					}
 					else
 					{
@@ -2117,7 +2148,7 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 							(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z + *a_element->offset_y + *a_element->size_y + *a_element->offset_z + catch_size)
 							)
 					{
-						if (!LMB) { *a_element->catched_right_side = true; }
+						if (!LMB) { *a_element->catched_right_side = true; any_catch = true;}
 					}
 					else
 					{
@@ -2135,7 +2166,7 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 							(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z + *a_element->offset_y + *a_element->offset_z + catch_size)
 							)
 					{
-						if (!LMB) { *a_element->catched_down_side = true; }
+						if (!LMB) { *a_element->catched_down_side = true; any_catch = true;}
 					}
 					else
 					{
@@ -2153,7 +2184,7 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 							(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z + *a_element->offset_y + *a_element->size_y + *a_element->offset_z + catch_size)
 							)
 					{
-						if (!LMB) { *a_element->catched_up_side = true; }
+						if (!LMB) { *a_element->catched_up_side = true; any_catch = true;}
 					}
 					else
 					{
@@ -2171,7 +2202,7 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 							(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z + *a_element->offset_y + *a_element->offset_z + *a_element->size_y / 2.0f + 10.0f)
 							)
 					{
-						if (!LMB) { *a_element->catched_mid = true; }
+						if (!LMB) { *a_element->catched_mid = true; any_catch = true;}
 					}
 					else
 					{
@@ -2189,7 +2220,7 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 							(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z + *a_element->offset_y + *a_element->offset_z + *a_element->size_y / 2.0f + 40.0f)
 							)
 					{
-						if (!LMB) { *a_element->catched_z = true; }
+						if (!LMB) { *a_element->catched_z = true; any_catch = true;}
 					}
 					else
 					{
@@ -2200,6 +2231,7 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 					{
 						if (*a_element->catched_left_side)
 						{
+							any_catch = true;
 							*a_element->size_x -= mouse_speed_x / *main_camera->zoom;
 							*a_element->offset_x += mouse_speed_x / *main_camera->zoom;
 
@@ -2208,6 +2240,7 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 
 						if (*a_element->catched_right_side)
 						{
+							any_catch = true;
 							*a_element->size_x += mouse_speed_x / *main_camera->zoom;
 							//*a_element->offset_x += mouse_speed_x / *main_camera->zoom;
 							//generate_building(e);
@@ -2215,6 +2248,7 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 
 						if (*a_element->catched_down_side)
 						{
+							any_catch = true;
 							*a_element->size_y -= mouse_speed_y / *main_camera->zoom;
 							*a_element->offset_y += mouse_speed_y / *main_camera->zoom;
 
@@ -2223,6 +2257,7 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 
 						if (*a_element->catched_up_side)
 						{
+							any_catch = true;
 							*a_element->size_y += mouse_speed_y / *main_camera->zoom;
 							//*a_element->offset_x += mouse_speed_x / *main_camera->zoom;
 							//generate_building(e);
@@ -2230,6 +2265,7 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 
 						if (*a_element->catched_mid)
 						{
+							any_catch = true;
 							*a_element->offset_x += mouse_speed_x / *main_camera->zoom;
 							*a_element->offset_y += mouse_speed_y / *main_camera->zoom;
 							//*a_element->offset_x += mouse_speed_x / *main_camera->zoom;
@@ -2238,6 +2274,7 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 
 						if (*a_element->catched_z)
 						{
+							any_catch = true;
 							*a_element->offset_z += mouse_speed_y / *main_camera->zoom;
 							*a_element->offset_z = max(*a_element->offset_z, 0.0f);
 							//*a_element->offset_x += mouse_speed_x / *main_camera->zoom;
@@ -2256,14 +2293,120 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 					*a_element->catched_down_side = false;
 				}
 
+				
 
 			}
-
 			
-		}
+
+			//select element by group
+			for (Entity::AutobuildingGroupElement* a_element : a_group->autobuilding_group_element_list)
+			{
+				if
+					(
+						(LMB)
+						&
+						(glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) != GLFW_PRESS)
+						&
+						(!any_catch)
+						&
+						(EWindow::top_overlaped_group == NULL)
+						&
+						(EWindow::operable_button == NULL)
+						&
+						(get_real_world_position_x_by_mouse(main_camera) >= *e->position_x + *a_group->offset_x + *a_element->offset_x)
+						&
+						(get_real_world_position_x_by_mouse(main_camera) <= *e->position_x + *a_group->offset_x + *a_element->offset_x + *a_element->size_x)
+						&
+						(get_real_world_position_y_by_mouse(main_camera) >= *e->position_y + *a_group->offset_y + *a_element->offset_y + *e->position_z + *a_group->offset_z + *a_element->offset_z)
+						&
+						(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *a_group->offset_y + *a_element->offset_y + *e->position_z + *a_group->offset_z + *a_element->offset_z + *a_element->size_y)
+						&
+						(
+							(
+								(last_matched_element != NULL)
+								&&
+								(
+									pow
+									(get_real_world_position_x_by_mouse(main_camera) - (*e->position_x + *last_matched_element->offset_x + *last_matched_element->master_group->offset_x + *last_matched_element->size_x / 2.0f), 2)
+									+
+									pow
+									(
+										get_real_world_position_y_by_mouse(main_camera)
+										-
+										(
+											*e->position_y + *last_matched_element->offset_y + *last_matched_element->master_group->offset_y
+											+
+											*e->position_z + *last_matched_element->offset_z + *last_matched_element->master_group->offset_z
+											+
+											*last_matched_element->size_y / 2.0f
+											), 2
+									)
+
+									>
+
+									pow
+									(get_real_world_position_x_by_mouse(main_camera) - (*e->position_x + *a_element->offset_x + *a_element->master_group->offset_x + *a_element->size_x / 2.0f), 2)
+									+
+									pow
+									(
+										get_real_world_position_y_by_mouse(main_camera)
+										-
+										(
+											*e->position_y + *a_element->offset_y + *a_element->master_group->offset_y
+											+
+											*e->position_z + *a_element->offset_z + *a_element->master_group->offset_z
+											+
+											*a_element->size_y / 2.0f
+											), 2
+									)
+								)
+							)
+							||
+							(last_matched_element == NULL)
+							//||
+							//(true)
+							)
+						)
+				{
+					last_matched_element = a_element; //*a_element->offset_x += 1.0f;
+				}
+			}
 
 		
 	}
+
+	if (last_matched_element != NULL)
+	{
+		int id = 0;
+
+		for (Entity::AutobuildingGroup* group : e->autobuilding_group_list)
+		{
+			if (group == last_matched_element->master_group)
+			{
+				EWindowMain::button_group_autobuilding_group->selected_button = EWindowMain::button_group_autobuilding_group->button_list.at(id);
+				ExternalButtonAction::external_button_action_select_autobuilding_group(EWindowMain::button_group_autobuilding_group->button_list.at(id), 0.1f);
+			}
+
+			id++;
+		}
+
+		id = 0;
+
+		for (Entity::AutobuildingGroupElement* ele : last_matched_element->master_group->autobuilding_group_element_list)
+		{
+			if (ele == last_matched_element)
+			{
+				//EWindowMain::button_group_autobuilding_group_element->selected_button = EWindowMain::button_group_autobuilding_group_element->button_list.at(id);
+				EWindowMain::button_group_autobuilding_group_element->selected_button = EWindowMain::button_group_autobuilding_group_element->button_list.at(id);
+
+				ExternalButtonAction::external_button_action_select_autobuilding_group_element(EWindowMain::button_group_autobuilding_group_element->button_list.at(id), 0.1f);
+			}
+
+			id++;
+		}
+
+	}
+		}
 }
 
 void EWindowMain::reset_render()
@@ -2872,6 +3015,8 @@ void EWindowMain::load_map(std::string _name)
 				jc_group_element = new Entity::AutobuildingGroupElement();
 				jc_group->autobuilding_group_element_list.push_back(jc_group_element);
 
+				jc_group_element->master_group = jc_group;
+
 				//std::cout << "______created new group element" << endl;
 			}
 
@@ -3003,12 +3148,15 @@ void EWindowMain::generate_building(Entity* _e)
 		*a_group->max_height = 10.0;
 
 		*a_group->pseudo_pos_x = 10000.0f;
+		*a_group->pseudo_pos_x2 = -10000.0f;
 		*a_group->pseudo_size_x = 0.0f;
 
 		*a_group->pseudo_pos_y = 10000.0f;
+		*a_group->pseudo_pos_y = -10000.0f;
 		*a_group->pseudo_size_y = 0.0f;
 
 		*a_group->pseudo_pos_z = 10000.0f;
+		*a_group->pseudo_pos_z = -10000.0f;
 		*a_group->pseudo_size_z = 0.0f;
 
 		for (Entity::AutobuildingGroupElement* a_element : a_group->autobuilding_group_element_list)
@@ -3021,7 +3169,6 @@ void EWindowMain::generate_building(Entity* _e)
 			)
 			{
 				*a_group->max_height = *a_element->offset_z + *a_element->size_y;
-
 			}
 
 			if
@@ -3037,39 +3184,34 @@ void EWindowMain::generate_building(Entity* _e)
 			///
 			if (*a_group->selected_direction_of_push == AutobuildingSpritePushDirection::AUTOBUILDING_SPRITE_PUSH_DIRECTION_WALL_Z)
 			{
-				if (*a_element->offset_z < *a_group->pseudo_pos_z)
-				{
-					*a_group->pseudo_pos_z = *a_group->pseudo_pos_z;
-				}
-
-				if (*a_element->offset_z + *a_element->size_y > *a_group->pseudo_size_z)
-				{
-					*a_group->pseudo_size_z = *a_element->offset_z + *a_element->size_y;
-				}
+				if (*a_element->offset_z < *a_group->pseudo_pos_z)									{*a_group->pseudo_pos_z		= *a_group->pseudo_pos_z;}
+				if (*a_element->offset_z + *a_element->size_y > * a_group->pseudo_pos_z2)			{*a_group->pseudo_pos_z2	= *a_element->offset_z + *a_element->size_y; }
+				if (*a_group->pseudo_pos_z2 - *a_group->pseudo_pos_z > * a_group->pseudo_size_z) { *a_group->pseudo_size_z = *a_group->pseudo_pos_z2 - *a_group->pseudo_pos_z; }
+				//if (*a_element->offset_z + *a_element->size_y > *a_group->pseudo_size_z)	{*a_group->pseudo_size_z = *a_element->offset_z + *a_element->size_y;}
 			}
 
 			if (*a_group->selected_direction_of_push == AutobuildingSpritePushDirection::AUTOBUILDING_SPRITE_PUSH_DIRECTION_ROOF_Y)
 			{
-				if (*a_element->offset_y < *a_group->pseudo_pos_y)
-				{
-					*a_group->pseudo_pos_y = *a_group->pseudo_pos_y;
-				}
-
-				if (*a_element->offset_y + *a_element->size_y > * a_group->pseudo_size_y)
-				{
-					*a_group->pseudo_size_y = *a_element->offset_y + *a_element->size_y;
-				}
+				if (*a_element->offset_y < *a_group->pseudo_pos_y)									{*a_group->pseudo_pos_y = *a_group->pseudo_pos_y;}
+				if (*a_element->offset_y + *a_element->size_y > * a_group->pseudo_pos_y2)			{*a_group->pseudo_pos_y2 = *a_element->offset_y + *a_element->size_y; }
+				if (*a_group->pseudo_pos_y2 - *a_group->pseudo_pos_y > * a_group->pseudo_size_y)	{*a_group->pseudo_size_y = *a_group->pseudo_pos_y2 - *a_group->pseudo_pos_y; }
+				//if (*a_element->offset_y + *a_element->size_y > * a_group->pseudo_size_y)	{*a_group->pseudo_size_y = *a_element->offset_y + *a_element->size_y;}
 			}
 
-			if (*a_element->offset_x < *a_group->pseudo_pos_x)
-			{
-				*a_group->pseudo_pos_x = *a_element->offset_x;
-			}
+			/// //////////////
+			/*	left	*/if (*a_element->offset_x < *a_group->pseudo_pos_x)								{*a_group->pseudo_pos_x		= *a_element->offset_x;}
+			/*	right	*/if (*a_element->offset_x + *a_element->size_x > *a_group->pseudo_pos_x2)			{*a_group->pseudo_pos_x2	= *a_element->offset_x + *a_element->size_x;}
+			/*	size x	*/if (*a_group->pseudo_pos_x2 - *a_group->pseudo_pos_x > * a_group->pseudo_size_x)	{*a_group->pseudo_size_x	= *a_group->pseudo_pos_x2 - *a_group->pseudo_pos_x;}
 
+			/*
 			if (*a_element->offset_x + *a_element->size_x - *a_group->pseudo_pos_x > * a_group->pseudo_size_x)
 			{
 				*a_group->pseudo_size_x = *a_element->offset_x + *a_element->size_x - *a_group->pseudo_pos_x;
-			}
+			}*/
+
+
+
+
 
 			if (*a_element->offset_y + *a_element->offset_z < * a_group->bottom_offset) { *a_group->bottom_offset = *a_element->offset_y + *a_element->offset_z; }
 			if (*a_element->offset_y + *a_element->offset_z + *a_element->size_y > * a_group->up_offset) { *a_group->up_offset = *a_element->offset_y + *a_element->size_y + *a_element->offset_z; }
