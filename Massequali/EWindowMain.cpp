@@ -43,6 +43,8 @@ EButton* EWindowMain::link_button_subdivision_mid_x;
 EButton* EWindowMain::link_button_subdivision_mid_y;
 
 EButton* EWindowMain::link_button_sprite_push_direction;
+EButton* EWindowMain::link_button_autobuilding_seed;
+
 
 std::vector<EButton*>			EWindowMain::auto_size_region_button;
 
@@ -540,6 +542,7 @@ void EWindowMain::create_button_groups()
 	but->action_on_input.push_back(&ExternalButtonAction::external_button_action_set_grid_region_auto_size);
 	but->text = "0";
 	but->input_auto_clear_text = true;
+	but->description_text = "Region border up";
 
 	but = new EButton(70.0f - 60.0f, 70.0f - 30.0f, 50.0f, 20.0f);
 	but->master_window = this;
@@ -553,6 +556,7 @@ void EWindowMain::create_button_groups()
 	but->action_on_input.push_back(&ExternalButtonAction::external_button_action_set_grid_region_auto_size);
 	but->text = "0";
 	but->input_auto_clear_text = true;
+	but->description_text = "Region border left";
 
 	but = new EButton(70.0f + 60.0f, 70.0f - 30.0f, 50.0f, 20.0f);
 	but->master_window = this;
@@ -566,6 +570,7 @@ void EWindowMain::create_button_groups()
 	but->action_on_input.push_back(&ExternalButtonAction::external_button_action_set_grid_region_auto_size);
 	but->text = "0";
 	but->input_auto_clear_text = true;
+	but->description_text = "Region border right";
 
 	but = new EButton(70.0f + 0.0f, 70.0f - 60.0f, 50.0f, 20.0f);
 	but->master_window = this;
@@ -579,6 +584,7 @@ void EWindowMain::create_button_groups()
 	but->action_on_input.push_back(&ExternalButtonAction::external_button_action_set_grid_region_auto_size);
 	but->text = "0";
 	but->input_auto_clear_text = true;
+	but->description_text = "Region border down";
 
 	but = new EButton(70.0f + 0.0f, 70.0f - 30.0f, 50.0f, 20.0f);
 	but->master_window = this;
@@ -589,6 +595,7 @@ void EWindowMain::create_button_groups()
 	but->text = "Auto";
 	but->action_on_left_click.push_back(&ExternalButtonAction::external_button_action_set_grid_region_auto_size);
 	//but->text = "0";
+	but->description_text = "Auto generate texture regions";
 
 	but = new EButton(190.0f + 0.0f, 70.0f - 30.0f, 50.0f, 20.0f);
 	space_between_sprites_x_button = but;
@@ -606,6 +613,7 @@ void EWindowMain::create_button_groups()
 	*just_created_SFC->selected_activation_type = EButton::ButtonSimpleChangerActivationType::CHANGER_ACTIVATION_TYPE_INPUT;
 	*just_created_SFC->selected_mathematic_type = EButton::ButtonSimpleChangerMathematic::BUTTON_SIMPLE_VALUE_MANIPULATOR_MATHEMATIC_SET_VALUE;
 	but->simple_float_changer_list.push_back(just_created_SFC);
+	but->description_text = "Space between sprites x";
 
 	but = new EButton(190.0f + 0.0f, 70.0f - 55.0f, 50.0f, 20.0f);
 	space_between_sprites_y_button = but;
@@ -623,6 +631,7 @@ void EWindowMain::create_button_groups()
 	*just_created_SFC->selected_activation_type = EButton::ButtonSimpleChangerActivationType::CHANGER_ACTIVATION_TYPE_INPUT;
 	*just_created_SFC->selected_mathematic_type = EButton::ButtonSimpleChangerMathematic::BUTTON_SIMPLE_VALUE_MANIPULATOR_MATHEMATIC_SET_VALUE;
 	but->simple_float_changer_list.push_back(just_created_SFC);
+	but->description_text = "Space between sprites y";
 
 	//////////////////////////////////////
 	//////////////////////////////////////
@@ -639,6 +648,7 @@ void EWindowMain::create_button_groups()
 	but->drop_elements = 2;
 	*but->is_consumable = true;
 	but->text = but->drop_text.at(0);
+	but->description_text = "Vertical or horizontal orientation";
 
 	but->is_drop_list = true;
 	but->action_on_drop_list_select_element.push_back(&ExternalButtonAction::external_button_action_set_button_value);
@@ -656,6 +666,7 @@ void EWindowMain::create_button_groups()
 	but->input_only_numbers = true;
 	but->action_on_input.push_back(&ExternalButtonAction::external_button_action_set_button_value);
 	*but->is_consumable = true;
+	but->description_text = "Texture rendomizator subdivision x";
 
 	but = new EButton(250.0f + 0.0f, 70.0f - 55.0f, 50.0f, 20.0f);
 	link_button_subdivision_mid_y = but;
@@ -665,6 +676,23 @@ void EWindowMain::create_button_groups()
 	*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_FREE;
 	group_grid_region_second_layer_link->button_list.push_back(but);
 	but->text = "0";
+	but->have_input_mode = true;
+	but->input_only_numbers = true;
+	//but->action_on_left_click.push_back(&ExternalButtonAction::external_button_action_set_grid_region_auto_size);
+	but->action_on_input.push_back(&ExternalButtonAction::external_button_action_set_button_value);
+	*but->is_consumable = true;
+	but->description_text = "Texture rendomizator subdivision y";
+
+	//seed
+	but = new EButton(5.0f, *group_grid_region_second_layer_link->size_y - 25.0f, 50.0f, 20.0f);
+	link_button_autobuilding_seed = but;
+	but->master_window = this;
+	but->master_super_group = super_group_autobuilding;
+	but->master_group = group_grid_region_second_layer_link;
+	*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_FREE;
+	group_grid_region_second_layer_link->button_list.push_back(but);
+	but->text = "0";
+	but->description_text = "Random seed";
 	but->have_input_mode = true;
 	but->input_only_numbers = true;
 	//but->action_on_left_click.push_back(&ExternalButtonAction::external_button_action_set_grid_region_auto_size);
@@ -1686,6 +1714,7 @@ glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 			}
 
 
+			//EGraphicCore::batch_PBR->setcolor_lum(EColor::COLOR_WHITE, 1.0f - );
 
 			EGraphicCore::draw_sprite_PBR
 			(
@@ -1954,6 +1983,17 @@ void EWindowMain::update(float _d)
 		}
 
 		update_selected_entity_list();
+
+		if (!selected_entities.empty())
+		{
+			
+			*super_group_autobuilding->is_active = true;
+			ExternalButtonAction::external_button_action_select_entity_from_list(group_grid_entity_list_link->button_list.at(0), 0.1f);
+		}
+		else
+		{
+			*super_group_autobuilding->is_active = false;
+		}
 	}
 	else
 	{
@@ -1979,15 +2019,24 @@ void EWindowMain::update(float _d)
 
 		//if (!key_pressed_array[GLFW_KEY_W]) { std::cout << &key_pressed_array[GLFW_KEY_W] << std::endl; }
 
+
 		if (key_pressed_array[GLFW_KEY_W])		{ *main_camera->speed_y = round(1000.0f);	}
 		if (key_pressed_array[GLFW_KEY_S])		{ *main_camera->speed_y = round(-1000.0f);	}
 
 		if (key_pressed_array[GLFW_KEY_D])		{ *main_camera->speed_x = round(1000.0f);	}
-		if (key_pressed_array[GLFW_KEY_A])		{ *main_camera->speed_x = round(-1000.0f); }
+		if (key_pressed_array[GLFW_KEY_A])		{ *main_camera->speed_x = round(-1000.0f);	}
 	}
 
-	*main_camera->position_x += (*main_camera->speed_x * _d);
-	*main_camera->position_y += (*main_camera->speed_y * _d);
+	if (!key_pressed_array[GLFW_KEY_LEFT_SHIFT])
+	{
+		*main_camera->position_x += (*main_camera->speed_x * _d);
+		*main_camera->position_y += (*main_camera->speed_y * _d);
+	}
+	else
+	{
+		*main_camera->position_x += (*main_camera->speed_x * _d * 0.1f);
+		*main_camera->position_y += (*main_camera->speed_y * _d * 0.1f);
+	}
 
 
 	/*
@@ -2852,6 +2901,12 @@ void EWindowMain::add_entity_data_to_save_string(Entity* e)
 		w_string += *a_group->name;
 		w_string += '\n';
 
+
+		w_string += "autobuilding_group_seed";
+		w_string += '\t';
+		w_string += std::to_string(*a_group->seed);
+		w_string += '\n';
+
 		for (Entity::AutobuildingGroupElement* a_element : a_group->autobuilding_group_element_list)
 		{
 			w_string += "CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT";
@@ -3009,6 +3064,11 @@ void EWindowMain::load_map(std::string _name)
 				i++; *jc_group->name = EFile::data_array[i];
 			}
 
+			if ((EFile::data_array[i] == "autobuilding_group_seed") & (jc_group != NULL))
+			{
+				i++; *jc_group->seed = std::stoi(EFile::data_array[i]);
+			}
+
 			///////////////////////ELEMENT SECTION
 			if ((EFile::data_array[i] == "CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT") & (jc_group != NULL))
 			{
@@ -3139,7 +3199,7 @@ void EWindowMain::generate_building(Entity* _e)
 	for (Entity::AutobuildingGroup* a_group : _e->autobuilding_group_list)
 	{
 		selected_sprite_id = 0;
-		srand(1);
+		srand(*a_group->seed);
 		//srand(time(NULL)
 
 		*a_group->bottom_offset = 9999.0f;

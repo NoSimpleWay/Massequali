@@ -47,7 +47,7 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_SAMPLES, 4);
+	glfwWindowHint(GLFW_SAMPLES, 2);
 
 #ifdef __APPLE__
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // uncomment this statement to fix compilation on OS X
@@ -55,7 +55,20 @@ int main()
 
 // glfw window creation
 // --------------------
-	EWindow::main_window = glfwCreateWindow(EGraphicCore::SCR_WIDTH, EGraphicCore::SCR_HEIGHT, "Window name", glfwGetPrimaryMonitor(), NULL);
+	
+	
+	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+
+	glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+	glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+	glfwWindowHint(GLFW_DECORATED, NULL);
+	EWindow::main_window = glfwCreateWindow(EGraphicCore::SCR_WIDTH, EGraphicCore::SCR_HEIGHT, "Window name", glfwGetPrimaryMonitor(), NULL); 
+
+
+	
 
 	if (EWindow::main_window == NULL)
 	{
@@ -274,17 +287,20 @@ int main()
 
 		glfwPollEvents();
 
-		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_W) == GLFW_PRESS)) { EWindow::key_pressed_array[GLFW_KEY_W] = true; }
-		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_W) == GLFW_RELEASE)) { EWindow::key_pressed_array[GLFW_KEY_W] = false; }
+		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_W) == GLFW_PRESS))				{ EWindow::key_pressed_array[GLFW_KEY_W] = true; }
+		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_W) == GLFW_RELEASE))				{ EWindow::key_pressed_array[GLFW_KEY_W] = false; }
 
-		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_A) == GLFW_PRESS)) { EWindow::key_pressed_array[GLFW_KEY_A] = true; }
-		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_A) == GLFW_RELEASE)) { EWindow::key_pressed_array[GLFW_KEY_A] = false; }
+		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_A) == GLFW_PRESS))				{ EWindow::key_pressed_array[GLFW_KEY_A] = true; }
+		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_A) == GLFW_RELEASE))				{ EWindow::key_pressed_array[GLFW_KEY_A] = false; }
 
-		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_S) == GLFW_PRESS)) { EWindow::key_pressed_array[GLFW_KEY_S] = true; }
-		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_S) == GLFW_RELEASE)) { EWindow::key_pressed_array[GLFW_KEY_S] = false; }
+		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_S) == GLFW_PRESS))				{ EWindow::key_pressed_array[GLFW_KEY_S] = true; }
+		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_S) == GLFW_RELEASE))				{ EWindow::key_pressed_array[GLFW_KEY_S] = false; }
 
-		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_D) == GLFW_PRESS)) { EWindow::key_pressed_array[GLFW_KEY_D] = true; }
-		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_D) == GLFW_RELEASE)) { EWindow::key_pressed_array[GLFW_KEY_D] = false; }
+		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_D) == GLFW_PRESS))				{ EWindow::key_pressed_array[GLFW_KEY_D] = true; }
+		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_D) == GLFW_RELEASE))				{ EWindow::key_pressed_array[GLFW_KEY_D] = false; }
+
+		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS))		{ EWindow::key_pressed_array[GLFW_KEY_LEFT_SHIFT] = true; }
+		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE))	{ EWindow::key_pressed_array[GLFW_KEY_LEFT_SHIFT] = false; }
 		
 		clock_t time = clock();
 		delta_time = (time - saved_time_for_delta) / 1000.0;

@@ -50,6 +50,8 @@ public:
 
 	static EButton*							link_button_sprite_push_direction;
 
+	static EButton*							link_button_autobuilding_seed;
+
 	static std::vector<Entity*>				selected_entities;
 
 	static EButton::EGridRegion*			entity_selection_region;

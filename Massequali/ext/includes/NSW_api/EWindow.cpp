@@ -580,6 +580,8 @@ void EButton::update(float _d)
 			//any_input = false;
 			is_input_mode_active = false;
 
+			if (EWindow::operable_button == this) { EWindow::operable_button = NULL; }
+
 			if ((input_only_numbers) && (text == ""))
 			{
 				text = "0";
@@ -613,6 +615,8 @@ void EButton::update(float _d)
 		if (is_input_mode_active)
 		{
 			is_input_mode_active = false;
+
+			if (EWindow::operable_button == this) { EWindow::operable_button = NULL; }
 			input_finish_event();
 
 			if (action_on_input_finish != NULL) { action_on_input_finish(this, _d); }
@@ -1045,7 +1049,7 @@ void EButton::update(float _d)
 					(
 						(is_slider)
 						||
-						(is_radial_button)
+						(*is_radial_button)
 					)
 					&
 					(!slider_activate)
@@ -1492,6 +1496,8 @@ void EButton::update(float _d)
 						for (BUTTON_ACTION ba : action_on_td_gradient_drag)
 						{ba(this, _d);}
 					}
+
+					if (EWindow::operable_button == NULL) { EWindow::operable_button = this; }
 				}
 
 				
@@ -1505,6 +1511,8 @@ void EButton::update(float _d)
 						for (BUTTON_ACTION ba : action_on_td_gradient_drag)
 						{ba(this, _d);}
 					}
+
+					if (EWindow::operable_button == NULL) { EWindow::operable_button = this; }
 				}
 			
 
@@ -1610,6 +1618,8 @@ void EButton::default_draw(Batcher* _batch, float _d)
 	{
 		target_font->draw_with_background(*side_text, _batch, screen_position_x, screen_position_y + button_size_y - 20.0f, EColor::COLOR_LIGHT_GRAY, EColor::COLOR_DARK_GRAY);
 	}
+
+	
 
 	if (have_rama)
 	{
@@ -1980,6 +1990,12 @@ void EButton::default_draw(Batcher* _batch, float _d)
 
 
 
+	}
+
+	if (EWindow::operable_button == this)
+	{
+		_batch->setcolor(EColor::COLOR_BLUE);
+		_batch->draw_rama(screen_position_x, screen_position_y, button_size_x, button_size_y, 5.0f, EGraphicCore::gabarite_small_wood_button_bg);
 	}
 }
 

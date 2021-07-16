@@ -99,17 +99,19 @@ public:
 
 		float* max_height = new float(0.0f);
 
-		float* pseudo_pos_x		= new float(0.0f);
-		float* pseudo_pos_x2	= new float(0.0f);
-		float* pseudo_size_x	= new float(0.0f);
+		float*	pseudo_pos_x		= new float(0.0f);
+		float*	pseudo_pos_x2		= new float(0.0f);
+		float*	pseudo_size_x		= new float(0.0f);
 
-		float* pseudo_pos_y		= new float(0.0f);
-		float* pseudo_pos_y2	= new float(0.0f);
-		float* pseudo_size_y	= new float(0.0f);
+		float*	pseudo_pos_y		= new float(0.0f);
+		float*	pseudo_pos_y2		= new float(0.0f);
+		float*	pseudo_size_y		= new float(0.0f);
 
-		float* pseudo_pos_z		= new float(0.0f);
-		float* pseudo_pos_z2	= new float(0.0f);
-		float* pseudo_size_z	= new float(0.0f);
+		float*	pseudo_pos_z		= new float(0.0f);
+		float*	pseudo_pos_z2		= new float(0.0f);
+		float*	pseudo_size_z		= new float(0.0f);
+
+		int*	seed				= new int(0);
 	
 	};
 

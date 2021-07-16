@@ -646,6 +646,8 @@ void ExternalButtonAction::external_button_action_select_autobuilding_group(EBut
 		{
 			EWindowMain::button_group_autobuilding_group->selected_button->target_address_for_string = get_selected_autobuilding_group(get_entity())->name;
 			EWindowMain::button_group_autobuilding_group->selected_button->text = *get_selected_autobuilding_group(get_entity())->name;
+
+			EWindowMain::link_button_autobuilding_seed->target_address_for_int = get_selected_autobuilding_group(get_entity())->seed;
 		}
 	}
 }
