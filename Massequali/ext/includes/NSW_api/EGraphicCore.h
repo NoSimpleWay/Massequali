@@ -123,7 +123,7 @@ public:
 
 	static void draw_sprite_regular(sprite_array* _sprite_array, Batcher* _batch, float _offset_x, float _offset_y, float _offset_z);
 
-	static void draw_sprite_PBR(EGraphicCore::ESprite* _sprite, Batcher* _batch, float _offset_x, float _offset_y, float _offset_z, float _true_height)
+	inline static void draw_sprite_PBR(EGraphicCore::ESprite* _sprite, Batcher* _batch, float _offset_x, float _offset_y, float _offset_z, float _true_height)
 	{
 		if ((_sprite != NULL) && (_sprite->texture_gabarite != NULL) && (_sprite->normal_gloss_map_gabarite != NULL))
 		{
