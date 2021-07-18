@@ -194,21 +194,23 @@ void main()
 	*
 	vec4
 	(
-		c_r * gloss_result + (matte_result_sun * 1.0f + matte_result_sky	* 0.75f) * sqrt(sun_zenith),
-		c_g * gloss_result + (matte_result_sun * 1.0f + matte_result_sky	* 0.78f) * sun_zenith,
-		c_b * gloss_result + (matte_result_sun * 1.0f + matte_result_sky	* 0.80f) * sun_zenith * sun_zenith,
+		c_r * gloss_result + (matte_result_sun * 1.1f + matte_result_sky	* 0.55f) * sqrt(sun_zenith),
+		c_g * gloss_result + (matte_result_sun * 1.05f + matte_result_sky	* 0.575f) * sun_zenith,
+		c_b * gloss_result + (matte_result_sun * 1.0f + matte_result_sky	* 0.6f) * sun_zenith * sun_zenith,
 	1.0f
 	);
 	
 	if ((WorldPosition[1] + screen_offset_y) < 50.0f)
 	{
-		FragColor.rgb *= max(vec3 ((WorldPosition[1] + screen_offset_y) / 1080.0f * 10.0f), 0.0f) + 0.5f ;
+		FragColor.rgb *= max(vec3 ((WorldPosition[1] + screen_offset_y) / 1080.0f * 10.0f), 0.0f) + 0.5f;
+		
 		if
 		(
 			(int(gl_FragCoord.x + gl_FragCoord.y) % max(int((WorldPosition[1] + screen_offset_y) / 10.0f + 1.0f), 2) == 0)
-			||
+			&&
 			(int(gl_FragCoord.y) % max(int((WorldPosition[1] + screen_offset_y) / 10.0f + 1.0f), 2) == 0)
-		) {FragColor.a = 0.0f;}
+		)
+		{FragColor.a = 0.0f;}
 	}
 	
 	/*if ((WorldPosition[1] + screen_offset_y) / 1080.0f < 0.00)

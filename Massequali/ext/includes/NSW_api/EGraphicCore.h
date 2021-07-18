@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../../../ExternalEnums.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -12,6 +13,7 @@
 #include "NSW_api/Batcher.h"
 #include "EGabarite.h"
 #include <vector>
+
 
 class EGraphicCore {
 public:
@@ -64,6 +66,7 @@ public:
 	static EGabarite* gabarite_sun;
 	static EGabarite* gabarite_sky;
 	static EGabarite* gabarite_panorama;
+	static EGabarite* gabarite_button_texture_AO_shadow;
 
 	static float sun_zenith_factor;
 
@@ -91,24 +94,26 @@ public:
 
 	struct ESprite
 	{
-		EGabarite* texture_gabarite = NULL;
-		EGabarite* normal_gloss_map_gabarite = NULL;
+		EGabarite* texture_gabarite				= NULL;
+		EGabarite* normal_gloss_map_gabarite	= NULL;
 
-		float* offset_x = new float(0.0f);
-		float* offset_y = new float(0.0f);
-		float* offset_z = new float(0.0f);
+		float* offset_x							= new float(0.0f);
+		float* offset_y							= new float(0.0f);
+		float* offset_z							= new float(0.0f);
 
-		float* fragment_x = new float(0.0f);
-		float* fragment_y = new float(0.0f);
+		float* fragment_x						= new float(0.0f);
+		float* fragment_y						= new float(0.0f);
 
-		float* fragment_left = new float(0.0f);
-		float* fragment_right = new float(0.0f);
-		float* fragment_down = new float(0.0f);
-		float* fragment_up = new float(0.0f);
+		float* fragment_left					= new float(0.0f);
+		float* fragment_right					= new float(0.0f);
+		float* fragment_down					= new float(0.0f);
+		float* fragment_up						= new float(0.0f);
 
-		float* size_x = new float(0.0f);
-		float* size_y = new float(0.0f);
-		float* size_z = new float(0.0f);
+		float* size_x							= new float(0.0f);
+		float* size_y							= new float(0.0f);
+		float* size_z							= new float(0.0f);
+
+		int* selected_draw_mode = new int(SpriteDrawMode::SPRITE_DRAW_MODE_NORMAL);
 
 		~ESprite();
 	};

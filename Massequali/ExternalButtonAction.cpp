@@ -151,7 +151,12 @@ void ExternalButtonAction::external_button_action_select_entity_from_list(EButto
 				if (i < en->autobuilding_base_list.size())
 				{
 					EWindowMain::button_group_autobuilding_base->button_list.at(i)->is_active = true;
-					EWindowMain::button_group_autobuilding_base->button_list.at(i)->gabarite = en->autobuilding_base_list.at(i)->main_texture;
+
+					if (*get_entity()->autobuilding_base_list.at(i)->selected_sprite_draw_mode == SpriteDrawMode::SPRITE_DRAW_MODE_NORMAL)
+					{EWindowMain::button_group_autobuilding_base->button_list.at(i)->gabarite = en->autobuilding_base_list.at(i)->main_texture;}
+
+					if (*get_entity()->autobuilding_base_list.at(i)->selected_sprite_draw_mode == SpriteDrawMode::SPRITE_DRAW_MODE_AO_SHADOW)
+					{ EWindowMain::button_group_autobuilding_base->button_list.at(i)->gabarite = EGraphicCore::gabarite_button_texture_AO_shadow;}
 				}
 				else
 				{
@@ -317,9 +322,11 @@ void ExternalButtonAction::external_button_action_select_autobuilding_base(EButt
 		(get_selected_autobuilding_base(get_entity()) != NULL)
 	)
 	{
-		EWindowMain::grid_region_edit_button_link->gabarite
-			=
-			get_entity()->autobuilding_base_list.at(_b->data_id)->main_texture;
+		if (*get_selected_autobuilding_base(get_entity())->selected_sprite_draw_mode == SpriteDrawMode::SPRITE_DRAW_MODE_NORMAL)
+		{EWindowMain::grid_region_edit_button_link->gabarite = get_entity()->autobuilding_base_list.at(_b->data_id)->main_texture;}
+
+		if (*get_selected_autobuilding_base(get_entity())->selected_sprite_draw_mode == SpriteDrawMode::SPRITE_DRAW_MODE_AO_SHADOW)
+		{EWindowMain::grid_region_edit_button_link->gabarite = EGraphicCore::gabarite_button_texture_AO_shadow;}
 
 		if
 			(
@@ -387,6 +394,67 @@ void ExternalButtonAction::external_button_action_select_autobuilding_base(EButt
 		//EWindowMain::link_button_subdivision_mid_y->text = std::to_string(*get_entity()->autobuilding_base_list.at(_b->data_id)->texture_region_list.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_MID)->subdivision_x);
 
 
+		EWindowMain::link_button_autobuilding_random_offset_x->	target_address_for_int	=	get_selected_autobuilding_base(get_entity())->random_space_between_sprite_x;
+		EWindowMain::link_button_autobuilding_random_offset_y->	target_address_for_int	=	get_selected_autobuilding_base(get_entity())->random_space_between_sprite_y;
+
+		EWindowMain::link_button_sprite_fill_mode->				target_address_for_int	=	get_selected_autobuilding_base(get_entity())->selected_sprite_fill_mode;
+
+		EWindowMain::link_button_sprite_random_count->			target_address_for_int	=	get_selected_autobuilding_base(get_entity())->random_sprite_count;
+		EWindowMain::link_button_selected_sprite_draw_mode->	target_address_for_int	=	get_selected_autobuilding_base(get_entity())->selected_sprite_draw_mode;
+
+	}
+	else
+	{
+		if (get_selected_autobuilding_base(get_entity()) == NULL) { std::cout << "ERROR: autobiulding base not selected" << std::endl; }
+	}
+}
+
+void ExternalButtonAction::external_button_action_select_sprite_draw_mode(EButton* _b, float _f)
+{
+	if
+	(
+		(valid_entity_select())
+		&&
+		(get_selected_autobuilding_base(get_entity()) != NULL)
+		&&
+		(get_selected_autobuilding_base_button() != NULL)
+	)
+	{
+		if (_b->selected_element == SpriteDrawMode::SPRITE_DRAW_MODE_NORMAL)
+		{
+			get_selected_autobuilding_base_button()->gabarite = get_selected_autobuilding_base(get_entity())->main_texture;
+		}
+
+		if (_b->selected_element == SpriteDrawMode::SPRITE_DRAW_MODE_AO_SHADOW)
+		{
+			get_selected_autobuilding_base_button()->gabarite = EGraphicCore::gabarite_button_texture_AO_shadow;
+		}
+
+		if (EWindowMain::button_group_autobuilding_group->selected_button != NULL)
+		{
+			ExternalButtonAction::external_button_action_select_autobuilding_group(EWindowMain::button_group_autobuilding_group->selected_button, 0.1f);
+		}
+
+		/*
+		int id = 0;
+		for (Entity::AutobuildingGroup* a_group : get_entity()->autobuilding_group_list)
+			for (Entity::AutobuildingGroupElement* a_element : a_group->autobuilding_group_element_list)
+			{
+				if (a_element->autobuilding_base == get_selected_autobuilding_base(get_entity()))
+				{
+					if (_b->selected_element == SpriteDrawMode::SPRITE_DRAW_MODE_NORMAL)
+					{
+						get_entity()-> = get_selected_autobuilding_base(get_entity())->main_texture;
+					}
+
+					if (_b->selected_element == SpriteDrawMode::SPRITE_DRAW_MODE_AO_SHADOW)
+					{
+						get_selected_autobuilding_base_button()->gabarite = EGraphicCore::gabarite_button_texture_AO_shadow;
+					}
+				}
+
+				id++;
+			}*/
 	}
 }
 
@@ -602,10 +670,18 @@ void ExternalButtonAction::external_button_action_select_autobuilding_group(EBut
 						(get_selected_autobuilding_group_element(get_entity()) != NULL, "button action select autobuilding group [EBA]")
 					)
 					{
-						EWindowMain::button_group_autobuilding_group_element->button_list.at(i)->gabarite
-						=
-						//EGraphicCore::gabarite_radial_button;
-						get_selected_autobuilding_group(get_entity())->autobuilding_group_element_list.at(i)->autobuilding_base->main_texture;
+						if (*get_selected_autobuilding_group(get_entity())->autobuilding_group_element_list.at(i)->autobuilding_base->selected_sprite_draw_mode == SpriteDrawMode::SPRITE_DRAW_MODE_NORMAL)
+						{
+							EWindowMain::button_group_autobuilding_group_element->button_list.at(i)->gabarite
+								=
+								//EGraphicCore::gabarite_radial_button;
+								get_selected_autobuilding_group(get_entity())->autobuilding_group_element_list.at(i)->autobuilding_base->main_texture;
+						}
+
+						if (*get_selected_autobuilding_group(get_entity())->autobuilding_group_element_list.at(i)->autobuilding_base->selected_sprite_draw_mode == SpriteDrawMode::SPRITE_DRAW_MODE_AO_SHADOW)
+						{
+							EWindowMain::button_group_autobuilding_group_element->button_list.at(i)->gabarite = EGraphicCore::gabarite_button_texture_AO_shadow;
+						}
 					}
 					else
 					{
@@ -1017,4 +1093,10 @@ Entity::AutobuildingBase* ExternalButtonAction::get_selected_autobuilding_base(E
 		
 		return NULL;
 	}
+}
+
+EButton* ExternalButtonAction::get_selected_autobuilding_base_button()
+{
+	return EWindowMain::button_group_autobuilding_base->selected_button;
+	//return nullptr;
 }

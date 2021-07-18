@@ -17,6 +17,9 @@ namespace fs = std::experimental::filesystem;
 EButton::button_super_group*			EWindowMain::super_group_texture_collection_link;
 EButton::button_group*					EWindowMain::group_texture_collection_link;
 
+EButton::button_super_group*			EWindowMain::super_group_task_bar_link;
+EButton::button_group*					EWindowMain::group_task_bar_link;
+
 EButton::button_super_group*			EWindowMain::super_group_autobuilding;
 
 EButton::button_group*					EWindowMain::group_grid_region_edit_link;
@@ -43,7 +46,14 @@ EButton* EWindowMain::link_button_subdivision_mid_x;
 EButton* EWindowMain::link_button_subdivision_mid_y;
 
 EButton* EWindowMain::link_button_sprite_push_direction;
+EButton* EWindowMain::link_button_sprite_fill_mode;
+EButton* EWindowMain::link_button_sprite_random_count;
 EButton* EWindowMain::link_button_autobuilding_seed;
+EButton* EWindowMain::link_button_selected_sprite_draw_mode;
+
+
+EButton* EWindowMain::link_button_autobuilding_random_offset_x;;
+EButton* EWindowMain::link_button_autobuilding_random_offset_y;;
 
 
 std::vector<EButton*>			EWindowMain::auto_size_region_button;
@@ -179,14 +189,28 @@ void saveImage(char* filepath, GLFWwindow* w)
 
 void EWindowMain::create_button_groups()
 {
+
+	super_group_task_bar_link = new EButton::button_super_group(this);
+			super_group_task_bar_link->button_close->is_active = false;
+
+			group_task_bar_link = new EButton::button_group();
+			super_group_task_bar_link->button_group_list.push_back(group_task_bar_link);
+	
+
 	//"search brick group" texture
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	EButton::button_super_group* just_created_button_super_group = new EButton::button_super_group(this);
+	create_button_for_task_list(this, super_group_task_bar_link, group_task_bar_link, just_created_button_super_group->is_active, "Textures list");
+
+	button_group_list.push_back(super_group_task_bar_link);
+
 	button_group_list.push_back(just_created_button_super_group);
 	*just_created_button_super_group->position_x = 50.0f;
 	*just_created_button_super_group->position_y = 50.0f;
 	super_group_texture_collection_link = just_created_button_super_group;
 	*just_created_button_super_group->is_active = false;
+
+
 
 	//group_texture_variants
 	EButton::button_group* just_created_button_group = new EButton::button_group();
@@ -229,6 +253,11 @@ void EWindowMain::create_button_groups()
 	std::vector<EGabarite*> v_gabarite;
 
 	EButton* but = NULL;
+
+	/// <summary>
+	/// lol
+	/// </summary>
+	
 
 	for (auto& p : fs::directory_iterator("data/textures"))
 	{
@@ -374,6 +403,7 @@ void EWindowMain::create_button_groups()
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/// grid region
 	super_group_autobuilding = new EButton::button_super_group(this);
+	create_button_for_task_list(this, super_group_task_bar_link, group_task_bar_link, super_group_autobuilding->is_active, "Autobuilding");
 	button_group_list.push_back(super_group_autobuilding);
 	*super_group_autobuilding->position_x = 300.0f;
 	*super_group_autobuilding->position_y = 50.0f;
@@ -523,7 +553,7 @@ void EWindowMain::create_button_groups()
 	group_grid_region_second_layer_link = new EButton::button_group();
 	*group_grid_region_second_layer_link->selected_push_method = EButton::GroupPushMethod::GROUP_PUSH_METHOD_ADD_X;
 	super_group_autobuilding->button_group_list.push_back(group_grid_region_second_layer_link);
-	*group_grid_region_second_layer_link->size_x = 300.0f;
+	*group_grid_region_second_layer_link->size_x = 600.0f;
 	*group_grid_region_second_layer_link->size_y = 200.0f;
 	*group_grid_region_second_layer_link->can_be_stretched_x = false;
 	*group_grid_region_second_layer_link->can_be_stretched_y = false;
@@ -668,6 +698,8 @@ void EWindowMain::create_button_groups()
 	*but->is_consumable = true;
 	but->description_text = "Texture rendomizator subdivision x";
 
+	
+
 	but = new EButton(250.0f + 0.0f, 70.0f - 55.0f, 50.0f, 20.0f);
 	link_button_subdivision_mid_y = but;
 	but->master_window = this;
@@ -700,6 +732,8 @@ void EWindowMain::create_button_groups()
 	*but->is_consumable = true;
 	//but->text = "0";
 
+
+	//drop list roof/wall mode
 	button_group_autobuilding_base = new EButton::button_group();
 	*button_group_autobuilding_base->selected_push_method = EButton::GroupPushMethod::GROUP_PUSH_METHOD_RESET_X_ADD_Y;
 	super_group_autobuilding->button_group_list.push_back(button_group_autobuilding_base);
@@ -709,7 +743,78 @@ void EWindowMain::create_button_groups()
 	*button_group_autobuilding_base->can_be_stretched_y = true;
 	*button_group_autobuilding_base->can_be_moved_by_user = false;
 
-	for (int i = 0; i < 10; i++)
+	but = new EButton(250.0f + 55.0f, 70.0f - 30.0f, 50.0f, 20.0f, this, super_group_autobuilding, group_grid_region_second_layer_link);
+	link_button_autobuilding_random_offset_x = but;
+	*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_FREE;
+	but->description_text = "Random offset x";
+	//but->input_hint = "offset x";
+	but->have_input_mode = true;
+	but->input_only_numbers = true;
+	*but->is_consumable = true;
+	but->text = "0";
+	but->action_on_input.push_back(&ExternalButtonAction::external_button_action_set_button_value);
+	group_grid_region_second_layer_link->button_list.push_back(but);
+
+	but = new EButton(250.0f + 55.0f, 70.0f - 55.0f, 50.0f, 20.0f, this, super_group_autobuilding, group_grid_region_second_layer_link);
+	link_button_autobuilding_random_offset_y = but;
+	*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_FREE;
+	but->description_text = "Random offset y";
+	//but->input_hint = "offset y";
+	but->have_input_mode = true;
+	but->input_only_numbers = true;
+	*but->is_consumable = true;
+	but->text = "0";
+	but->action_on_input.push_back(&ExternalButtonAction::external_button_action_set_button_value);
+	group_grid_region_second_layer_link->button_list.push_back(but);
+
+	but = new EButton(250.0f + 55.0f, 70.0f - 0.0f, 110.0f, 20.0f, this, super_group_autobuilding, group_grid_region_second_layer_link);
+			link_button_sprite_fill_mode = but;
+			*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_FREE;
+			group_grid_region_second_layer_link->button_list.push_back(but);
+			//but->text = "PUSH Y";
+
+			but->drop_text.push_back("TILE");
+			but->drop_text.push_back("RANDOM PLACE");
+			but->drop_elements = 2;
+			*but->is_consumable = true;
+			but->text = but->drop_text.at(0);
+			but->description_text = "Fill rectandle area or random fill";
+
+			but->is_drop_list = true;
+			but->action_on_drop_list_select_element.push_back(&ExternalButtonAction::external_button_action_set_button_value);
+			but->target_address_for_int = NULL;
+
+	but = new EButton(250.0f + 170.0f, 70.0f - 0.0f, 50.0f, 20.0f, this, super_group_autobuilding, group_grid_region_second_layer_link);
+			link_button_sprite_random_count = but;
+			*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_FREE;
+			but->description_text = "Random sprites count";
+			//but->input_hint = "offset y";
+			but->have_input_mode = true;
+			but->input_only_numbers = true;
+			*but->is_consumable = true;
+			but->text = "0";
+			but->action_on_input.push_back(&ExternalButtonAction::external_button_action_set_button_value);
+			group_grid_region_second_layer_link->button_list.push_back(but);
+			
+		but = new EButton(250.0f + 225.0f, 70.0f - 0.0f, 110.0f, 20.0f, this, super_group_autobuilding, group_grid_region_second_layer_link);
+			link_button_selected_sprite_draw_mode = but;
+			*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_FREE;
+			group_grid_region_second_layer_link->button_list.push_back(but);
+			//but->text = "PUSH Y";
+
+			but->drop_text.push_back("NORMAL");
+			but->drop_text.push_back("AO SHADOW");
+			but->drop_elements = 2;
+			*but->is_consumable = true;
+			but->text = but->drop_text.at(0);
+			but->description_text = "Sprite draw mode (Normal/AO shadow)";
+
+			but->is_drop_list = true;
+			but->action_on_drop_list_select_element.push_back(&ExternalButtonAction::external_button_action_set_button_value);
+			but->action_on_drop_list_select_element.push_back(&ExternalButtonAction::external_button_action_select_sprite_draw_mode);
+			but->target_address_for_int = NULL;
+
+	for (int i = 0; i < 20; i++)
 	{
 		but = new EButton(0.0f, 0.0f, 50.0f, 50.0f);
 		but->master_window = this;
@@ -854,6 +959,8 @@ void EWindowMain::create_button_groups()
 
 	/////////////vertex editor
 		super_group_vertex_editor = new EButton::button_super_group(this);
+		create_button_for_task_list(this, super_group_task_bar_link, group_task_bar_link, super_group_vertex_editor->is_active, "Vertex editor");
+
 			button_group_list.push_back(super_group_vertex_editor);
 			*super_group_vertex_editor->size_x = 500.0f;
 			*super_group_vertex_editor->size_y = 300.0f;
@@ -960,6 +1067,8 @@ void EWindowMain::create_button_groups()
 
 	//world setting
 	just_created_button_super_group = new EButton::button_super_group(this);
+	create_button_for_task_list(this, super_group_task_bar_link, group_task_bar_link, just_created_button_super_group->is_active, "World setting");
+
 	button_group_list.push_back(just_created_button_super_group);
 	*just_created_button_super_group->position_x = 700.0f;
 	*just_created_button_super_group->position_y = 300.0f;
@@ -1196,6 +1305,17 @@ void EWindowMain::create_button_groups()
 
 EWindowMain::~EWindowMain()
 {
+}
+
+EButton* EWindowMain::create_button_for_task_list(EWindow* _window, EButton::button_super_group* _super_group, EButton::button_group* _group, bool* _target_bool, std::string _text)
+{
+	EButton* but = new EButton(0.0f, 0.0f, 150.0f, 20.0f, _window, _super_group, _group);
+	but->action_on_left_click.push_back(&ExternalButtonAction::external_button_action_set_button_constant_value);
+	*but->target_value_for_bool = true;
+	but->target_address_for_bool = _target_bool;
+	_group->button_list.push_back(but);
+	but->text = _text;
+	return but;
 }
 
 bool EWindowMain::is_entity_in_region(Entity* _e, EButton::EGridRegion* _gr)
@@ -1657,40 +1777,66 @@ EGraphicCore::PBR_shader->setInt("texture1", 0);
 
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);//texture filtering
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);//
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 glActiveTexture(GL_TEXTURE1);
-glBindTexture(GL_TEXTURE_2D, EWindow::default_texture_atlas->colorbuffer);
-EGraphicCore::PBR_shader->setInt("normal_gloss_map_texture", 1);
-
-glActiveTexture(GL_TEXTURE2);
-glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[0]->colorbuffer);//1
-EGraphicCore::PBR_shader->setInt("SD_array[0]", 2);
-
-glActiveTexture(GL_TEXTURE3);
-glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[1]->colorbuffer);//1/2
-EGraphicCore::PBR_shader->setInt("SD_array[1]", 3);
-
-glActiveTexture(GL_TEXTURE4);
-glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[2]->colorbuffer);//1/4
-EGraphicCore::PBR_shader->setInt("SD_array[2]", 4);
-
-glActiveTexture(GL_TEXTURE5);
-glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[3]->colorbuffer);//1/8
-EGraphicCore::PBR_shader->setInt("SD_array[3]", 5);
-
-glActiveTexture(GL_TEXTURE6);
-glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[4]->colorbuffer);//1/16
-EGraphicCore::PBR_shader->setInt("SD_array[4]", 6);
-
-glActiveTexture(GL_TEXTURE7);
-glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[5]->colorbuffer);//1/32
-EGraphicCore::PBR_shader->setInt("SD_array[5]", 7);
-
-
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+glBindTexture(GL_TEXTURE_2D, EWindow::default_texture_atlas->colorbuffer);
+EGraphicCore::PBR_shader->setInt("normal_gloss_map_texture", 1);
+
+glActiveTexture(GL_TEXTURE2);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[0]->colorbuffer);//1
+EGraphicCore::PBR_shader->setInt("SD_array[0]", 2);
+
+glActiveTexture(GL_TEXTURE3);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[1]->colorbuffer);//1/2
+EGraphicCore::PBR_shader->setInt("SD_array[1]", 3);
+
+glActiveTexture(GL_TEXTURE4);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[2]->colorbuffer);//1/4
+EGraphicCore::PBR_shader->setInt("SD_array[2]", 4);
+
+glActiveTexture(GL_TEXTURE5);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[3]->colorbuffer);//1/8
+EGraphicCore::PBR_shader->setInt("SD_array[3]", 5);
+
+glActiveTexture(GL_TEXTURE6);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[4]->colorbuffer);//1/16
+EGraphicCore::PBR_shader->setInt("SD_array[4]", 6);
+
+glActiveTexture(GL_TEXTURE7);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[5]->colorbuffer);//1/32
+EGraphicCore::PBR_shader->setInt("SD_array[5]", 7);
+
+
 
 	//DRAW BUFFER
 	for (int z = 0; z < last_index; z++)
@@ -1715,7 +1861,7 @@ glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 
 			//EGraphicCore::batch_PBR->setcolor_lum(EColor::COLOR_WHITE, 1.0f - );
-
+			//if (t_group->base)
 			EGraphicCore::draw_sprite_PBR
 			(
 					t_group->sprite_list.at(f),
@@ -2664,8 +2810,11 @@ void EWindowMain::generate_AO_shadow()
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glEnable(GL_BLEND);
-	glBlendFunc(GL_ONE, GL_ONE);
-	glBlendEquation(GL_MIN);
+	glBlendFunc(GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA);
+	
+	//glBlendEquation(GL_FUNC_ADD);
+	//glBlendEquation(GL_MIN);
+	glBlendEquationSeparate(GL_MIN, GL_MAX);
 	//EGraphicCore::batch->setcolor(EColor::COLOR_WHITE);
 	//EGraphicCore::batch->draw_gabarite(0.0f, 0.0f, 10000.0f, 10000.0f, EGraphicCore::gabarite_white_pixel);
 
@@ -2676,16 +2825,23 @@ void EWindowMain::generate_AO_shadow()
 		{
 			for (Entity* e : cluster_static[j][i]->entity_list)
 				for (Entity::AutobuildingGroup* a_group : e->autobuilding_group_list)
+				for (Entity::AutobuildingGroupElement* a_element : a_group->autobuilding_group_element_list)
 				{
-					EGraphicCore::batch->draw_AO_shadow
-					(
-						*e->position_x + *a_group->offset_x - 100.0f,
-						*e->position_y + *a_group->offset_y - 5.0f,
-						200.0f,
-						200.0f,
-						500.0f,
-						EGraphicCore::gabarite_white_pixel
-					);
+
+					if (*a_element->autobuilding_base->selected_sprite_draw_mode == SpriteDrawMode::SPRITE_DRAW_MODE_AO_SHADOW)
+					{
+						EGraphicCore::batch->setcolor_lum(EColor::COLOR_WHITE, 1.0f - (*a_element->offset_z / (*a_element->offset_z + 10.0f)));
+
+						EGraphicCore::batch->draw_AO_shadow
+						(
+							*e->position_x + *a_group->offset_x + *a_element->offset_x,
+							*e->position_y + *a_group->offset_y + *a_element->offset_y,
+							*a_element->size_x,
+							*a_element->size_y,
+							*a_element->offset_z * 1.0f,
+							EGraphicCore::gabarite_white_pixel
+						);
+					}
 				}
 		}
 
@@ -2847,6 +3003,29 @@ void EWindowMain::add_entity_data_to_save_string(Entity* e)
 		w_string += EString::float_to_string(*a_base->space_between_sprite_x);
 		w_string += '\t';
 		w_string += EString::float_to_string(*a_base->space_between_sprite_y);
+		w_string += '\n';
+
+		w_string += "autobuilding_base_random_offset";
+		w_string += '\t';
+		w_string += std::to_string(*a_base->random_space_between_sprite_x);
+		w_string += '\t';
+		w_string += std::to_string(*a_base->random_space_between_sprite_y);
+		w_string += '\n';
+
+		w_string += "autobuilding_selected_sprite_fill_mode";
+		w_string += '\t';
+		w_string += std::to_string(*a_base->selected_sprite_fill_mode);
+		w_string += '\n';
+
+		w_string += "autobuilding_random_sprite_count";
+		w_string += '\t';
+		w_string += std::to_string(*a_base->random_sprite_count);
+		w_string += '\n';
+
+
+		w_string += "autobuilding_base_selected_draw_mode";
+		w_string += '\t';
+		w_string += std::to_string(*a_base->selected_sprite_draw_mode);
 		w_string += '\n';
 
 		for (EButton::EGridRegion* gr : a_base->grid_region)
@@ -3013,6 +3192,27 @@ void EWindowMain::load_map(std::string _name)
 				i++; *jc_base->space_between_sprite_y = EMath::to_float(EFile::data_array[i]);
 			}
 
+			if ((EFile::data_array[i] == "autobuilding_base_random_offset") & (jc_base != NULL))
+			{
+				i++; *jc_base->random_space_between_sprite_x = std::stoi(EFile::data_array[i]);
+				i++; *jc_base->random_space_between_sprite_y = std::stoi(EFile::data_array[i]);
+			}
+
+			if ((EFile::data_array[i] == "autobuilding_selected_sprite_fill_mode") & (jc_base != NULL))
+			{
+				i++; *jc_base->selected_sprite_fill_mode = std::stoi(EFile::data_array[i]);
+			}
+
+			if ((EFile::data_array[i] == "autobuilding_random_sprite_count") & (jc_base != NULL))
+			{
+				i++; *jc_base->random_sprite_count = std::stoi(EFile::data_array[i]);
+			}
+
+			if ((EFile::data_array[i] == "autobuilding_base_selected_draw_mode") & (jc_base != NULL))
+			{
+				i++; *jc_base->selected_sprite_draw_mode = std::stoi(EFile::data_array[i]);
+			}
+
 			if ((EFile::data_array[i] == "CREATE_NEW_GRID_REGION") & (jc_base != NULL))
 			{
 				jc_grid_region = new EButton::EGridRegion();
@@ -3140,7 +3340,7 @@ void EWindowMain::add_new_sprite_if_need(int _i, Entity* _e, std::string _text)
 		EGraphicCore::ESprite* jcs = new EGraphicCore::ESprite();
 		_e->entity_sprite_array->sprite_list.push_back(jcs);
 
-		std::cout << "create new sprite (" << _text << "), new size of sprites is [" << std::to_string(_e->entity_sprite_array->sprite_list.size()) << "]" << std::endl;
+		//std::cout << "create new sprite (" << _text << "), new size of sprites is [" << std::to_string(_e->entity_sprite_array->sprite_list.size()) << "]" << std::endl;
 	}
 }
 
@@ -3198,6 +3398,11 @@ void EWindowMain::generate_building(Entity* _e)
 
 	for (Entity::AutobuildingGroup* a_group : _e->autobuilding_group_list)
 	{
+		/*for (EGraphicCore::ESprite* spr : a_group->sprite_list)
+		{
+			EGraphicCore::reset_sprite_data(spr);
+		}*/
+
 		selected_sprite_id = 0;
 		srand(*a_group->seed);
 		//srand(time(NULL)
@@ -3220,6 +3425,7 @@ void EWindowMain::generate_building(Entity* _e)
 		*a_group->pseudo_size_z = 0.0f;
 
 		for (Entity::AutobuildingGroupElement* a_element : a_group->autobuilding_group_element_list)
+		if (*a_element->autobuilding_base->selected_sprite_draw_mode == SpriteDrawMode::SPRITE_DRAW_MODE_NORMAL)
 		{
 			if
 			(
@@ -3341,63 +3547,136 @@ void EWindowMain::generate_building(Entity* _e)
 					(*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_MID)->size_x > 0)
 					&
 					(*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_MID)->size_y > 0)
-					)
-				for (int yy = 0; yy < ceil(mid_wall_copies_y); yy++)
-					for (int xx = 0; xx < ceil(mid_wall_copies_x); xx++)
-					{
-						add_new_sprite_to_group_if_need(selected_sprite_id, a_group, "mid wall");
+				)
 
-						selected_sprite = a_group->sprite_list.at(selected_sprite_id);
-						EGraphicCore::reset_sprite_data(selected_sprite);
-
-						wall_fragment_x = min(1.0f, (mid_wall_copies_x + 0.0f - xx) / fragment_correction_factor_x);
-						wall_fragment_y = min(1.0f, (mid_wall_copies_y + 0.0f - yy) / fragment_correction_factor_y);
-
-						*selected_sprite->offset_x = *a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_LEFT)->size_x;
-						*selected_sprite->offset_x += xx * (wall_full_size_x + *a_element->autobuilding_base->space_between_sprite_x) + *a_group->offset_x + *a_element->offset_x;
-
-						if (*a_group->selected_direction_of_push == AutobuildingSpritePushDirection::AUTOBUILDING_SPRITE_PUSH_DIRECTION_WALL_Z)
+				if (*a_element->autobuilding_base->selected_sprite_fill_mode == SpriteFillMode::SPRITE_FILL_MODE_TILE)
+				{
+					for (int yy = 0; yy < ceil(mid_wall_copies_y); yy++)
+						for (int xx = 0; xx < ceil(mid_wall_copies_x); xx++)
 						{
-							*selected_sprite->offset_y = 0.0f;
-							*selected_sprite->offset_y += *a_group->offset_y + *a_element->offset_y;
+							add_new_sprite_to_group_if_need(selected_sprite_id, a_group, "mid wall");
 
-							*selected_sprite->offset_z = *a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_DOWN)->size_y;
-							*selected_sprite->offset_z += yy * (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y) + *a_group->offset_z + *a_element->offset_z;
+							selected_sprite = a_group->sprite_list.at(selected_sprite_id);
+							EGraphicCore::reset_sprite_data(selected_sprite);
 
-							*selected_sprite->size_z = round(wall_full_size_y * wall_fragment_y);
+							wall_fragment_x = min(1.0f, (mid_wall_copies_x + 0.0f - xx) / fragment_correction_factor_x);
+							wall_fragment_y = min(1.0f, (mid_wall_copies_y + 0.0f - yy) / fragment_correction_factor_y);
+
+							*selected_sprite->offset_x = *a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_LEFT)->size_x;
+							*selected_sprite->offset_x += xx * (wall_full_size_x + *a_element->autobuilding_base->space_between_sprite_x) + *a_group->offset_x + *a_element->offset_x;
+
+							if (*a_group->selected_direction_of_push == AutobuildingSpritePushDirection::AUTOBUILDING_SPRITE_PUSH_DIRECTION_WALL_Z)
+							{
+								*selected_sprite->offset_y = 0.0f;
+								*selected_sprite->offset_y += *a_group->offset_y + *a_element->offset_y;
+
+								*selected_sprite->offset_z = *a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_DOWN)->size_y;
+								*selected_sprite->offset_z += yy * (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y) + *a_group->offset_z + *a_element->offset_z;
+
+								*selected_sprite->size_z = round(wall_full_size_y * wall_fragment_y);
+								*selected_sprite->offset_z += (rand() % 100 / 100.0f) * *a_element->autobuilding_base->random_space_between_sprite_y;
+							}
+
+							if (*a_group->selected_direction_of_push == AutobuildingSpritePushDirection::AUTOBUILDING_SPRITE_PUSH_DIRECTION_ROOF_Y)
+							{
+								*selected_sprite->offset_z = 0.0f;
+								*selected_sprite->offset_z += *a_group->offset_z + *a_element->offset_z;
+
+								*selected_sprite->offset_y = *a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_DOWN)->size_y;
+								*selected_sprite->offset_y += yy * (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y) + *a_group->offset_y + *a_element->offset_y;
+
+								*selected_sprite->size_y = round(wall_full_size_y * wall_fragment_y);
+								*selected_sprite->offset_y += (rand() % 100 / 100.0f) * *a_element->autobuilding_base->random_space_between_sprite_y;
+
+							}
+							convert_size_to_fragment
+							(
+								a_element->autobuilding_base->main_texture,
+								round(*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_LEFT)->size_x + (wall_full_size_x * (rand() % (subdivision_x_count + 1)))),
+								round(*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_DOWN)->size_y + (wall_full_size_y * (rand() % (subdivision_y_count + 1)))),
+								round(wall_full_size_x * wall_fragment_x),
+								round(wall_full_size_y * wall_fragment_y),
+								selected_sprite->fragment_left,
+								selected_sprite->fragment_right,
+								selected_sprite->fragment_down,
+								selected_sprite->fragment_up
+							);
+
+							*selected_sprite->size_x = round(wall_full_size_x * wall_fragment_x);
+							*selected_sprite->offset_x += (rand() % 100 / 100.0f) * *a_element->autobuilding_base->random_space_between_sprite_x;
+
+							selected_sprite->texture_gabarite = a_element->autobuilding_base->main_texture;
+							selected_sprite->normal_gloss_map_gabarite = a_element->autobuilding_base->normal_gloss_map_texture;
+
+							selected_sprite_id++;
 						}
+				}
 
-						if (*a_group->selected_direction_of_push == AutobuildingSpritePushDirection::AUTOBUILDING_SPRITE_PUSH_DIRECTION_ROOF_Y)
+			if (*a_element->autobuilding_base->selected_sprite_fill_mode == SpriteFillMode::SPRITE_FILL_MODE_RANDOM)
+				{
+						for (int z = 0; z < *a_element->autobuilding_base->random_sprite_count; z++)
 						{
-							 *selected_sprite->offset_z = 0.0f;
-							 *selected_sprite->offset_z += *a_group->offset_z + *a_element->offset_z;
+							add_new_sprite_to_group_if_need(selected_sprite_id, a_group, "mid wall");
 
-							 *selected_sprite->offset_y = *a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_DOWN)->size_y;
-							 *selected_sprite->offset_y += yy * (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y) + *a_group->offset_y + *a_element->offset_y;
+							selected_sprite = a_group->sprite_list.at(selected_sprite_id);
+							EGraphicCore::reset_sprite_data(selected_sprite);
 
-							 *selected_sprite->size_y = round(wall_full_size_y * wall_fragment_y);
+							wall_fragment_x = 1.0f;
+							wall_fragment_y = 1.0f;
 
+							*selected_sprite->offset_x = *a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_LEFT)->size_x;
+							*selected_sprite->offset_x += *a_group->offset_x + *a_element->offset_x;
+							*selected_sprite->offset_x += (*a_element->size_x - wall_full_size_x) * (rand() % 100 / 100.0f);
+							
+
+							if (*a_group->selected_direction_of_push == AutobuildingSpritePushDirection::AUTOBUILDING_SPRITE_PUSH_DIRECTION_WALL_Z)
+							{
+								*selected_sprite->offset_y = 0.0f;
+								*selected_sprite->offset_y += *a_group->offset_y + *a_element->offset_y;
+
+								*selected_sprite->offset_z = *a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_DOWN)->size_y;
+								*selected_sprite->offset_z += *a_group->offset_z + *a_element->offset_z;
+								*selected_sprite->offset_z += (*a_element->size_y - wall_full_size_y) * (rand() % 100 / 100.0f);
+
+								*selected_sprite->size_z = round(wall_full_size_y * wall_fragment_y);
+								*selected_sprite->offset_z += (rand() % 100 / 100.0f) * *a_element->autobuilding_base->random_space_between_sprite_y;
+							}
+
+							if (*a_group->selected_direction_of_push == AutobuildingSpritePushDirection::AUTOBUILDING_SPRITE_PUSH_DIRECTION_ROOF_Y)
+							{
+								*selected_sprite->offset_z = 0.0f;
+								*selected_sprite->offset_z += *a_group->offset_z + *a_element->offset_z;
+
+								*selected_sprite->offset_y = *a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_DOWN)->size_y;
+								*selected_sprite->offset_y += *a_group->offset_y + *a_element->offset_y;
+								*selected_sprite->offset_y += (*a_element->size_y - wall_full_size_y) * (rand() % 100 / 100.0f);
+
+								*selected_sprite->size_y = round(wall_full_size_y * wall_fragment_y);
+								*selected_sprite->offset_y += (rand() % 100 / 100.0f) * *a_element->autobuilding_base->random_space_between_sprite_y;
+
+							}
+							convert_size_to_fragment
+							(
+								a_element->autobuilding_base->main_texture,
+								round(*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_LEFT)->size_x + (wall_full_size_x * (rand() % (subdivision_x_count + 1)))),
+								round(*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_DOWN)->size_y + (wall_full_size_y * (rand() % (subdivision_y_count + 1)))),
+								round(wall_full_size_x * wall_fragment_x),
+								round(wall_full_size_y * wall_fragment_y),
+								selected_sprite->fragment_left,
+								selected_sprite->fragment_right,
+								selected_sprite->fragment_down,
+								selected_sprite->fragment_up
+							);
+
+							*selected_sprite->size_x = round(wall_full_size_x * wall_fragment_x);
+							//*selected_sprite->offset_x += (rand() % 100 / 100.0f) * *a_element->autobuilding_base->random_space_between_sprite_x;
+
+							selected_sprite->texture_gabarite = a_element->autobuilding_base->main_texture;
+							selected_sprite->normal_gloss_map_gabarite = a_element->autobuilding_base->normal_gloss_map_texture;
+
+							selected_sprite_id++;
 						}
-						convert_size_to_fragment
-						(
-							a_element->autobuilding_base->main_texture,
-							round(*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_LEFT)->size_x + (wall_full_size_x * (rand() % (subdivision_x_count + 1)))),
-							round(*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_DOWN)->size_y + (wall_full_size_y * (rand() % (subdivision_y_count + 1)))),
-							round(wall_full_size_x * wall_fragment_x),
-							round(wall_full_size_y * wall_fragment_y),
-							selected_sprite->fragment_left,
-							selected_sprite->fragment_right,
-							selected_sprite->fragment_down,
-							selected_sprite->fragment_up
-						);
-
-						*selected_sprite->size_x = round(wall_full_size_x * wall_fragment_x);
-
-						selected_sprite->texture_gabarite = a_element->autobuilding_base->main_texture;
-						selected_sprite->normal_gloss_map_gabarite = a_element->autobuilding_base->normal_gloss_map_texture;
-
-						selected_sprite_id++;
-					}
+				}
 
 			//bottom
 			if
@@ -3424,13 +3703,10 @@ void EWindowMain::generate_building(Entity* _e)
 						*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_RIGHT)->size_x
 						) / (wall_full_size_x + *a_element->autobuilding_base->space_between_sprite_x);
 
-				mid_wall_copies_y
-					=
-					(*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_DOWN)->size_y)
-					/ (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y);
+				mid_wall_copies_y = 1.0f;
 
 				fragment_correction_factor_x = wall_full_size_x / (wall_full_size_x + *a_element->autobuilding_base->space_between_sprite_x);
-				fragment_correction_factor_y = wall_full_size_y / (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y);
+				fragment_correction_factor_y = 1.0f;
 
 				for (int yy = 0; yy < ceil(mid_wall_copies_y); yy++)
 					for (int xx = 0; xx < ceil(mid_wall_copies_x); xx++)
@@ -3514,13 +3790,10 @@ void EWindowMain::generate_building(Entity* _e)
 						*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_RIGHT)->size_x
 						) / (wall_full_size_x + *a_element->autobuilding_base->space_between_sprite_x);
 
-				mid_wall_copies_y
-					=
-					(*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_UP)->size_y)
-					/ (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y);
+				mid_wall_copies_y = 1.0f;
 
 				fragment_correction_factor_x = wall_full_size_x / (wall_full_size_x + *a_element->autobuilding_base->space_between_sprite_x);
-				fragment_correction_factor_y = wall_full_size_y / (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y);
+				fragment_correction_factor_y = 1.0f;
 
 				for (int yy = 0; yy < ceil(mid_wall_copies_y); yy++)
 					for (int xx = 0; xx < ceil(mid_wall_copies_x); xx++)
@@ -3593,12 +3866,7 @@ void EWindowMain::generate_building(Entity* _e)
 				wall_full_size_x = round((*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_LEFT)->size_x) / (subdivision_x_count + 1.0f));
 				wall_full_size_y = round((*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_LEFT)->size_y) / (subdivision_y_count + 1.0f));
 
-				mid_wall_copies_x
-					=
-					(
-						(*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_LEFT)->size_x)
-
-						) / (wall_full_size_x + *a_element->autobuilding_base->space_between_sprite_x);
+				mid_wall_copies_x = 1.0f;
 
 				mid_wall_copies_y
 					=
@@ -3611,7 +3879,7 @@ void EWindowMain::generate_building(Entity* _e)
 						)
 					/ (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y);
 
-				fragment_correction_factor_x = wall_full_size_x / (wall_full_size_x + *a_element->autobuilding_base->space_between_sprite_x);
+				fragment_correction_factor_x = 1.0f;
 				fragment_correction_factor_y = wall_full_size_y / (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y);
 
 				for (int yy = 0; yy < ceil(mid_wall_copies_y); yy++)
@@ -3685,22 +3953,12 @@ void EWindowMain::generate_building(Entity* _e)
 				wall_full_size_x = round((*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_LEFT_DOWN_CORNER)->size_x) / (subdivision_x_count + 1.0f));
 				wall_full_size_y = round((*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_LEFT_DOWN_CORNER)->size_y) / (subdivision_y_count + 1.0f));
 
-				mid_wall_copies_x
-					=
-					(
-						*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_LEFT_DOWN_CORNER)->size_x
-						)
-					/ (wall_full_size_x + *a_element->autobuilding_base->space_between_sprite_x);
+				mid_wall_copies_x = 1.0f;
 
-				mid_wall_copies_y
-					=
-					(
-						*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_LEFT_DOWN_CORNER)->size_y
-						)
-					/ (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y);
+				mid_wall_copies_y = 1.0f;
 
-				fragment_correction_factor_x = wall_full_size_x / (wall_full_size_x + *a_element->autobuilding_base->space_between_sprite_x);
-				fragment_correction_factor_y = wall_full_size_y / (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y);
+				fragment_correction_factor_x = 1.0f;
+				fragment_correction_factor_y = 1.0f;
 
 				for (int yy = 0; yy < ceil(mid_wall_copies_y); yy++)
 					for (int xx = 0; xx < ceil(mid_wall_copies_x); xx++)
@@ -3774,22 +4032,11 @@ void EWindowMain::generate_building(Entity* _e)
 				wall_full_size_x = round((*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_LEFT_UP_CORNER)->size_x) / (subdivision_x_count + 1.0f));
 				wall_full_size_y = round((*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_LEFT_UP_CORNER)->size_y) / (subdivision_y_count + 1.0f));
 
-				mid_wall_copies_x
-					=
-					(
-						*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_LEFT_UP_CORNER)->size_x
-						)
-					/ (wall_full_size_x + *a_element->autobuilding_base->space_between_sprite_x);
+				mid_wall_copies_x =	1.0f;
+				mid_wall_copies_y = 1.0f;
 
-				mid_wall_copies_y
-					=
-					(
-						*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_LEFT_UP_CORNER)->size_y
-						)
-					/ (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y);
-
-				fragment_correction_factor_x = wall_full_size_x / (wall_full_size_x + *a_element->autobuilding_base->space_between_sprite_x);
-				fragment_correction_factor_y = wall_full_size_y / (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y);
+				fragment_correction_factor_x = 1.0f;
+				fragment_correction_factor_y = 1.0f;
 
 				for (int yy = 0; yy < ceil(mid_wall_copies_y); yy++)
 					for (int xx = 0; xx < ceil(mid_wall_copies_x); xx++)
@@ -3855,7 +4102,7 @@ void EWindowMain::generate_building(Entity* _e)
 					(*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_RIGHT)->size_x > 0)
 					&
 					(*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_RIGHT)->size_y > 0)
-					)
+				)
 			{
 				subdivision_x_count = *a_element->autobuilding_base->grid_region.at(GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_RIGHT)->subdivision_x;
 				subdivision_y_count = *a_element->autobuilding_base->grid_region.at(GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_MID)->subdivision_y;
@@ -3863,12 +4110,7 @@ void EWindowMain::generate_building(Entity* _e)
 				wall_full_size_x = round((*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_RIGHT)->size_x) / (subdivision_x_count + 1.0f));
 				wall_full_size_y = round((*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_RIGHT)->size_y) / (subdivision_y_count + 1.0f));
 
-				mid_wall_copies_x
-					=
-					(
-						(*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_RIGHT)->size_x)
-
-						) / (wall_full_size_x + *a_element->autobuilding_base->space_between_sprite_x);
+				mid_wall_copies_x = 1.0f;
 
 				mid_wall_copies_y
 					=
@@ -3881,7 +4123,7 @@ void EWindowMain::generate_building(Entity* _e)
 						)
 					/ (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y);
 
-				fragment_correction_factor_x = wall_full_size_x / (wall_full_size_x + *a_element->autobuilding_base->space_between_sprite_x);
+				fragment_correction_factor_x = 1.0f;
 				fragment_correction_factor_y = wall_full_size_y / (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y);
 
 				for (int yy = 0; yy < ceil(mid_wall_copies_y); yy++)
@@ -3956,23 +4198,12 @@ void EWindowMain::generate_building(Entity* _e)
 
 				wall_full_size_x = round((*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_RIGHT_DOWN_CORNER)->size_x) / (subdivision_x_count + 1.0f));
 				wall_full_size_y = round((*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_RIGHT_DOWN_CORNER)->size_y) / (subdivision_y_count + 1.0f));
+				
+				mid_wall_copies_x = 1.0f;
+				mid_wall_copies_y = 1.0f;
 
-				mid_wall_copies_x
-					=
-					(
-						(*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_RIGHT_DOWN_CORNER)->size_x)
-
-						) / (wall_full_size_x + *a_element->autobuilding_base->space_between_sprite_x);
-
-				mid_wall_copies_y
-					=
-					(
-						*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_RIGHT_DOWN_CORNER)->size_y
-						)
-					/ (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y);
-
-				fragment_correction_factor_x = wall_full_size_x / (wall_full_size_x + *a_element->autobuilding_base->space_between_sprite_x);
-				fragment_correction_factor_y = wall_full_size_y / (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y);
+				fragment_correction_factor_x = 1.0f;
+				fragment_correction_factor_y = 1.0f;
 
 				for (int yy = 0; yy < ceil(mid_wall_copies_y); yy++)
 					for (int xx = 0; xx < ceil(mid_wall_copies_x); xx++)
@@ -4044,22 +4275,11 @@ void EWindowMain::generate_building(Entity* _e)
 				wall_full_size_x = round((*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_RIGHT_UP_CORNER)->size_x) / (subdivision_x_count + 1.0f));
 				wall_full_size_y = round((*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_RIGHT_UP_CORNER)->size_y) / (subdivision_y_count + 1.0f));
 
-				mid_wall_copies_x
-					=
-					(
-						(*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_RIGHT_UP_CORNER)->size_x)
+				mid_wall_copies_x = 1.0f;
+				mid_wall_copies_y = 1.0f;
 
-						) / (wall_full_size_x + *a_element->autobuilding_base->space_between_sprite_x);
-
-				mid_wall_copies_y
-					=
-					(
-						*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_RIGHT_UP_CORNER)->size_y
-						)
-					/ (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y);
-
-				fragment_correction_factor_x = wall_full_size_x / (wall_full_size_x + *a_element->autobuilding_base->space_between_sprite_x);
-				fragment_correction_factor_y = wall_full_size_y / (wall_full_size_y + *a_element->autobuilding_base->space_between_sprite_y);
+				fragment_correction_factor_x = 1.0f;
+				fragment_correction_factor_y = 1.0f;
 
 				for (int yy = 0; yy < ceil(mid_wall_copies_y); yy++)
 					for (int xx = 0; xx < ceil(mid_wall_copies_x); xx++)
@@ -4166,7 +4386,7 @@ void EWindowMain::generate_building(Entity* _e)
 				(selected_sprite_id < a_group->sprite_list.size())
 				&&
 				(true)
-				)
+			)
 		{
 			//std::cout << "pre remove empty sprite, new size of sprites is [" << std::to_string(_e->entity_sprite_array->sprite_list.size()) << "]" << std::endl;
 
@@ -4178,7 +4398,9 @@ void EWindowMain::generate_building(Entity* _e)
 			{
 				a_group->sprite_list.erase(a_group->sprite_list.begin() + a_group->sprite_list.size() - 1);
 
+				//std::cout << "Dovboyob" << std::endl;
 				delete deleted_sprite;
+				//std::cout << "Dovboyob 2" << std::endl;
 			}
 			//else
 			//{_e->entity_sprite_array->sprite_list.clear(); }

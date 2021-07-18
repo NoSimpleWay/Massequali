@@ -26,6 +26,11 @@ public:
 	static void external_button_action_select_autobuilding_group_element(EButton* _b, float _f);
 	static void external_button_action_select_autobuilding_base(EButton* _b, float _f);
 
+
+	static void external_button_action_select_sprite_draw_mode(EButton* _b, float _f);
+
+
+
 	//remove
 	//////////////////////
 	static void external_button_action_remove_autobuilding_group(EButton* _b, float _f);
@@ -60,4 +65,6 @@ public:
 	static Entity::AutobuildingGroup* get_selected_autobuilding_group(Entity* _e);
 	static Entity::AutobuildingGroupElement* get_selected_autobuilding_group_element(Entity* _e, std::string _text = "");
 	static Entity::AutobuildingBase* get_selected_autobuilding_base(Entity* _e);
+
+	static EButton* get_selected_autobuilding_base_button();
 };

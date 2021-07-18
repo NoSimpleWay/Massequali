@@ -826,7 +826,7 @@ void Batcher::draw_AO_shadow(float _x, float _y, float _size_x, float _size_y, f
 
 		//.#
 		//..
-		vertices[id + 0] = _x + _size_y;
+		vertices[id + 0] = _x + _size_x;
 		vertices[id + 1] = _y + _size_y;
 		//vertices[id + 2] = 0;
 

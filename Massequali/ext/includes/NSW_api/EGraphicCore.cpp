@@ -69,6 +69,7 @@ EGabarite* EGraphicCore::gabarite_full_atlas;
 EGabarite* EGraphicCore::gabarite_sun;
 EGabarite* EGraphicCore::gabarite_sky;
 EGabarite* EGraphicCore::gabarite_panorama;
+EGabarite* EGraphicCore::gabarite_button_texture_AO_shadow;
 
 float EGraphicCore::sun_zenith_factor;
 
@@ -87,6 +88,7 @@ void EGraphicCore::reset_sprite_data(EGraphicCore::ESprite* _sprite)
 	*_sprite->fragment_right = 0.0f;
 
 	_sprite->texture_gabarite = NULL;
+	_sprite->normal_gloss_map_gabarite = NULL;
 
 	*_sprite->size_x = 0.0f;
 	*_sprite->size_y = 0.0f;
@@ -230,5 +232,13 @@ EGraphicCore::ESprite::~ESprite()
 	delete size_y;
 	delete size_z;
 
+	delete normal_gloss_map_gabarite;
 	delete texture_gabarite;
+	
+	/*if (normal_gloss_map_gabarite != NULL)
+	{
+		
+	}*/
+
+	delete selected_draw_mode;
 }

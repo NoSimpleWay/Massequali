@@ -65,7 +65,8 @@ int main()
 	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
 	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 	glfwWindowHint(GLFW_DECORATED, NULL);
-	EWindow::main_window = glfwCreateWindow(EGraphicCore::SCR_WIDTH, EGraphicCore::SCR_HEIGHT, "Window name", glfwGetPrimaryMonitor(), NULL); 
+//	EWindow::main_window = glfwCreateWindow(EGraphicCore::SCR_WIDTH, EGraphicCore::SCR_HEIGHT, "Window name", glfwGetPrimaryMonitor(), NULL); 
+	EWindow::main_window = glfwCreateWindow(EGraphicCore::SCR_WIDTH, EGraphicCore::SCR_HEIGHT, "Window name", NULL, NULL);
 
 
 	
@@ -236,9 +237,10 @@ int main()
 	EGraphicCore::gabarite_radial_button = ETextureAtlas::put_texture_to_atlas("data/textures/radial_button.png", EWindow::default_texture_atlas);
 	EGraphicCore::gabarite_radial_button_dot = ETextureAtlas::put_texture_to_atlas("data/textures/radial_button_dot.png", EWindow::default_texture_atlas);
 	
-	EGraphicCore::gabarite_sun		 = ETextureAtlas::put_texture_to_atlas("data/textures/sun2.png", EWindow::default_texture_atlas);
-	EGraphicCore::gabarite_sky		 = ETextureAtlas::put_texture_to_atlas("data/textures/sky3.png", EWindow::default_texture_atlas);
-	EGraphicCore::gabarite_panorama	 = ETextureAtlas::put_texture_to_atlas("data/textures/panorama[3].png", EWindow::default_texture_atlas);
+	EGraphicCore::gabarite_sun							= ETextureAtlas::put_texture_to_atlas("data/textures/sun2.png", EWindow::default_texture_atlas);
+	EGraphicCore::gabarite_sky							= ETextureAtlas::put_texture_to_atlas("data/textures/sky3.png", EWindow::default_texture_atlas);
+	EGraphicCore::gabarite_panorama						= ETextureAtlas::put_texture_to_atlas("data/textures/panorama[3].png", EWindow::default_texture_atlas);
+	EGraphicCore::gabarite_button_texture_AO_shadow		= ETextureAtlas::put_texture_to_atlas("data/textures/button_texture_AO_shadow.png", EWindow::default_texture_atlas);
 
 	EGraphicCore::gabarite_small_wood_button_bg = ETextureAtlas::put_texture_to_atlas("data/textures/button_bg.png", EWindow::default_texture_atlas);
 

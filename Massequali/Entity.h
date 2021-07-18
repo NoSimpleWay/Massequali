@@ -40,9 +40,19 @@ public:
 		float* space_between_sprite_x = new float(0.0f);
 		float* space_between_sprite_y = new float(0.0f);
 
+		int* random_space_between_sprite_x = new int(0.0f);
+		int* random_space_between_sprite_y = new int(0.0f);
+
+		int* selected_sprite_fill_mode = new int(0.0f);
+
+		int* random_sprite_count = new int(0.0f);
+
 		std::vector<EButton::EGridRegion*> grid_region;
 
 		AutobuildingBase();
+
+		//bool* is_AO_embient_shadow = new bool(false);
+		int* selected_sprite_draw_mode = new int(SpriteDrawMode::SPRITE_DRAW_MODE_NORMAL);
 
 		
 	};

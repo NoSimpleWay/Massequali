@@ -16,6 +16,9 @@ public:
 	static EButton::button_super_group*		super_group_texture_collection_link;
 	static EButton::button_group*			group_texture_collection_link;
 
+	static EButton::button_super_group*		super_group_task_bar_link;
+	static EButton::button_group*			group_task_bar_link;
+
 	static EButton::button_super_group*		super_group_autobuilding;
 
 	static EButton::button_group*			group_grid_region_edit_link;
@@ -49,13 +52,21 @@ public:
 	static EButton*							link_button_subdivision_mid_y;
 
 	static EButton*							link_button_sprite_push_direction;
+	static EButton*							link_button_sprite_fill_mode;
+	static EButton*							link_button_sprite_random_count;
+	static EButton*							link_button_selected_sprite_draw_mode;
 
 	static EButton*							link_button_autobuilding_seed;
+
+	static EButton*							link_button_autobuilding_random_offset_x;
+	static EButton*							link_button_autobuilding_random_offset_y;
 
 	static std::vector<Entity*>				selected_entities;
 
 	static EButton::EGridRegion*			entity_selection_region;
 	static bool								is_entity_selection_started;
+
+	static EButton* create_button_for_task_list(EWindow* _window, EButton::button_super_group* _super_group, EButton::button_group* _group, bool* _target_bool, std::string _text);
 
 	static bool is_entity_in_region(Entity* _e, EButton::EGridRegion* _gr);
 
