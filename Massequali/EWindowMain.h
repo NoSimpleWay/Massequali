@@ -79,6 +79,7 @@ public:
 	void autobuilding_updater(std::vector<Entity*> _v);
 
 	void reset_render();
+	void draw_terrain();
 
 	void generate_AO_shadow();
 
@@ -114,10 +115,40 @@ public:
 	static int cluster_draw_end_x;
 	static int cluster_draw_end_y;
 
+	static int terrain_draw_start_x;
+	static int terrain_draw_start_y;
+			   
+	static int terrain_draw_end_x;
+	static int terrain_draw_end_y;
+
 	static std::vector<Entity*> draw_buffer;
 	static std::vector<Entity::AutobuildingGroup*> draw_group_buffer;
 
 	static int last_index;
+
+	//EGabarite* terrain_texture;
+
+	struct terrain_tile_struct
+	{
+		EGabarite* terrain_texture;
+		EGabarite* normal_gloss_texture;
+
+		float* texture_offset_x = new float(0.0f);
+		float* texture_offset_y = new float(0.0f);
+
+		float* size_x = new float(0.0f);
+		float* size_y = new float(0.0f);
+
+		terrain_tile_struct();
+		~terrain_tile_struct();
+
+	};
+
+	static terrain_tile_struct* terrain_matrix[250][250];
+
+	const int TILES_COUNT_X = 250;
+	const int TILES_COUNT_Y = 250;
+
 
 	enum GridRegionNameByOrder
 	{

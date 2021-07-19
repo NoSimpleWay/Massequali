@@ -55,7 +55,7 @@ float angle_x;
 float angle_y;
 float total_angle;
 
-
+float AO_bottom_shade_factor;
 
 void main()
 {
@@ -88,7 +88,7 @@ void main()
 					NormalGlossMapTexCoord
 				).r - sun_position_x
 		) 
-		* 4.0f,
+		* 2.0f,
 		1.0f
 	);
 	
@@ -105,11 +105,12 @@ void main()
 					NormalGlossMapTexCoord
 				).g - sun_position_y
 		) 
-		* 4.0f,
+		* 2.0f,
 		1.0f
 	);
 	
 	total_angle = min(angle_x, angle_y);
+	//total_angle = (angle_x + angle_y) / 2.0f;
 	
 	//reflect_coord = vec2(gl_FragCoord.x / 1920.0f * 0.3f + 0.3f + normal_x, gl_FragCoord.y / 1080.0f * 0.3f + 0.3f + normal_y);
 	reflect_coord =
@@ -183,22 +184,26 @@ void main()
 	//gloss_result = 1.0f;
 	
 	matte_result_sun = (1.0f - gloss_power) * total_angle;
-	matte_result_sky = (1.0f - gloss_power) * (1.0f - total_angle);
+	matte_result_sky = (1.0f - gloss_power) * (1.0f - total_angle) + (normal_y * (1.0f - gloss_power)  / 2.0f);
 	//matte_result = 0.0f;
 	
 	
-	
+	AO_bottom_shade_factor = max(0.0f, (WorldPosition[2] / (WorldPosition[2] + 200.0f)) * (1.0f - normal_y) + normal_y);
+	AO_bottom_shade_factor = 1.0f - pow(1.0f - AO_bottom_shade_factor, 5);
+	AO_bottom_shade_factor = AO_bottom_shade_factor / 2.0f + 0.5f;
 	FragColor = texture(texture1, TexCoord)
 	*
 	ourColor
 	*
 	vec4
 	(
-		c_r * gloss_result + (matte_result_sun * 1.1f + matte_result_sky	* 0.55f) * sqrt(sun_zenith),
-		c_g * gloss_result + (matte_result_sun * 1.05f + matte_result_sky	* 0.575f) * sun_zenith,
-		c_b * gloss_result + (matte_result_sun * 1.0f + matte_result_sky	* 0.6f) * sun_zenith * sun_zenith,
+		c_r * gloss_result + (matte_result_sun * 1.1f + matte_result_sky	* 0.55f)	* sqrt(sun_zenith)			* AO_bottom_shade_factor,
+		c_g * gloss_result + (matte_result_sun * 1.05f + matte_result_sky	* 0.575f)	* sun_zenith				* AO_bottom_shade_factor,
+		c_b * gloss_result + (matte_result_sun * 1.0f + matte_result_sky	* 0.6f)		* sun_zenith * sun_zenith	* AO_bottom_shade_factor,
 	1.0f
 	);
+	
+	
 	
 	if ((WorldPosition[1] + screen_offset_y) < 50.0f)
 	{

@@ -164,7 +164,8 @@ int main()
 
 	EWindow::supermap_FBO = new ETextureAtlas(512, 512);
 	//EWindow::supermap_FBO = new ETextureAtlas(512, 512);
-	EWindow::AO_shadow_FBO = new ETextureAtlas(1920, 1080, GL_RGBA16, GL_UNSIGNED_SHORT);
+	//EWindow::AO_shadow_FBO = new ETextureAtlas(1920, 1080, GL_RGBA16, GL_UNSIGNED_SHORT);
+	EWindow::AO_shadow_FBO = new ETextureAtlas(2048.0f / 16.0f, 1024.0f / 16.0f, GL_RGBA16, GL_UNSIGNED_SHORT);
 
 	for (int i = 0; i < 8; i++)
 	{

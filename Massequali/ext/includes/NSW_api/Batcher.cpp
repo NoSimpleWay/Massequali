@@ -2273,9 +2273,12 @@ Batcher::~Batcher()
 
 void Batcher::reinit()
 {
-	glBindBuffer(GL_ARRAY_BUFFER, VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * id, vertices, GL_DYNAMIC_DRAW);
+	if (id > 0)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, VAO);
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * id, vertices, GL_DYNAMIC_DRAW);
+	}
 }
 
 void Batcher::draw_call()
@@ -2300,8 +2303,11 @@ void Batcher::draw_call_shadowmap()
 
 void Batcher::draw_call_PBR()
 {
-	glBindVertexArray(VAO);
-	glDrawElements(GL_TRIANGLES, 6 * id / 52, GL_UNSIGNED_INT, 0);
+	if (id > 0)
+	{
+		glBindVertexArray(VAO);
+		glDrawElements(GL_TRIANGLES, 6 * id / 52, GL_UNSIGNED_INT, 0);
+	}
 }
 
 void Batcher::reset()
@@ -2465,9 +2471,14 @@ void Batcher::force_draw_call_shadowmap()
 
 void Batcher::force_draw_call_PBR()
 {
-	reinit();
-	draw_call_PBR();
-	reset();
+	//std::cout << "PBR batched id: " << std::to_string(id) << std::endl;
+	if (id > 0)
+	{
+		reinit();
+		draw_call_PBR();
+		reset();
+	}
+
 }
 
 void Batcher::set_interpolated_color(EColorCollection* _a, EColorCollection* _b, float _value)

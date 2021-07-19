@@ -56,32 +56,58 @@ EButton* EWindowMain::link_button_autobuilding_random_offset_x;;
 EButton* EWindowMain::link_button_autobuilding_random_offset_y;;
 
 
-std::vector<EButton*>			EWindowMain::auto_size_region_button;
+std::vector<EButton*>							EWindowMain::auto_size_region_button;
 
-std::vector<Entity*>			EWindowMain::selected_entities;
-EButton::EGridRegion*			EWindowMain::entity_selection_region;
+std::vector<Entity*>							EWindowMain::selected_entities;
+EButton::EGridRegion*							EWindowMain::entity_selection_region;
 
-ECamera*						EWindowMain::main_camera = new ECamera();
+ECamera*										EWindowMain::main_camera = new ECamera();
 
-//std::vector<Entity*>			EWindowMain::entity_list;
-bool							EWindowMain::is_entity_selection_started = false;
+//std::vector<Entity*>							EWindowMain::entity_list;
+bool											EWindowMain::is_entity_selection_started = false;
 
-ECluster*						EWindowMain::cluster_static		[ECluster::CLUSTED_DIM_X][ECluster::CLUSTED_DIM_Y];
-ECluster*						EWindowMain::cluster_non_static	[ECluster::CLUSTED_DIM_X][ECluster::CLUSTED_DIM_Y];
+ECluster*										EWindowMain::cluster_static		[ECluster::CLUSTED_DIM_X][ECluster::CLUSTED_DIM_Y];
+ECluster*										EWindowMain::cluster_non_static	[ECluster::CLUSTED_DIM_X][ECluster::CLUSTED_DIM_Y];
 
-std::string						EWindowMain::w_string;
+std::string										EWindowMain::w_string;
 
-int								EWindowMain::cluster_draw_start_x;
-int								EWindowMain::cluster_draw_start_y;
-int								EWindowMain::cluster_draw_end_x;
-int								EWindowMain::cluster_draw_end_y;
+int												EWindowMain::cluster_draw_start_x;
+int												EWindowMain::cluster_draw_start_y;
+int												EWindowMain::cluster_draw_end_x;
+int												EWindowMain::cluster_draw_end_y;
+
+int												EWindowMain::terrain_draw_start_x;
+int												EWindowMain::terrain_draw_start_y;
+
+int												EWindowMain::terrain_draw_end_x;
+int												EWindowMain::terrain_draw_end_y;
 
 std::vector<Entity*>							EWindowMain::draw_buffer(1001);
 std::vector<Entity::AutobuildingGroup*>			EWindowMain::draw_group_buffer(1001);
 
-int								EWindowMain::last_index;
+int												EWindowMain::last_index;
+
+EWindowMain::terrain_tile_struct*				EWindowMain::terrain_matrix[250][250];
 EWindowMain::EWindowMain()
 {
+	EWindowMain::terrain_tile_struct* just_created_terrain_tile = NULL;
+	for (int i = 0; i < TILES_COUNT_X; i++)
+	for (int j = 0; j < TILES_COUNT_Y; j++)
+	{
+		just_created_terrain_tile = new EWindowMain::terrain_tile_struct();
+
+		terrain_matrix[j][i] = just_created_terrain_tile;
+
+		just_created_terrain_tile->terrain_texture = ETextureAtlas::put_texture_to_atlas("data/textures/beton_plates_terrain.png", EWindow::default_texture_atlas);
+		just_created_terrain_tile->normal_gloss_texture = ETextureAtlas::get_normal_gloss_map_from_regular_texture_path("data/textures/beton_plates_terrain.png", EWindow::default_texture_atlas);
+
+		*just_created_terrain_tile->texture_offset_x = (40.0f * (rand() % 3)) / 4096.0f;
+		*just_created_terrain_tile->texture_offset_y = (40.0f * (rand() % 2)) / 4096.0f;
+
+		*just_created_terrain_tile->size_x = 40.0f;
+		*just_created_terrain_tile->size_y = 40.0f;
+	}
+
 	create_button_groups();
 
 	entity_selection_region = new EButton::EGridRegion();
@@ -1355,8 +1381,11 @@ bool EWindowMain::is_entity_in_region(Entity* _e, EButton::EGridRegion* _gr)
 
 void EWindowMain::draw(float _d)
 {
+
 	EWindow::add_time_process("Start draw");
 	reset_render();
+
+
 
 	//EGraphicCore::batch->setcolor(EColor::COLOR_GRAY);
 	//EGraphicCore::batch->draw_gabarite(0.0f, 0.0f, 2000.0f, 2000.0f, EGraphicCore::gabarite_white_pixel);
@@ -1772,17 +1801,18 @@ glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "screen_offset_x"
 glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "screen_offset_y"), -*main_camera->position_y + EGraphicCore::SCR_HEIGHT / 2.0f);
 
 glActiveTexture(GL_TEXTURE0);
-glBindTexture(GL_TEXTURE_2D, EWindow::default_texture_atlas->colorbuffer);
-EGraphicCore::PBR_shader->setInt("texture1", 0);
-
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);//texture filtering
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);//
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+glBindTexture(GL_TEXTURE_2D, EWindow::default_texture_atlas->colorbuffer);
+EGraphicCore::PBR_shader->setInt("texture1", 0);
+
+
 
 glActiveTexture(GL_TEXTURE1);
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);//texture filtering
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);//
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 glBindTexture(GL_TEXTURE_2D, EWindow::default_texture_atlas->colorbuffer);
@@ -1981,6 +2011,15 @@ void EWindowMain::update(float _d)
 
 	cluster_draw_end_x = floor((*main_camera->position_x + EGraphicCore::SCR_WIDTH / 2.0f) / *main_camera->zoom / ECluster::CLUSTER_SIZE_X) + 5; cluster_draw_end_x = min(cluster_draw_end_x, ECluster::CLUSTED_DIM_X - 1);
 	cluster_draw_end_y = floor((*main_camera->position_y + EGraphicCore::SCR_HEIGHT / 2.0f) / *main_camera->zoom / ECluster::CLUSTER_SIZE_Y) + 5; cluster_draw_end_y = min(cluster_draw_end_y, ECluster::CLUSTED_DIM_Y - 1);
+
+
+
+
+	terrain_draw_start_x	= floor((*main_camera->position_x - EGraphicCore::SCR_WIDTH / 2.0f)		/ *main_camera->zoom / 40.0f) - 1; terrain_draw_start_x	= max(terrain_draw_start_x, 0);
+	terrain_draw_start_y	= floor((*main_camera->position_y - EGraphicCore::SCR_HEIGHT / 2.0f)	/ *main_camera->zoom / 40.0f) - 1; terrain_draw_start_y	= max(terrain_draw_start_y, 0);
+																																	   
+	terrain_draw_end_x		= floor((*main_camera->position_x + EGraphicCore::SCR_WIDTH / 2.0f)		/ *main_camera->zoom / 40.0f) + 1; terrain_draw_end_x	= min(terrain_draw_end_x, TILES_COUNT_X - 1);
+	terrain_draw_end_y		= floor((*main_camera->position_y + EGraphicCore::SCR_HEIGHT / 2.0f)	/ *main_camera->zoom / 40.0f) + 1; terrain_draw_end_y	= min(terrain_draw_end_y, TILES_COUNT_Y - 1);
 
 	std::vector <Entity*>* t_vec;
 
@@ -2610,145 +2649,83 @@ void EWindowMain::reset_render()
 	EGraphicCore::sun_zenith_factor = (1.0f - EGraphicCore::sun_zenith_factor) * 2.0f;
 	EMath::clamp_value_float(&EGraphicCore::sun_zenith_factor, 0.0f, 1.0f);
 
-	glClearColor(EColor::COLOR_LAZURE_SHADOW->color_red, EColor::COLOR_LAZURE_SHADOW->color_green, EColor::COLOR_LAZURE_SHADOW->color_blue, 0.0f);
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	EGraphicCore::AO_shader->use();
-		EGraphicCore::matrix_transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-		EGraphicCore::matrix_transform = glm::translate(EGraphicCore::matrix_transform, glm::vec3(-1.0f + round(EGraphicCore::SCR_WIDTH / 2.0f - *main_camera->position_x) * EGraphicCore::correction_x, -1.0f + round(EGraphicCore::SCR_HEIGHT / 2.0f - *main_camera->position_y) * EGraphicCore::correction_y, 0.0f));
-		EGraphicCore::matrix_transform = glm::scale(EGraphicCore::matrix_transform, glm::vec3(EGraphicCore::correction_x * *main_camera->zoom, EGraphicCore::correction_y * *main_camera->zoom, 1.0f));
-		transformLoc = glGetUniformLocation(EGraphicCore::AO_shader->ID, "transform");
-		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(EGraphicCore::matrix_transform));
-
-	//סבנמס באעקונא
-	EGraphicCore::batch->reset();
-
-
-
-	/*
 	
-	GENERATE AO SHADOW
-	
-	*/
-	generate_AO_shadow();
-
-	EWindow::add_time_process("Generate AO shadow");
-	
-	EGraphicCore::ourShader->use();
-	ETextureAtlas::set_this_FBO_as_active(EWindow::AO_shadow_FBO);
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA);
-	glBlendEquation(GL_FUNC_ADD);
-
-		glClearColor
-		(
-				sqrt(EGraphicCore::sun_zenith_factor),
-				EGraphicCore::sun_zenith_factor,
-				EGraphicCore::sun_zenith_factor * EGraphicCore::sun_zenith_factor,
-				1.0f
-		);
-
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		EGraphicCore::matrix_transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-		EGraphicCore::matrix_transform = glm::translate(EGraphicCore::matrix_transform, glm::vec3(-1.0f, -1.0f, 0.0f));
-		EGraphicCore::matrix_transform = glm::scale(EGraphicCore::matrix_transform, glm::vec3(1.0f, 1.0f, 1.0f));
-		transformLoc = glGetUniformLocation(EGraphicCore::ourShader->ID, "transform");
-		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(EGraphicCore::matrix_transform));
-
-		EGraphicCore::batch->draw_rect(0.0f, 0.0f, 2.0f, 2.0f);
-		EGraphicCore::batch->reinit();
-		EGraphicCore::batch->draw_call();
-		EGraphicCore::batch->reset();
-
-			
 
 
-		EWindow::add_time_process("Draw AO shaodw");
+
 	ETextureAtlas::draw_to_this_FBO(EWindow::skydome_light_FBO[0], EWindow::default_texture_atlas);
 	EGraphicCore::batch->reset();
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
 
 
 
-		EGraphicCore::ourShader->use();
-		//glUniform1f(glGetUniformLocation(EGraphicCore::simple_blur->ID, "blur_size_x"), 1.0f / 4096.0f * 0.5f);
-		//glUniform1f(glGetUniformLocation(EGraphicCore::simple_blur->ID, "blur_size_y"), 1.0f / 4096.0f * 0.5f);
-		EGraphicCore::matrix_transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-		EGraphicCore::matrix_transform = glm::translate(EGraphicCore::matrix_transform, glm::vec3(-1.0f, -1.0f, 0.0f));
-		EGraphicCore::matrix_transform = glm::scale(EGraphicCore::matrix_transform, glm::vec3(2.0f, 2.0f, 1.0f));
-		transformLoc = glGetUniformLocation(EGraphicCore::ourShader->ID, "transform");
-		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(EGraphicCore::matrix_transform));
+	EGraphicCore::ourShader->use();
+	//glUniform1f(glGetUniformLocation(EGraphicCore::simple_blur->ID, "blur_size_x"), 1.0f / 4096.0f * 0.5f);
+	//glUniform1f(glGetUniformLocation(EGraphicCore::simple_blur->ID, "blur_size_y"), 1.0f / 4096.0f * 0.5f);
+	EGraphicCore::matrix_transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+	EGraphicCore::matrix_transform = glm::translate(EGraphicCore::matrix_transform, glm::vec3(-1.0f, -1.0f, 0.0f));
+	EGraphicCore::matrix_transform = glm::scale(EGraphicCore::matrix_transform, glm::vec3(2.0f, 2.0f, 1.0f));
+	transformLoc = glGetUniformLocation(EGraphicCore::ourShader->ID, "transform");
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(EGraphicCore::matrix_transform));
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendEquation(GL_FUNC_ADD);
+
+	float
+		sun_zenith_factor_sun = abs(EGraphicCore::sun_position_y - 0.66f) * 3.0f;
+	sun_zenith_factor_sun = (1.0f - sun_zenith_factor_sun) * 2.0f;
+	EMath::clamp_value_float(&sun_zenith_factor_sun, 0.0f, 1.0f);
+
+	//sky
+	EGraphicCore::batch->setcolor
+	(
+		sqrt(EGraphicCore::sun_zenith_factor) * EGraphicCore::sky_lum,
+		EGraphicCore::sun_zenith_factor * EGraphicCore::sky_lum,
+		EGraphicCore::sun_zenith_factor * EGraphicCore::sun_zenith_factor * EGraphicCore::sky_lum,
+		1.0f
+	);
+	EGraphicCore::batch->draw_gabarite(0.0f, 0.0f, 1.0f, 1.0f, EGraphicCore::gabarite_sky);
 
 
 
-		
-		/*
-		glClearColor(0.04f, 0.045f, 0.055f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);*/
-
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glBlendEquation(GL_FUNC_ADD);
-		/*//sky
-		EGraphicCore::batch->setcolor(0.095f, 0.098f, 0.1f, 1.0f);
-		EGraphicCore::batch->draw_gabarite(0.0f, 0.0f, 1.0f, 1.000f, EGraphicCore::gabarite_white_pixel);*/
-
-		
-		
-
-		float
-			sun_zenith_factor_sun = abs(EGraphicCore::sun_position_y - 0.66f) * 3.0f;
-			sun_zenith_factor_sun = (1.0f - sun_zenith_factor_sun) * 2.0f;
-			EMath::clamp_value_float(&sun_zenith_factor_sun, 0.0f, 1.0f);
-
-		//sky
-		EGraphicCore::batch->setcolor
-		(
-			sqrt(EGraphicCore::sun_zenith_factor) * EGraphicCore::sky_lum,
-			EGraphicCore::sun_zenith_factor * EGraphicCore::sky_lum,
-			EGraphicCore::sun_zenith_factor * EGraphicCore::sun_zenith_factor * EGraphicCore::sky_lum,
-			1.0f
-		);
-		EGraphicCore::batch->draw_gabarite(0.0f, 0.0f, 1.0f, 1.0f, EGraphicCore::gabarite_sky);
+	//sun
+	EGraphicCore::batch->setcolor
+	(
+		1.0f * EGraphicCore::sun_lum * sqrt(sun_zenith_factor_sun),
+		0.8f * EGraphicCore::sun_lum * sun_zenith_factor_sun,
+		0.5f * EGraphicCore::sun_lum * sun_zenith_factor_sun * sun_zenith_factor_sun,
+		1.0f
+	);
 
 
+	EGraphicCore::batch->draw_gabarite
+	(
+		(EGraphicCore::sun_position_x * 1.4f - 0.2f) - EGraphicCore::sun_size * 0.25f,
+		(EGraphicCore::sun_position_y * 1.4f - 0.2f) - EGraphicCore::sun_size * 0.5f,
+		EGraphicCore::sun_size * 0.5f,
+		EGraphicCore::sun_size,
+		EGraphicCore::gabarite_sun
+	);
 
-		//sun
-		EGraphicCore::batch->setcolor
-		(
-			1.0f * EGraphicCore::sun_lum * sqrt(sun_zenith_factor_sun),
-			0.8f * EGraphicCore::sun_lum * sun_zenith_factor_sun,
-			0.5f * EGraphicCore::sun_lum * sun_zenith_factor_sun * sun_zenith_factor_sun,
-			1.0f
-		);
+	//ground (grass)
+	//EGraphicCore::batch->setcolor(0.85f * EGraphicCore::ground_lum, 0.80f * EGraphicCore::ground_lum, 0.75f * EGraphicCore::ground_lum, 1.0f);
+	//EGraphicCore::batch->draw_gabarite(0.0f, 0.0f, 1.0f, 0.45f, EGraphicCore::gabarite_white_pixel
 
-
-		EGraphicCore::batch->draw_gabarite
-		(
-			(EGraphicCore::sun_position_x * 1.4f - 0.2f) - EGraphicCore::sun_size * 0.25f,
-			(EGraphicCore::sun_position_y * 1.4f - 0.2f) - EGraphicCore::sun_size * 0.5f,
-			EGraphicCore::sun_size * 0.5f,
-			EGraphicCore::sun_size,
-			EGraphicCore::gabarite_sun
-		);
-
-		//ground (grass)
-		//EGraphicCore::batch->setcolor(0.85f * EGraphicCore::ground_lum, 0.80f * EGraphicCore::ground_lum, 0.75f * EGraphicCore::ground_lum, 1.0f);
-		//EGraphicCore::batch->draw_gabarite(0.0f, 0.0f, 1.0f, 0.45f, EGraphicCore::gabarite_white_pixel
-
-		EGraphicCore::batch->setcolor
-		(
-			sqrt(EGraphicCore::sun_zenith_factor)* EGraphicCore::sky_lum,
-			EGraphicCore::sun_zenith_factor* EGraphicCore::sky_lum,
-			EGraphicCore::sun_zenith_factor* EGraphicCore::sun_zenith_factor* EGraphicCore::sky_lum,
-			1.0f
-		);
-		EGraphicCore::batch->draw_gabarite(0.0f, 0.0f, 1.0f, 0.5f, EGraphicCore::gabarite_panorama);
+	EGraphicCore::batch->setcolor
+	(
+		sqrt(EGraphicCore::sun_zenith_factor) * EGraphicCore::sky_lum,
+		EGraphicCore::sun_zenith_factor * EGraphicCore::sky_lum,
+		EGraphicCore::sun_zenith_factor * EGraphicCore::sun_zenith_factor * EGraphicCore::sky_lum,
+		1.0f
+	);
+	EGraphicCore::batch->draw_gabarite(0.0f, 0.0f, 1.0f, 0.5f, EGraphicCore::gabarite_panorama);
 	EGraphicCore::batch->force_draw_call();
 
 	EGraphicCore::simple_blur->use();
@@ -2759,38 +2736,89 @@ void EWindowMain::reset_render()
 	transformLoc = glGetUniformLocation(EGraphicCore::simple_blur->ID, "transform");
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(EGraphicCore::matrix_transform));
 
-	
+
 
 	EGraphicCore::batch->setcolor(EColor::COLOR_WHITE);
-	
+
 	//blur skydome
 	for (int i = 0; i < 7; i++)
 	{
-		glUniform1f(glGetUniformLocation(EGraphicCore::simple_blur->ID, "blur_size_x"), (1.0f / skydome_light_FBO[i]->size_x) * (EGraphicCore::blur_size_buffer) );
-		glUniform1f(glGetUniformLocation(EGraphicCore::simple_blur->ID, "blur_size_y"), (1.0f / skydome_light_FBO[i]->size_y) * (EGraphicCore::blur_size_buffer) );
-			ETextureAtlas::draw_to_this_FBO(EWindow::skydome_light_FBO_buffer[i + 1], EWindow::skydome_light_FBO[i]);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
-			EGraphicCore::batch->draw_rect(0.0f, 0.0f, 1.0f, 1.0f);
+		glUniform1f(glGetUniformLocation(EGraphicCore::simple_blur->ID, "blur_size_x"), (1.0f / skydome_light_FBO[i]->size_x) * (EGraphicCore::blur_size_buffer));
+		glUniform1f(glGetUniformLocation(EGraphicCore::simple_blur->ID, "blur_size_y"), (1.0f / skydome_light_FBO[i]->size_y) * (EGraphicCore::blur_size_buffer));
+		ETextureAtlas::draw_to_this_FBO(EWindow::skydome_light_FBO_buffer[i + 1], EWindow::skydome_light_FBO[i]);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
+		EGraphicCore::batch->draw_rect(0.0f, 0.0f, 1.0f, 1.0f);
 		EGraphicCore::batch->force_draw_call();
 
 		glUniform1f(glGetUniformLocation(EGraphicCore::simple_blur->ID, "blur_size_x"), (1.0f / skydome_light_FBO[i]->size_x) * (EGraphicCore::blur_size));
-			glUniform1f(glGetUniformLocation(EGraphicCore::simple_blur->ID, "blur_size_y"), (1.0f / skydome_light_FBO[i]->size_y) * (EGraphicCore::blur_size));
-			ETextureAtlas::draw_to_this_FBO(EWindow::skydome_light_FBO[i + 1], EWindow::skydome_light_FBO_buffer[i + 1]);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
-			EGraphicCore::batch->draw_rect(0.0f, 0.0f, 1.0f, 1.0f);
+		glUniform1f(glGetUniformLocation(EGraphicCore::simple_blur->ID, "blur_size_y"), (1.0f / skydome_light_FBO[i]->size_y) * (EGraphicCore::blur_size));
+		ETextureAtlas::draw_to_this_FBO(EWindow::skydome_light_FBO[i + 1], EWindow::skydome_light_FBO_buffer[i + 1]);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
+		EGraphicCore::batch->draw_rect(0.0f, 0.0f, 1.0f, 1.0f);
 		EGraphicCore::batch->force_draw_call();
 	}
 
 	EWindow::add_time_process("Prepare skydome reflection");
 
+	draw_terrain();
+	
+	/*
+	
+	GENERATE AO SHADOW
+	
+	*/
+
+	
+
+	generate_AO_shadow();
+
+	EWindow::add_time_process("Generate AO shadow");
+	
+	
+	
+
+	EGraphicCore::simple_blur->use();
+	ETextureAtlas::set_this_FBO_as_active(EWindow::AO_shadow_FBO);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_ZERO, GL_SRC_COLOR);
+	glBlendEquationSeparate(GL_FUNC_ADD, GL_MAX);
+
+				EGraphicCore::matrix_transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+				EGraphicCore::matrix_transform = glm::translate(EGraphicCore::matrix_transform, glm::vec3(-1.0f, -1.0f, 0.0f));
+				EGraphicCore::matrix_transform = glm::scale(EGraphicCore::matrix_transform, glm::vec3(1.0f, 1.0f, 1.0f));
+				transformLoc = glGetUniformLocation(EGraphicCore::simple_blur->ID, "transform");
+				glUniform1f(glGetUniformLocation(EGraphicCore::simple_blur->ID, "blur_size_x"), (1.0f / EWindow::AO_shadow_FBO->size_x));
+				glUniform1f(glGetUniformLocation(EGraphicCore::simple_blur->ID, "blur_size_y"), (1.0f / EWindow::AO_shadow_FBO->size_y));
+				glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(EGraphicCore::matrix_transform));
+
+				
+				EGraphicCore::batch->setcolor_alpha(EColor::COLOR_WHITE, 1.0f);
+				//EGraphicCore::batch->setcolor(0.8, 0.9f, 1.0f, 1.0f);
+				EGraphicCore::batch->draw_rect(0.0f, 0.0f, 2.0f, 2.0f);
+				EGraphicCore::batch->reinit();
+				EGraphicCore::batch->draw_call();
+				EGraphicCore::batch->reset();
+
+		EWindow::add_time_process("Draw AO shadow");
+	
+		
+
 
 	EGraphicCore::ourShader->use();
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendEquation(GL_FUNC_ADD);
 	ETextureAtlas::set_this_FBO_as_active(EWindow::default_texture_atlas);
 
 	EGraphicCore::matrix_transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
@@ -2801,8 +2829,175 @@ void EWindowMain::reset_render()
 
 }
 
+void EWindowMain::draw_terrain()
+{
+	ETextureAtlas::set_this_FBO_as_active(EWindow::default_texture_atlas);
+	glEnable(GL_BLEND);
+	//glBlendFunc(GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendEquation(GL_FUNC_ADD);
+	EGraphicCore::batch_PBR->reset();
+	
+	EGraphicCore::PBR_shader->use();
+	
+
+	EGraphicCore::matrix_transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+	EGraphicCore::matrix_transform = glm::translate
+	(
+		EGraphicCore::matrix_transform,
+		glm::vec3
+		(
+			-1.0f + round(EGraphicCore::SCR_WIDTH / 2.0f - *main_camera->position_x) * EGraphicCore::correction_x,
+			-1.0f + round(EGraphicCore::SCR_HEIGHT / 2.0f - *main_camera->position_y) * EGraphicCore::correction_y,
+			-1.0f
+		)
+	);
+
+	EGraphicCore::matrix_transform = glm::scale
+	(
+		EGraphicCore::matrix_transform,
+		glm::vec3
+		(
+			EGraphicCore::correction_x * *main_camera->zoom,
+			EGraphicCore::correction_y * *main_camera->zoom,
+			EGraphicCore::correction_y * *main_camera->zoom
+		)
+	);
+
+	transformLoc = glGetUniformLocation(EGraphicCore::PBR_shader->ID, "transform");
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(EGraphicCore::matrix_transform));
+	float true_height = 0.0f;
+
+	glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "brightness_multiplier"), EGraphicCore::brightness_multiplier);
+
+	glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "input_gloss"), EGraphicCore::gloss_input);
+
+	glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "sun_position_x"), EGraphicCore::sun_position_x);
+	glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "sun_position_y"), EGraphicCore::sun_position_y);
+
+
+	glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "sun_zenith"), EGraphicCore::sun_zenith_factor);
+
+	glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "screen_offset_x"), -*main_camera->position_x + EGraphicCore::SCR_WIDTH / 2.0f);
+	glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "screen_offset_y"), -*main_camera->position_y + EGraphicCore::SCR_HEIGHT / 2.0f);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, EWindow::default_texture_atlas->colorbuffer);
+	EGraphicCore::PBR_shader->setInt("texture1", 0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);//texture filtering
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);//
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	glActiveTexture(GL_TEXTURE1);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);//texture filtering
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);//
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glBindTexture(GL_TEXTURE_2D, EWindow::default_texture_atlas->colorbuffer);
+	EGraphicCore::PBR_shader->setInt("normal_gloss_map_texture", 1);
+
+	glActiveTexture(GL_TEXTURE2);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[0]->colorbuffer);//1
+	EGraphicCore::PBR_shader->setInt("SD_array[0]", 2);
+
+	glActiveTexture(GL_TEXTURE3);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[1]->colorbuffer);//1/2
+	EGraphicCore::PBR_shader->setInt("SD_array[1]", 3);
+
+	glActiveTexture(GL_TEXTURE4);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[2]->colorbuffer);//1/4
+	EGraphicCore::PBR_shader->setInt("SD_array[2]", 4);
+
+	glActiveTexture(GL_TEXTURE5);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[3]->colorbuffer);//1/8
+	EGraphicCore::PBR_shader->setInt("SD_array[3]", 5);
+
+	glActiveTexture(GL_TEXTURE6);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[4]->colorbuffer);//1/16
+	EGraphicCore::PBR_shader->setInt("SD_array[4]", 6);
+
+	glActiveTexture(GL_TEXTURE7);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[5]->colorbuffer);//1/32
+	EGraphicCore::PBR_shader->setInt("SD_array[5]", 7);
+
+	
+
+	EGraphicCore::batch_PBR->setcolor(EColor::COLOR_WHITE);
+
+	for (int i = terrain_draw_start_y; i <= terrain_draw_end_y; i++)
+	for (int j = terrain_draw_start_x; j <= terrain_draw_end_x; j++)
+	{
+
+		if (terrain_matrix[j][i] != NULL)
+		{
+			EGraphicCore::batch_PBR->draw_terrain_PBR
+			(
+				j * 40.0f,
+				i * 40.0f,
+				0.0f,
+
+				*terrain_matrix[j][i]->size_x,
+				*terrain_matrix[j][i]->size_y,
+				0.0f,
+
+				*terrain_matrix[j][i]->texture_offset_x,
+				*terrain_matrix[j][i]->texture_offset_y,
+
+				terrain_matrix[j][i]->terrain_texture,
+				terrain_matrix[j][i]->normal_gloss_texture,
+
+				0.0f
+			);
+		}
+		else
+		{
+			std::cout << "DOLBOYOB?" << " [" << std::to_string(j) << "][" << std::to_string(i) << "]" << std::endl;
+		}
+	}
+
+	
+
+	EGraphicCore::batch_PBR->force_draw_call_PBR();
+	EGraphicCore::batch_PBR->reset();
+
+
+}
+
 void EWindowMain::generate_AO_shadow()
 {
+	EGraphicCore::AO_shader->use();
+		EGraphicCore::matrix_transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+		EGraphicCore::matrix_transform = glm::translate(EGraphicCore::matrix_transform, glm::vec3(-1.0f + round(EGraphicCore::SCR_WIDTH / 2.0f - *main_camera->position_x) * EGraphicCore::correction_x, -1.0f + round(EGraphicCore::SCR_HEIGHT / 2.0f - *main_camera->position_y) * EGraphicCore::correction_y, 0.0f));
+		EGraphicCore::matrix_transform = glm::scale(EGraphicCore::matrix_transform, glm::vec3(EGraphicCore::correction_x * *main_camera->zoom, EGraphicCore::correction_y * *main_camera->zoom, 1.0f));
+		transformLoc = glGetUniformLocation(EGraphicCore::AO_shader->ID, "transform");
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(EGraphicCore::matrix_transform));
+	EGraphicCore::batch->reset();
+
 	ETextureAtlas::draw_to_this_FBO(EWindow::AO_shadow_FBO, EWindow::default_texture_atlas);
 
 
@@ -2810,7 +3005,7 @@ void EWindowMain::generate_AO_shadow()
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glEnable(GL_BLEND);
-	glBlendFunc(GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	
 	//glBlendEquation(GL_FUNC_ADD);
 	//glBlendEquation(GL_MIN);
@@ -2819,6 +3014,8 @@ void EWindowMain::generate_AO_shadow()
 	//EGraphicCore::batch->draw_gabarite(0.0f, 0.0f, 10000.0f, 10000.0f, EGraphicCore::gabarite_white_pixel);
 
 	EGraphicCore::batch->setcolor(EColor::COLOR_BLACK);
+
+	float z_factor = 0.0f;
 
 	for (int i = cluster_draw_start_y; i <= cluster_draw_end_y; i++)
 		for (int j = cluster_draw_start_x; j <= cluster_draw_end_x; j++)
@@ -2830,7 +3027,11 @@ void EWindowMain::generate_AO_shadow()
 
 					if (*a_element->autobuilding_base->selected_sprite_draw_mode == SpriteDrawMode::SPRITE_DRAW_MODE_AO_SHADOW)
 					{
-						EGraphicCore::batch->setcolor_lum(EColor::COLOR_WHITE, 1.0f - (*a_element->offset_z / (*a_element->offset_z + 10.0f)));
+						z_factor = 1.0f - (*a_element->offset_z / (*a_element->offset_z + 10.0f));
+
+						//z_factor = 0.0f;
+						//z_factor *= z_factor;
+						EGraphicCore::batch->setcolor_lum(EColor::COLOR_WHITE, z_factor);
 
 						EGraphicCore::batch->draw_AO_shadow
 						(
@@ -2838,7 +3039,7 @@ void EWindowMain::generate_AO_shadow()
 							*e->position_y + *a_group->offset_y + *a_element->offset_y,
 							*a_element->size_x,
 							*a_element->size_y,
-							*a_element->offset_z * 1.0f,
+							*a_element->offset_z * 10.0f,
 							EGraphicCore::gabarite_white_pixel
 						);
 					}
@@ -3351,7 +3552,7 @@ void EWindowMain::add_new_sprite_to_group_if_need(int _i, Entity::AutobuildingGr
 		EGraphicCore::ESprite* jcs = new EGraphicCore::ESprite();
 		_gr->sprite_list.push_back(jcs);
 
-		std::cout << "create new sprite to group (" << _text << "), new size of sprites is [" << std::to_string(_gr->sprite_list.size()) << "]" << std::endl;
+		//std::cout << "create new sprite to group (" << _text << "), new size of sprites is [" << std::to_string(_gr->sprite_list.size()) << "]" << std::endl;
 	}
 }
 
@@ -4419,4 +4620,12 @@ void EWindowMain::generate_building(Entity* _e)
 	}
 
 	}
+}
+
+EWindowMain::terrain_tile_struct::terrain_tile_struct()
+{
+}
+
+EWindowMain::terrain_tile_struct::~terrain_tile_struct()
+{
 }

@@ -17,8 +17,8 @@ void main()
 	lum = ourColor.r;
 	//lum = 1.0f - pow(1.0f - lum, 5.0f);
 	
-	lum = 1.0f - pow(1.0f - lum, 3.0f);
-	lum = 1.0f - (1.0f - lum) / 2.0f;
+	lum = 1.0f - pow(1.0f - lum, 5.0f);
+	//lum = 1.0f - (1.0f - lum) / 1.0f;
 	
 	// linearly interpolate between both textures (80% container, 20% awesomeface)
 	FragColor.rgb = vec3(lum);

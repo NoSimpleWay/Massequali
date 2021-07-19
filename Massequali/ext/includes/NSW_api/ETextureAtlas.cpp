@@ -332,7 +332,7 @@ EGabarite* ETextureAtlas::get_normal_gloss_map_from_regular_texture_path(std::st
 	}
 	else
 	{
-		//logger(path_to_supermap + " not exist");
+		std::cout << _s << " not exist" << std::endl;
 		//return EGraphicCore::gabarite_white_pixel;
 		return ETextureAtlas::put_texture_to_atlas("data/textures/normal_gloss_placeholder.png", _a);
 	}

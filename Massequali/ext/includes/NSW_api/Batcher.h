@@ -140,6 +140,124 @@ public:
 			reset();
 		}
 	}
+
+	inline void draw_terrain_PBR(float _x, float _y, float _z, float _size_x, float _size_y, float _size_z, float _tile_offset_x, float _tile_offset_y, EGabarite* _g, EGabarite* _nmg, float _true_height)
+	{
+		//std::cout << "filled rect" << std::endl;
+
+		//.#
+		//..
+
+		//if (_nmg == NULL) { std::cout << "ti ebanutyi?" << std::endl; }
+		//std::cout << "zaebal: " << _nmg->name << std::endl;
+
+		//position
+		vertices[id + 0] = (_x + _size_x);
+		vertices[id + 1] = (_y + _size_y);
+		vertices[id + 2] = (_z + _size_z);
+		//vertices[id + 2] = 0;
+
+		//color
+		vertices[id + 3] = batch_color_r;
+		vertices[id + 4] = batch_color_g;
+		vertices[id + 5] = batch_color_b;
+		vertices[id + 6] = batch_color_a;
+
+		//uv
+		vertices[id + 7] = *_g->x + _tile_offset_x + _size_x / 4096.0f;
+		vertices[id + 8] = *_g->y + _tile_offset_y + _size_y / 4096.0f;
+
+		//uv reflection
+		vertices[id + 9] = 0.0f;
+		vertices[id + 10] = (_true_height + _size_y) / 1080.0f;
+
+		//normal gloss
+		vertices[id + 11] = *_nmg->x + _tile_offset_x + _size_x / 4096.0f;
+		vertices[id + 12] = *_nmg->y + _tile_offset_y + _size_y / 4096.0f;
+
+
+
+		//..
+		//.#
+		vertices[id + 13] = (_x + _size_x);
+		vertices[id + 14] = _y;
+		vertices[id + 15] = _z;
+		//vertices[id + 10] = 0;
+
+		vertices[id + 16] = batch_color_r;
+		vertices[id + 17] = batch_color_g;
+		vertices[id + 18] = batch_color_b;
+		vertices[id + 19] = batch_color_a;
+
+		vertices[id + 20] = *_g->x + _tile_offset_x + _size_x / 4096.0f;
+		vertices[id + 21] = *_g->y + _tile_offset_y;
+
+		//uv reflection
+		vertices[id + 22] = 0.0f;
+		vertices[id + 23] = (_true_height) / 1080.0f;
+
+		//normal gloss
+		vertices[id + 24] = *_nmg->x + _tile_offset_x + _size_x / 4096.0f;
+		vertices[id + 25] = *_nmg->y + _tile_offset_y;
+
+
+		//..
+		//#.
+		vertices[id + 26] = _x;
+		vertices[id + 27] = _y;
+		vertices[id + 28] = _z;
+		//vertices[id + 18] = 0;
+
+		vertices[id + 29] = batch_color_r;
+		vertices[id + 30] = batch_color_g;
+		vertices[id + 31] = batch_color_b;
+		vertices[id + 32] = batch_color_a;
+
+		vertices[id + 33] = *_g->x + _tile_offset_x;
+		vertices[id + 34] = *_g->y + _tile_offset_y;
+
+		//uv reflection
+		vertices[id + 35] = 0.0f;
+		vertices[id + 36] = (_true_height) / 1080.0f;
+
+
+		//normal gloss
+		vertices[id + 37] = *_nmg->x + _tile_offset_x;
+		vertices[id + 38] = *_nmg->y + _tile_offset_y;
+
+		//#.
+		//..
+		vertices[id + 39] = _x;
+		vertices[id + 40] = (_y + _size_y);
+		vertices[id + 41] = (_z + _size_z);
+		//vertices[id + 26] = 0;
+
+		vertices[id + 42] = batch_color_r;
+		vertices[id + 43] = batch_color_g;
+		vertices[id + 44] = batch_color_b;
+		vertices[id + 45] = batch_color_a;
+
+		vertices[id + 46] = *_g->x + _tile_offset_x;
+		vertices[id + 47] = *_g->y + _tile_offset_y + _size_y / 4096.0f;
+
+		//uv reflection
+		vertices[id + 48] = 0.0f;
+		vertices[id + 49] = (_true_height + _size_y) / 1080.0f;
+
+		//normal gloss
+		vertices[id + 50] = *_nmg->x + _tile_offset_x;
+		vertices[id + 51] = *_nmg->y + _tile_offset_y + _size_y / 4096.0f;
+
+		id += 52;
+
+		if (id > batch_force_draw_call)
+		{
+			reinit();
+			draw_call_PBR();
+			reset();
+		}
+	}
+
 	inline void draw_sprite_PBR(float _x, float _y, float _z, float _size_x, float _size_y, float _size_z, float _left, float _right, float _down, float _up, EGabarite* _g, EGabarite* _nmg, float _true_height)
 	{
 		//std::cout << "filled rect" << std::endl;
