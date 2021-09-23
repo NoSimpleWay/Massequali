@@ -20,6 +20,8 @@ public:
 	int* previvous_cluster_x = new int(0);
 	int* previvous_cluster_y = new int(0);
 
+	//float* baran_rune_spawner_aggro_radius = new float(250.0f);
+
 	//ECluster* previvous_cluster = NULL;
 
 	Entity();

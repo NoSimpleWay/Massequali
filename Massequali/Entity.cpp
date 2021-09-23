@@ -247,9 +247,9 @@ void Entity::draw_entity_autobuilging_helping(Entity* _e, Batcher* _b, float _d)
 						EGraphicCore::batch->draw_gabarite
 						(
 							*_e->position_x + *_group->offset_x + *_group->pseudo_pos_x,
-							*_e->position_y + *_e->position_z + *_group->offset_y + *_group->offset_z - 20.0f,
+							*_e->position_y + *_e->position_z + *_group->offset_y + *_group->offset_z - 11.0f,
 							*_group->pseudo_size_x,
-							20.0f,
+							10.0f,
 							EGraphicCore::gabarite_white_pixel
 						);
 

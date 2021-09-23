@@ -126,7 +126,7 @@ autobuilding_group_element_offset_and_size	-64	-28	60	155	74
 autobuilding_group_element_base_id	2
 PUT_ENTITY_TO_MAP
 CREATE_NEW_ENTITY
-entity_position	637	590	0
+entity_position	773	586	0
 CREATE_NEW_AUTOBUILDING_BASE
 autobuilding_base_main_texture	data/textures/bricked_wall.png
 autobuilding_base_space_between_sprites	0	0
@@ -361,7 +361,7 @@ autobuilding_group_element_offset_and_size	-100	-12.5	0	198	325.5
 autobuilding_group_element_base_id	1
 PUT_ENTITY_TO_MAP
 CREATE_NEW_ENTITY
-entity_position	1212	575	0
+entity_position	1337	569	0
 CREATE_NEW_AUTOBUILDING_BASE
 autobuilding_base_main_texture	data/textures/beton_bright_more_lighten[2].png
 autobuilding_base_space_between_sprites	0	0
@@ -579,7 +579,1102 @@ autobuilding_group_element_offset_and_size	-600	-20	0	769	959
 autobuilding_group_element_base_id	2
 PUT_ENTITY_TO_MAP
 CREATE_NEW_ENTITY
-entity_position	1928.203613	581.843689	0
+entity_position	2365	745	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/beton_001.png
+autobuilding_base_space_between_sprites	0	0
+autobuilding_base_random_offset	0	0
+autobuilding_selected_sprite_fill_mode	0
+autobuilding_random_sprite_count	0
+autobuilding_base_selected_draw_mode	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	101	5	5
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	5	101	146	5
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	151	101	5	5
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	5	5	96
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	5	5	146	96
+grid_region_subdivision	2	1
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	151	5	5	96
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	5	5
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	5	0	146	5
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	151	0	5	5
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/gudron_roof.png
+autobuilding_base_space_between_sprites	0	0
+autobuilding_base_random_offset	0	0
+autobuilding_selected_sprite_fill_mode	0
+autobuilding_random_sprite_count	0
+autobuilding_base_selected_draw_mode	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	98	7	7
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	7	98	134	7
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	141	98	7	7
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	7	7	91
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	7	7	134	91
+grid_region_subdivision	1	1
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	141	7	7	91
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	7	7
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	7	0	134	7
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	141	0	7	7
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/window_blue_simple_001.png
+autobuilding_base_space_between_sprites	56	19
+autobuilding_base_random_offset	0	0
+autobuilding_selected_sprite_fill_mode	0
+autobuilding_random_sprite_count	0
+autobuilding_base_selected_draw_mode	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	114	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	114	84	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	84	114	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	114
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	84	114
+grid_region_subdivision	1	1
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	84	0	0	114
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	84	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	84	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/bricked_wall.png
+autobuilding_base_space_between_sprites	0	0
+autobuilding_base_random_offset	0	0
+autobuilding_selected_sprite_fill_mode	0
+autobuilding_random_sprite_count	0
+autobuilding_base_selected_draw_mode	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	113	15	15
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	15	113	118	15
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	133	113	15	15
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	17	15	96
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	15	17	118	96
+grid_region_subdivision	1	1
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	133	17	15	96
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	15	17
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	15	0	118	17
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	133	0	15	17
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/roof.png
+autobuilding_base_space_between_sprites	0	0
+autobuilding_base_random_offset	0	0
+autobuilding_selected_sprite_fill_mode	0
+autobuilding_random_sprite_count	0
+autobuilding_base_selected_draw_mode	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	80	3	5
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	3	80	96	5
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	99	80	3	5
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	18	3	62
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	3	18	96	62
+grid_region_subdivision	2	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	99	18	3	62
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	3	18
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	3	0	96	18
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	99	0	3	18
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/radial_button.png
+autobuilding_base_space_between_sprites	0	0
+autobuilding_base_random_offset	0	0
+autobuilding_selected_sprite_fill_mode	0
+autobuilding_random_sprite_count	0
+autobuilding_base_selected_draw_mode	1
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/beton_yellow_decal_001.png
+autobuilding_base_space_between_sprites	68	54
+autobuilding_base_random_offset	50	50
+autobuilding_selected_sprite_fill_mode	0
+autobuilding_random_sprite_count	50
+autobuilding_base_selected_draw_mode	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	82	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	82	82	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	82	82	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	82
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	82	82
+grid_region_subdivision	1	1
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	82	0	0	82
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	82	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	82	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/window_blue_simple_wide_001.png
+autobuilding_base_space_between_sprites	10	36
+autobuilding_base_random_offset	0	0
+autobuilding_selected_sprite_fill_mode	0
+autobuilding_random_sprite_count	0
+autobuilding_base_selected_draw_mode	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	80	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	80	192	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	192	80	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	80
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	192	80
+grid_region_subdivision	1	1
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	192	0	0	80
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	192	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	192	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/radial_button_dot.png
+autobuilding_base_space_between_sprites	0	0
+autobuilding_base_random_offset	0	0
+autobuilding_selected_sprite_fill_mode	0
+autobuilding_random_sprite_count	0
+autobuilding_base_selected_draw_mode	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_GROUP
+autobuilding_group_offset_and_size	-363	-71	0	0	0
+direction_of_sprite_push	1
+autobuilding_group_name	bottom_wall
+autobuilding_group_seed	9
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	138	0	0	505	92
+autobuilding_group_element_base_id	3
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	147	6	74	490	278
+autobuilding_group_element_base_id	5
+CREATE_NEW_AUTOBUILDING_GROUP
+autobuilding_group_offset_and_size	-19	-72	71	0	0
+direction_of_sprite_push	0
+autobuilding_group_name	miniroof
+autobuilding_group_seed	0
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	-209	0	0	512	238
+autobuilding_group_element_base_id	4
+CREATE_NEW_AUTOBUILDING_GROUP
+autobuilding_group_offset_and_size	-124	-56	88	0	0
+direction_of_sprite_push	1
+autobuilding_group_name	WALL_BIG
+autobuilding_group_seed	2021
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	-97	0	0	498	743
+autobuilding_group_element_base_id	0
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	-82	6	0	415	645
+autobuilding_group_element_base_id	6
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	-63	0	18	142	672
+autobuilding_group_element_base_id	2
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	104	0	17	98	670
+autobuilding_group_element_base_id	7
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	230	0	15	142	670
+autobuilding_group_element_base_id	2
+CREATE_NEW_AUTOBUILDING_GROUP
+autobuilding_group_offset_and_size	-116	-56	788	0	0
+direction_of_sprite_push	0
+autobuilding_group_name	ROOF
+autobuilding_group_seed	0
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	-109	0	0	507	286
+autobuilding_group_element_base_id	1
+CREATE_NEW_AUTOBUILDING_GROUP
+autobuilding_group_offset_and_size	0	0	0	0	0
+direction_of_sprite_push	0
+autobuilding_group_name	!
+autobuilding_group_seed	0
+CREATE_NEW_AUTOBUILDING_GROUP
+autobuilding_group_offset_and_size	0	0	0	0	0
+direction_of_sprite_push	0
+autobuilding_group_name	!
+autobuilding_group_seed	0
+PUT_ENTITY_TO_MAP
+CREATE_NEW_ENTITY
+entity_position	2892.10791	683.12854	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/panel.png
+autobuilding_base_space_between_sprites	0	0
+autobuilding_base_random_offset	0	0
+autobuilding_selected_sprite_fill_mode	0
+autobuilding_random_sprite_count	0
+autobuilding_base_selected_draw_mode	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	59	5	5
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	5	59	54	5
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	59	59	5	5
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	5	5	54
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	5	5	54	54
+grid_region_subdivision	1	1
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	59	5	5	54
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	5	5
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	5	0	54	5
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	59	0	5	5
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_GROUP
+autobuilding_group_offset_and_size	0	0	0	0	0
+direction_of_sprite_push	1
+autobuilding_group_name	!
+autobuilding_group_seed	0
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	-239	0	0	480	1475
+autobuilding_group_element_base_id	0
+PUT_ENTITY_TO_MAP
+CREATE_NEW_ENTITY
+entity_position	3646.291016	737.939392	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/beton_002.png
+autobuilding_base_space_between_sprites	0	0
+autobuilding_base_random_offset	0	0
+autobuilding_selected_sprite_fill_mode	0
+autobuilding_random_sprite_count	0
+autobuilding_base_selected_draw_mode	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	153	16	15
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	16	153	258	15
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	274	153	16	15
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	32	16	121
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	16	32	258	121
+grid_region_subdivision	1	1
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	274	32	16	121
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	16	32
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	16	0	258	32
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	274	0	16	32
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/roof#normal_gloss_map.png
+autobuilding_base_space_between_sprites	0	0
+autobuilding_base_random_offset	0	0
+autobuilding_selected_sprite_fill_mode	0
+autobuilding_random_sprite_count	0
+autobuilding_base_selected_draw_mode	1
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/window_blue_simple_003.png
+autobuilding_base_space_between_sprites	88	16
+autobuilding_base_random_offset	0	0
+autobuilding_selected_sprite_fill_mode	0
+autobuilding_random_sprite_count	0
+autobuilding_base_selected_draw_mode	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	90	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	90	72	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	72	90	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	90
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	72	90
+grid_region_subdivision	1	1
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	72	0	0	90
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	72	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	72	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/roof_002.png
+autobuilding_base_space_between_sprites	0	0
+autobuilding_base_random_offset	0	0
+autobuilding_selected_sprite_fill_mode	0
+autobuilding_random_sprite_count	0
+autobuilding_base_selected_draw_mode	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	134	16	7
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	16	134	253	7
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	269	134	21	7
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	11	16	123
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	16	11	253	123
+grid_region_subdivision	1	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	269	11	21	123
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	16	11
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	16	0	253	11
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	269	0	21	11
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/beton_003.png
+autobuilding_base_space_between_sprites	0	0
+autobuilding_base_random_offset	0	0
+autobuilding_selected_sprite_fill_mode	0
+autobuilding_random_sprite_count	0
+autobuilding_base_selected_draw_mode	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	153	16	15
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	16	153	258	15
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	274	153	16	15
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	32	16	121
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	16	32	258	121
+grid_region_subdivision	3	1
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	274	32	16	121
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	16	32
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	16	0	258	32
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	274	0	16	32
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/window_blue_simple_003.png
+autobuilding_base_space_between_sprites	33	16
+autobuilding_base_random_offset	0	0
+autobuilding_selected_sprite_fill_mode	0
+autobuilding_random_sprite_count	0
+autobuilding_base_selected_draw_mode	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	90	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	90	72	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	72	90	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	90
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	72	90
+grid_region_subdivision	1	1
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	72	0	0	90
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	72	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	72	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/human.png
+autobuilding_base_space_between_sprites	0	0
+autobuilding_base_random_offset	0	0
+autobuilding_selected_sprite_fill_mode	0
+autobuilding_random_sprite_count	0
+autobuilding_base_selected_draw_mode	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	46	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	46	15	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	15	46	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	46
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	15	46
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	15	0	0	46
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	15	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	15	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/balcone_001.png
+autobuilding_base_space_between_sprites	0	-13
+autobuilding_base_random_offset	0	0
+autobuilding_selected_sprite_fill_mode	0
+autobuilding_random_sprite_count	0
+autobuilding_base_selected_draw_mode	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	146	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	146	224	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	224	146	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	146
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	224	146
+grid_region_subdivision	1	1
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	224	0	0	146
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	224	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	224	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/hrusch_roof_tubes_01.png
+autobuilding_base_space_between_sprites	0	0
+autobuilding_base_random_offset	0	0
+autobuilding_selected_sprite_fill_mode	0
+autobuilding_random_sprite_count	0
+autobuilding_base_selected_draw_mode	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/door_balcone.png
+autobuilding_base_space_between_sprites	0	12
+autobuilding_base_random_offset	0	0
+autobuilding_selected_sprite_fill_mode	0
+autobuilding_random_sprite_count	0
+autobuilding_base_selected_draw_mode	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	98	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	98	130	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	130	98	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	98
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	130	98
+grid_region_subdivision	1	1
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	130	0	0	98
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	130	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	130	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/window_blue_simple_wide_001.png
+autobuilding_base_space_between_sprites	0	21
+autobuilding_base_random_offset	0	0
+autobuilding_selected_sprite_fill_mode	0
+autobuilding_random_sprite_count	0
+autobuilding_base_selected_draw_mode	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	80	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	80	192	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	192	80	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	80
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	192	80
+grid_region_subdivision	1	1
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	192	0	0	80
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	192	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	192	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/roof.png
+autobuilding_base_space_between_sprites	0	0
+autobuilding_base_random_offset	0	0
+autobuilding_selected_sprite_fill_mode	0
+autobuilding_random_sprite_count	0
+autobuilding_base_selected_draw_mode	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	80	4	5
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	4	80	93	5
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	97	80	5	5
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	20	4	60
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	4	20	93	60
+grid_region_subdivision	2	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	97	20	5	60
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	4	20
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	4	0	93	20
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	97	0	5	20
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/bricked_wall.png
+autobuilding_base_space_between_sprites	0	0
+autobuilding_base_random_offset	0	0
+autobuilding_selected_sprite_fill_mode	0
+autobuilding_random_sprite_count	0
+autobuilding_base_selected_draw_mode	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	113	15	15
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	15	113	118	15
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	133	113	15	15
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	20	15	93
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	15	20	118	93
+grid_region_subdivision	1	1
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	133	20	15	93
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	15	20
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	15	0	118	20
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	133	0	15	20
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/beton_waffle.png
+autobuilding_base_space_between_sprites	0	0
+autobuilding_base_random_offset	0	0
+autobuilding_selected_sprite_fill_mode	0
+autobuilding_random_sprite_count	0
+autobuilding_base_selected_draw_mode	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/door_01.png
+autobuilding_base_space_between_sprites	0	0
+autobuilding_base_random_offset	0	0
+autobuilding_selected_sprite_fill_mode	0
+autobuilding_random_sprite_count	0
+autobuilding_base_selected_draw_mode	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	59	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	59	57	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	57	59	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	59
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	57	59
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	57	0	0	59
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	57	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	57	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/decor_roof_trash.png
+autobuilding_base_space_between_sprites	70	40
+autobuilding_base_random_offset	79	41
+autobuilding_selected_sprite_fill_mode	0
+autobuilding_random_sprite_count	80
+autobuilding_base_selected_draw_mode	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	20	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	20	50	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	50	20	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	20
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	50	20
+grid_region_subdivision	4	1
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	50	0	0	20
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	50	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	50	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_GROUP
+autobuilding_group_offset_and_size	-310	-52	0	0	0
+direction_of_sprite_push	0
+autobuilding_group_name	trash
+autobuilding_group_seed	2021
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	-194	-141	0	1028	188
+autobuilding_group_element_base_id	15
+CREATE_NEW_AUTOBUILDING_GROUP
+autobuilding_group_offset_and_size	-631	-69	0	0	0
+direction_of_sprite_push	1
+autobuilding_group_name	Wall
+autobuilding_group_seed	3
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	126	0	0	161.25	595
+autobuilding_group_element_base_id	0
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	127	-4	68	164	264
+autobuilding_group_element_base_id	1
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	160	0	40	43	542
+autobuilding_group_element_base_id	2
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	997	0	0	164	597
+autobuilding_group_element_base_id	0
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	1098	-1	39	48	542
+autobuilding_group_element_base_id	2
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	996	-6	106	167	106
+autobuilding_group_element_base_id	1
+CREATE_NEW_AUTOBUILDING_GROUP
+autobuilding_group_offset_and_size	-635	-69	589	0	0
+direction_of_sprite_push	0
+autobuilding_group_name	Roof
+autobuilding_group_seed	9
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	128	0	0	162	390
+autobuilding_group_element_base_id	3
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	1003	-1	0	161	387
+autobuilding_group_element_base_id	3
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	456	18	0	106	41
+autobuilding_group_element_base_id	11
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	714	22	0	110	37
+autobuilding_group_element_base_id	11
+CREATE_NEW_AUTOBUILDING_GROUP
+autobuilding_group_offset_and_size	-491	-3	0	0	0
+direction_of_sprite_push	1
+autobuilding_group_name	W2
+autobuilding_group_seed	14
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	145	0	0	161	595
+autobuilding_group_element_base_id	4
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	172	0	40	132	539
+autobuilding_group_element_base_id	5
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	147	0	143	722	209
+autobuilding_group_element_base_id	1
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	702	-4	0	157	600
+autobuilding_group_element_base_id	4
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	729	0	40	51	543
+autobuilding_group_element_base_id	5
+CREATE_NEW_AUTOBUILDING_GROUP
+autobuilding_group_offset_and_size	-578	-3	588	0	0
+direction_of_sprite_push	0
+autobuilding_group_name	R2
+autobuilding_group_seed	0
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	218	2	0	742	321
+autobuilding_group_element_base_id	3
+CREATE_NEW_AUTOBUILDING_GROUP
+autobuilding_group_offset_and_size	-102	2	0	0	0
+direction_of_sprite_push	1
+autobuilding_group_name	!
+autobuilding_group_seed	2012
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	-105	0	0	421	594
+autobuilding_group_element_base_id	0
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	-120	-14	130	164	100
+autobuilding_group_element_base_id	1
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	-73	-18	17	95	542
+autobuilding_group_element_base_id	9
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	-79	-15	0	109	550
+autobuilding_group_element_base_id	7
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	189	-15	18	94	544
+autobuilding_group_element_base_id	9
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	180	-16	0	105	558
+autobuilding_group_element_base_id	7
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	56	0	103	96	470
+autobuilding_group_element_base_id	10
+CREATE_NEW_AUTOBUILDING_GROUP
+autobuilding_group_offset_and_size	172	-63	0	0	0
+direction_of_sprite_push	1
+autobuilding_group_name	human
+autobuilding_group_seed	0
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	-164	0	0	15	46
+autobuilding_group_element_base_id	6
+CREATE_NEW_AUTOBUILDING_GROUP
+autobuilding_group_offset_and_size	-156	-43	0	0	0
+direction_of_sprite_push	1
+autobuilding_group_name	Parade
+autobuilding_group_seed	0
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	101	-8	0	114	84
+autobuilding_group_element_base_id	12
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	140	0.5	6.5	56.5	56
+autobuilding_group_element_base_id	14
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	98	-11	115	116	57
+autobuilding_group_element_base_id	1
+CREATE_NEW_AUTOBUILDING_GROUP
+autobuilding_group_offset_and_size	-55	-45	73	0	0
+direction_of_sprite_push	0
+autobuilding_group_name	Parade roof
+autobuilding_group_seed	0
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	0	0	0	116	48
+autobuilding_group_element_base_id	11
+CREATE_NEW_AUTOBUILDING_GROUP
+autobuilding_group_offset_and_size	0	0	0	0	0
+direction_of_sprite_push	0
+autobuilding_group_name	!
+autobuilding_group_seed	0
+PUT_ENTITY_TO_MAP
+CREATE_NEW_ENTITY
+entity_position	4476.203613	666.843689	0
 CREATE_NEW_AUTOBUILDING_BASE
 autobuilding_base_main_texture	data/textures/hrusch_wall_01.png
 autobuilding_base_space_between_sprites	0	0
@@ -616,7 +1711,7 @@ grid_region_position_and_size	130	0	6	27
 grid_region_subdivision	0	0
 CREATE_NEW_AUTOBUILDING_BASE
 autobuilding_base_main_texture	data/textures/hrusch_window_01.png
-autobuilding_base_space_between_sprites	47	15
+autobuilding_base_space_between_sprites	47	14
 autobuilding_base_random_offset	0	0
 autobuilding_selected_sprite_fill_mode	0
 autobuilding_random_sprite_count	0
@@ -751,38 +1846,38 @@ CREATE_NEW_GRID_REGION
 grid_region_position_and_size	114	0	0	0
 grid_region_subdivision	0	0
 CREATE_NEW_AUTOBUILDING_BASE
-autobuilding_base_main_texture	data/textures/window_plant_001_lighten.png
-autobuilding_base_space_between_sprites	20	21
+autobuilding_base_main_texture	data/textures/window_blue_simple_wide_001.png
+autobuilding_base_space_between_sprites	20	32
 autobuilding_base_random_offset	0	0
 autobuilding_selected_sprite_fill_mode	0
 autobuilding_random_sprite_count	0
 autobuilding_base_selected_draw_mode	0
 CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	100	0	0
+grid_region_position_and_size	0	80	0	0
 grid_region_subdivision	0	0
 CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	100	100	0
+grid_region_position_and_size	0	80	192	0
 grid_region_subdivision	0	0
 CREATE_NEW_GRID_REGION
-grid_region_position_and_size	100	100	0	0
+grid_region_position_and_size	192	80	0	0
 grid_region_subdivision	0	0
 CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	0	0	100
+grid_region_position_and_size	0	0	0	80
 grid_region_subdivision	0	0
 CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	0	100	100
+grid_region_position_and_size	0	0	192	80
 grid_region_subdivision	1	1
 CREATE_NEW_GRID_REGION
-grid_region_position_and_size	100	0	0	100
+grid_region_position_and_size	192	0	0	80
 grid_region_subdivision	0	0
 CREATE_NEW_GRID_REGION
 grid_region_position_and_size	0	0	0	0
 grid_region_subdivision	0	0
 CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	0	100	0
+grid_region_position_and_size	0	0	192	0
 grid_region_subdivision	0	0
 CREATE_NEW_GRID_REGION
-grid_region_position_and_size	100	0	0	0
+grid_region_position_and_size	192	0	0	0
 grid_region_subdivision	0	0
 CREATE_NEW_AUTOBUILDING_BASE
 autobuilding_base_main_texture	data/textures/door_01.png
@@ -1023,7 +2118,7 @@ CREATE_NEW_GRID_REGION
 grid_region_position_and_size	50	0	0	0
 grid_region_subdivision	0	0
 CREATE_NEW_AUTOBUILDING_GROUP
-autobuilding_group_offset_and_size	0	0	0	0	0
+autobuilding_group_offset_and_size	49	101	0	0	0
 direction_of_sprite_push	1
 autobuilding_group_name	wall
 autobuilding_group_seed	144
@@ -1031,7 +2126,7 @@ CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
 autobuilding_group_element_offset_and_size	-285	0	0	502	391
 autobuilding_group_element_base_id	0
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	-281	1	26	468	352
+autobuilding_group_element_offset_and_size	-281	1	26	468	353
 autobuilding_group_element_base_id	10
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
 autobuilding_group_element_offset_and_size	-275	-14	37	162	353
@@ -1040,41 +2135,49 @@ CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
 autobuilding_group_element_offset_and_size	-265	0	0	15	46
 autobuilding_group_element_base_id	3
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	49	29	0	162	353
+autobuilding_group_element_offset_and_size	49	0	26	162	353
 autobuilding_group_element_base_id	1
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	-287	-27	74	500	329
+autobuilding_group_element_offset_and_size	-287	-4	132	500	306
 autobuilding_group_element_base_id	11
 CREATE_NEW_AUTOBUILDING_GROUP
-autobuilding_group_offset_and_size	14	-10	361	0	0
+autobuilding_group_offset_and_size	62	96	361	0	0
 direction_of_sprite_push	0
 autobuilding_group_name	roof
 autobuilding_group_seed	71
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	-302	28	0	505	314
+autobuilding_group_element_offset_and_size	-302	29	0	505	313
 autobuilding_group_element_base_id	2
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	-298	35	0	499	302
+autobuilding_group_element_offset_and_size	-298	0	0	499	337
 autobuilding_group_element_base_id	12
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
 autobuilding_group_element_offset_and_size	-289	72	0	480	259
 autobuilding_group_element_base_id	4
 CREATE_NEW_AUTOBUILDING_GROUP
-autobuilding_group_offset_and_size	-140	-83	0	0	0
+autobuilding_group_offset_and_size	-131	3	0	0	0
 direction_of_sprite_push	1
 autobuilding_group_name	subwall
 autobuilding_group_seed	2021
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	39	0.75	0	141	384.25
+autobuilding_group_element_offset_and_size	72	0.75	0	141	378.25
 autobuilding_group_element_base_id	0
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	49	-1	110	120	269
+autobuilding_group_element_offset_and_size	95	0	107	96	261
 autobuilding_group_element_base_id	5
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	40	11	74	137	79
+autobuilding_group_element_offset_and_size	30	-8	80	160	98
 autobuilding_group_element_base_id	11
 CREATE_NEW_AUTOBUILDING_GROUP
-autobuilding_group_offset_and_size	-58	-149	0	0	0
+autobuilding_group_offset_and_size	-210	-7	388	0	0
+direction_of_sprite_push	0
+autobuilding_group_name	subwall_roof
+autobuilding_group_seed	0
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	146	1	0	153	112
+autobuilding_group_element_base_id	2
+CREATE_NEW_AUTOBUILDING_GROUP
+autobuilding_group_offset_and_size	-17	-52	0	0	0
 direction_of_sprite_push	1
 autobuilding_group_name	parade
 autobuilding_group_seed	55
@@ -1091,161 +2194,16 @@ CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
 autobuilding_group_element_offset_and_size	-44	-3	47	137	92
 autobuilding_group_element_base_id	11
 CREATE_NEW_AUTOBUILDING_GROUP
-autobuilding_group_offset_and_size	-232	-64	352	0	0
-direction_of_sprite_push	0
-autobuilding_group_name	subwall_roof
-autobuilding_group_seed	0
-CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	129	0	0	146	91
-autobuilding_group_element_base_id	2
-CREATE_NEW_AUTOBUILDING_GROUP
-autobuilding_group_offset_and_size	-175	-150	87	0	0
+autobuilding_group_offset_and_size	-134	-53	87	0	0
 direction_of_sprite_push	0
 autobuilding_group_name	parade_roof
 autobuilding_group_seed	0
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	81	0	0	125	66
+autobuilding_group_element_offset_and_size	81	-4	0	125	70
 autobuilding_group_element_base_id	8
 PUT_ENTITY_TO_MAP
 CREATE_NEW_ENTITY
-entity_position	2299	590	0
-CREATE_NEW_AUTOBUILDING_BASE
-autobuilding_base_main_texture	data/textures/beton_001.png
-autobuilding_base_space_between_sprites	0	0
-autobuilding_base_random_offset	0	0
-autobuilding_selected_sprite_fill_mode	0
-autobuilding_random_sprite_count	0
-autobuilding_base_selected_draw_mode	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	101	5	5
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	5	101	146	5
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	151	101	5	5
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	5	5	96
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	5	5	146	96
-grid_region_subdivision	2	1
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	151	5	5	96
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	0	5	5
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	5	0	146	5
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	151	0	5	5
-grid_region_subdivision	0	0
-CREATE_NEW_AUTOBUILDING_BASE
-autobuilding_base_main_texture	data/textures/gudron_roof.png
-autobuilding_base_space_between_sprites	0	0
-autobuilding_base_random_offset	0	0
-autobuilding_selected_sprite_fill_mode	0
-autobuilding_random_sprite_count	0
-autobuilding_base_selected_draw_mode	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	98	7	7
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	7	98	134	7
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	141	98	7	7
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	7	7	91
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	7	7	134	91
-grid_region_subdivision	1	1
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	141	7	7	91
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	0	7	7
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	7	0	134	7
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	141	0	7	7
-grid_region_subdivision	0	0
-CREATE_NEW_AUTOBUILDING_GROUP
-autobuilding_group_offset_and_size	1	2	0	0	0
-direction_of_sprite_push	1
-autobuilding_group_name	WALL
-autobuilding_group_seed	0
-CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	-100	-3	0	203	748
-autobuilding_group_element_base_id	0
-CREATE_NEW_AUTOBUILDING_GROUP
-autobuilding_group_offset_and_size	0	0	746	0	0
-direction_of_sprite_push	0
-autobuilding_group_name	ROOF
-autobuilding_group_seed	0
-CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	-105	0	0	214	286
-autobuilding_group_element_base_id	1
-CREATE_NEW_AUTOBUILDING_GROUP
-autobuilding_group_offset_and_size	0	0	0	0	0
-direction_of_sprite_push	0
-autobuilding_group_name	!
-autobuilding_group_seed	0
-PUT_ENTITY_TO_MAP
-CREATE_NEW_ENTITY
-entity_position	2167.10791	1061.12854	0
-CREATE_NEW_AUTOBUILDING_BASE
-autobuilding_base_main_texture	data/textures/panel.png
-autobuilding_base_space_between_sprites	0	0
-autobuilding_base_random_offset	0	0
-autobuilding_selected_sprite_fill_mode	0
-autobuilding_random_sprite_count	0
-autobuilding_base_selected_draw_mode	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	59	5	5
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	5	59	54	5
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	59	59	5	5
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	5	5	54
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	5	5	54	54
-grid_region_subdivision	1	1
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	59	5	5	54
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	0	5	5
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	5	0	54	5
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	59	0	5	5
-grid_region_subdivision	0	0
-CREATE_NEW_AUTOBUILDING_GROUP
-autobuilding_group_offset_and_size	0	0	0	0	0
-direction_of_sprite_push	1
-autobuilding_group_name	!
-autobuilding_group_seed	0
-CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	-239	0	0	480	738
-autobuilding_group_element_base_id	0
-PUT_ENTITY_TO_MAP
-CREATE_NEW_ENTITY
-entity_position	1670	1291	0
+entity_position	2050	1701	0
 CREATE_NEW_AUTOBUILDING_BASE
 autobuilding_base_main_texture	data/textures/Checker.png
 autobuilding_base_space_between_sprites	0	0
@@ -1254,47 +2212,47 @@ autobuilding_selected_sprite_fill_mode	0
 autobuilding_random_sprite_count	0
 autobuilding_base_selected_draw_mode	0
 CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	63	1	1
+grid_region_position_and_size	0	62	2	2
 grid_region_subdivision	0	0
 CREATE_NEW_GRID_REGION
-grid_region_position_and_size	1	63	62	1
+grid_region_position_and_size	2	62	60	2
 grid_region_subdivision	0	0
 CREATE_NEW_GRID_REGION
-grid_region_position_and_size	63	63	1	1
+grid_region_position_and_size	62	62	2	2
 grid_region_subdivision	0	0
 CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	1	1	62
+grid_region_position_and_size	0	2	2	60
 grid_region_subdivision	0	0
 CREATE_NEW_GRID_REGION
-grid_region_position_and_size	1	1	62	62
-grid_region_subdivision	1	1
+grid_region_position_and_size	2	2	60	60
+grid_region_subdivision	2	2
 CREATE_NEW_GRID_REGION
-grid_region_position_and_size	63	1	1	62
+grid_region_position_and_size	62	2	2	60
 grid_region_subdivision	0	0
 CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	0	1	1
+grid_region_position_and_size	0	0	2	2
 grid_region_subdivision	0	0
 CREATE_NEW_GRID_REGION
-grid_region_position_and_size	1	0	62	1
+grid_region_position_and_size	2	0	60	2
 grid_region_subdivision	0	0
 CREATE_NEW_GRID_REGION
-grid_region_position_and_size	63	0	1	1
+grid_region_position_and_size	62	0	2	2
 grid_region_subdivision	0	0
 CREATE_NEW_AUTOBUILDING_GROUP
-autobuilding_group_offset_and_size	45	349	0	0	0
+autobuilding_group_offset_and_size	-13	15	0	0	0
 direction_of_sprite_push	1
 autobuilding_group_name	!
 autobuilding_group_seed	0
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	-340	0	0	690	201
+autobuilding_group_element_offset_and_size	-336	0	0	690	201
 autobuilding_group_element_base_id	0
 CREATE_NEW_AUTOBUILDING_GROUP
-autobuilding_group_offset_and_size	80	58	0	0	0
+autobuilding_group_offset_and_size	88	11	198	0	0
 direction_of_sprite_push	0
 autobuilding_group_name	!
 autobuilding_group_seed	0
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	-346	191	0	703	314
+autobuilding_group_element_offset_and_size	-445	0	0	705	314
 autobuilding_group_element_base_id	0
 CREATE_NEW_AUTOBUILDING_GROUP
 autobuilding_group_offset_and_size	0	0	0	0	0

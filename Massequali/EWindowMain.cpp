@@ -1167,9 +1167,9 @@ void EWindowMain::create_button_groups()
 	*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_Y;
 	//but->is_slider = true;
 	*but->is_radial_button = true;
-	*but->maximum_value = 100.0f;
-	but->slider_value_multiplier = 0.01f;
-	but->target_address_for_float = &EGraphicCore::sun_lum;
+	*but->maximum_value = 2.0f;
+	but->slider_value_multiplier = 0.1f;
+	but->target_address_for_float = &EGraphicCore::sun_matte_power;
 	but->action_on_slider_drag.push_back(&ExternalButtonAction::external_button_action_set_button_value);
 	just_created_button_group->button_list.push_back(but);
 	but->description_text = "Sun bright";
@@ -1267,14 +1267,36 @@ void EWindowMain::create_button_groups()
 	*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_Y;
 	//but->is_slider = true;
 	*but->is_radial_button = true;
-	*but->maximum_value = 1.0f;
-	but->slider_value_multiplier = 1.0f;
+	*but->maximum_value = 2.0f;
+	but->slider_value_multiplier = 0.5f;
 	//but->target_address_for_float = &EGraphicCore::suskyn_lum;
-	but->target_address_for_float = &EGraphicCore::gloss_input;
+	but->target_address_for_float = &EGraphicCore::sky_ambient_light_power;
 	but->action_on_slider_drag.push_back(&ExternalButtonAction::external_button_action_set_button_value);
 	just_created_button_group->button_list.push_back(but);
-	but->description_text = "Force gloss on object";
-	*but->side_text = "Gloss";
+	but->description_text = "Sky light on non-sun angle";
+	*but->side_text = "Sky light";
+	but->have_rama = true;
+	*but->is_consumable = true;
+	but->text_color->set_color(EColor::COLOR_WHITE);
+	but->bg_color->set_color(EColor::COLOR_WHITE);
+
+	but->text_color->set_color(EColor::COLOR_WHITE);
+	but->bg_color->set_color(EColor::COLOR_WHITE);
+
+
+	//top free sky light
+	but = new EButton(0.0f, 0.0f, 100.0f, 60.0f, this, just_created_button_super_group, just_created_button_group);
+	*but->selected_auto_align_mode = EButton::ButtonAutoAlign::BUTTON_AUTO_ALIGN_ADD_Y;
+	//but->is_slider = true;
+	*but->is_radial_button = true;
+	*but->maximum_value = 2.0f;
+	but->slider_value_multiplier = 0.5f;
+	//but->target_address_for_float = &EGraphicCore::suskyn_lum;
+	but->target_address_for_float = &EGraphicCore::sky_free_top_light;
+	but->action_on_slider_drag.push_back(&ExternalButtonAction::external_button_action_set_button_value);
+	just_created_button_group->button_list.push_back(but);
+	but->description_text = "Free top sky light multiplier";
+	*but->side_text = "Top light";
 	but->have_rama = true;
 	*but->is_consumable = true;
 	but->text_color->set_color(EColor::COLOR_WHITE);
@@ -1789,7 +1811,9 @@ float true_height = 0.0f;
 
 glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "brightness_multiplier"), EGraphicCore::brightness_multiplier);
 
-glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "input_gloss"), EGraphicCore::gloss_input);
+glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "skydome_light_power"), EGraphicCore::sky_ambient_light_power);
+glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "free_top_light"), EGraphicCore::sky_free_top_light);
+glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "direct_sun_matte_multiplier"), EGraphicCore::sun_matte_power);
 
 glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "sun_position_x"), EGraphicCore::sun_position_x);
 glUniform1f(glGetUniformLocation(EGraphicCore::PBR_shader->ID, "sun_position_y"), EGraphicCore::sun_position_y);
@@ -2269,14 +2293,14 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 					(ExternalButtonAction::get_selected_autobuilding_group(e) != NULL)
 					&&
 					(ExternalButtonAction::get_selected_autobuilding_group(e) == a_group)
-					&
+					&&
 					(get_real_world_position_x_by_mouse(main_camera) >= *e->position_x + *a_group->offset_x + *a_group->pseudo_pos_x)
-					&
+					&&
 					(get_real_world_position_x_by_mouse(main_camera) <= *e->position_x + *a_group->offset_x + *a_group->pseudo_pos_x + *a_group->pseudo_size_x)
-					&
+					&&
 					(get_real_world_position_y_by_mouse(main_camera) >= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z - 20.0f)
-					&
-					(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z)
+					&&
+					(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z - 0.0f)
 				)
 			{
 				if (!LMB) { *a_group->is_catched = true; any_catch = true; }
@@ -2286,23 +2310,7 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 				if (!LMB) { *a_group->is_catched = false; }
 			}
 
-			if (*a_group->is_catched)
-			{
-				if (LMB)
-				{
-					any_catch = true;
-					if (glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-					{
-						*a_group->offset_z += mouse_speed_y;
-						*a_group->offset_z = max(*a_group->offset_z, 0.0f);
-					}
-					else
-					{
-						*a_group->offset_x += mouse_speed_x;
-						*a_group->offset_y += mouse_speed_y;
-					}
-				}
-			}
+			
 
 			//catches
 			for (Entity::AutobuildingGroupElement* a_element : a_group->autobuilding_group_element_list)
@@ -2322,6 +2330,8 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 				std::endl;*/
 				//any_catch = false;
 
+
+				//if valid group element, group, and entity
 				if
 					(
 						(
@@ -2339,7 +2349,7 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 							||
 							(glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) != GLFW_PRESS)
 						)
-						&
+						&&
 						(
 							(
 								(ExternalButtonAction::get_entity() != NULL)
@@ -2353,106 +2363,117 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 						)
 					)
 				{
-					if
-						(
-							(get_real_world_position_x_by_mouse(main_camera) >= *e->position_x + *a_group->offset_x + *a_element->offset_x - catch_size)
-							&
-							(get_real_world_position_x_by_mouse(main_camera) <= *e->position_x + *a_group->offset_x + *a_element->offset_x + catch_size)
-							&
-							(get_real_world_position_y_by_mouse(main_camera) >= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z + *a_element->offset_y + *a_element->offset_z - catch_size)
-							&
-							(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z + *a_element->offset_y + *a_element->size_y + *a_element->offset_z + catch_size)
+
+					//left
+					//prevert overlap gabarites and group border, for up/down/left/right
+					{
+						if
+							(
+								(get_real_world_position_x_by_mouse(main_camera) >= *e->position_x + *a_group->offset_x + *a_element->offset_x - catch_size)
+								&&
+								(get_real_world_position_x_by_mouse(main_camera) <= *e->position_x + *a_group->offset_x + *a_element->offset_x + catch_size)
+								&&
+								(get_real_world_position_y_by_mouse(main_camera) >= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z + *a_element->offset_y + *a_element->offset_z - catch_size)
+								&&
+								(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z + *a_element->offset_y + *a_element->size_y + *a_element->offset_z + catch_size)
 							)
-					{
-						if (!LMB) { *a_element->catched_left_side = true; any_catch = true; }
-					}
-					else
-					{
-						if (!LMB) { *a_element->catched_left_side = false; }
+						{
+							if (!LMB) { *a_element->catched_left_side = true; any_catch = true; *a_group->is_catched = false; }
+						}
+						else
+						{
+							if (!LMB) { *a_element->catched_left_side = false; }
+						}
+
+						//right
+						if
+							(
+								(get_real_world_position_x_by_mouse(main_camera) >= *e->position_x + *a_group->offset_x + *a_element->offset_x + *a_element->size_x - catch_size)
+								&&
+								(get_real_world_position_x_by_mouse(main_camera) <= *e->position_x + *a_group->offset_x + *a_element->offset_x + *a_element->size_x + catch_size)
+								&&
+								(get_real_world_position_y_by_mouse(main_camera) >= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z + *a_element->offset_y + *a_element->offset_z - catch_size)
+								&&
+								(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z + *a_element->offset_y + *a_element->size_y + *a_element->offset_z + catch_size)
+								)
+						{
+							if (!LMB) { *a_element->catched_right_side = true; any_catch = true; *a_group->is_catched = false;}
+						}
+						else
+						{
+							if (!LMB) { *a_element->catched_right_side = false; }
+						}
+
+						//down
+						if
+							(
+								(get_real_world_position_x_by_mouse(main_camera) >= *e->position_x + *a_group->offset_x + *a_element->offset_x - catch_size)
+								&&
+								(get_real_world_position_x_by_mouse(main_camera) <= *e->position_x + *a_group->offset_x + *a_element->offset_x + *a_element->size_x + catch_size)
+								&&
+								(get_real_world_position_y_by_mouse(main_camera) >= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z + *a_element->offset_y + *a_element->offset_z - catch_size)
+								&&
+								(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z + *a_element->offset_y + *a_element->offset_z + catch_size)
+								)
+						{
+							if (!LMB) { *a_element->catched_down_side = true; any_catch = true; *a_group->is_catched = false;}
+						}
+						else
+						{
+							if (!LMB) { *a_element->catched_down_side = false; }
+						}
+
+						//up
+						if
+							(
+								(get_real_world_position_x_by_mouse(main_camera) >= *e->position_x + *a_group->offset_x + *a_element->offset_x - catch_size)
+								&&
+								(get_real_world_position_x_by_mouse(main_camera) <= *e->position_x + *a_group->offset_x + *a_element->offset_x + *a_element->size_x + catch_size)
+								&&
+								(get_real_world_position_y_by_mouse(main_camera) >= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z + *a_element->offset_y + *a_element->size_y + *a_element->offset_z - catch_size)
+								&&
+								(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z + *a_element->offset_y + *a_element->size_y + *a_element->offset_z + catch_size)
+								)
+						{
+							if (!LMB) { *a_element->catched_up_side = true; any_catch = true; *a_group->is_catched = false;}
+						}
+						else
+						{
+							if (!LMB) { *a_element->catched_up_side = false; }
+						}
 					}
 
-					if
-						(
-							(get_real_world_position_x_by_mouse(main_camera) >= *e->position_x + *a_group->offset_x + *a_element->offset_x + *a_element->size_x - catch_size)
-							&
-							(get_real_world_position_x_by_mouse(main_camera) <= *e->position_x + *a_group->offset_x + *a_element->offset_x + *a_element->size_x + catch_size)
-							&
-							(get_real_world_position_y_by_mouse(main_camera) >= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z + *a_element->offset_y + *a_element->offset_z - catch_size)
-							&
-							(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z + *a_element->offset_y + *a_element->size_y + *a_element->offset_z + catch_size)
-							)
-					{
-						if (!LMB) { *a_element->catched_right_side = true; any_catch = true;}
-					}
-					else
-					{
-						if (!LMB) { *a_element->catched_right_side = false; }
-					}
 
-					if
-						(
-							(get_real_world_position_x_by_mouse(main_camera) >= *e->position_x + *a_group->offset_x + *a_element->offset_x - catch_size)
-							&
-							(get_real_world_position_x_by_mouse(main_camera) <= *e->position_x + *a_group->offset_x + *a_element->offset_x + *a_element->size_x + catch_size)
-							&
-							(get_real_world_position_y_by_mouse(main_camera) >= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z + *a_element->offset_y + *a_element->offset_z - catch_size)
-							&
-							(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z + *a_element->offset_y + *a_element->offset_z + catch_size)
-							)
-					{
-						if (!LMB) { *a_element->catched_down_side = true; any_catch = true;}
-					}
-					else
-					{
-						if (!LMB) { *a_element->catched_down_side = false; }
-					}
-
-					if
-						(
-							(get_real_world_position_x_by_mouse(main_camera) >= *e->position_x + *a_group->offset_x + *a_element->offset_x - catch_size)
-							&
-							(get_real_world_position_x_by_mouse(main_camera) <= *e->position_x + *a_group->offset_x + *a_element->offset_x + *a_element->size_x + catch_size)
-							&
-							(get_real_world_position_y_by_mouse(main_camera) >= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z + *a_element->offset_y + *a_element->size_y + *a_element->offset_z - catch_size)
-							&
-							(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z + *a_element->offset_y + *a_element->size_y + *a_element->offset_z + catch_size)
-							)
-					{
-						if (!LMB) { *a_element->catched_up_side = true; any_catch = true;}
-					}
-					else
-					{
-						if (!LMB) { *a_element->catched_up_side = false; }
-					}
-
+					//mid
 					if
 						(
 							(get_real_world_position_x_by_mouse(main_camera) >= *e->position_x + *a_group->offset_x + *a_element->offset_x + *a_element->size_x / 2.0f - 10.0f)
-							&
+							&&
 							(get_real_world_position_x_by_mouse(main_camera) <= *e->position_x + *a_group->offset_x + *a_element->offset_x + *a_element->size_x / 2.0f + 10.0f)
-							&
+							&&
 							(get_real_world_position_y_by_mouse(main_camera) >= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z + *a_element->offset_y + *a_element->offset_z + *a_element->size_y / 2.0f - 10.0f)
-							&
+							&&
 							(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z + *a_element->offset_y + *a_element->offset_z + *a_element->size_y / 2.0f + 10.0f)
-							)
+						)
 					{
-						if (!LMB) { *a_element->catched_mid = true; any_catch = true;}
+						if (!LMB) { *a_element->catched_mid = true; any_catch = true; *a_group->is_catched = false;}
 					}
 					else
 					{
 						if (!LMB) { *a_element->catched_mid = false; }
 					}
 
+					//z
 					if
 						(
 							(get_real_world_position_x_by_mouse(main_camera) >= *e->position_x + *a_group->offset_x + *a_element->offset_x + *a_element->size_x / 2.0f - 5.0f)
-							&
+							&&
 							(get_real_world_position_x_by_mouse(main_camera) <= *e->position_x + *a_group->offset_x + *a_element->offset_x + *a_element->size_x / 2.0f + 5.0f)
-							&
+							&&
 							(get_real_world_position_y_by_mouse(main_camera) >= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z + *a_element->offset_y + *a_element->offset_z + *a_element->size_y / 2.0f + 10.0f)
-							&
+							&&
 							(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *e->position_z + *a_group->offset_y + *a_group->offset_z + *a_element->offset_y + *a_element->offset_z + *a_element->size_y / 2.0f + 40.0f)
-							)
+						)
 					{
 						if (!LMB) { *a_element->catched_z = true; any_catch = true;}
 					}
@@ -2526,9 +2547,26 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 					*a_element->catched_up_side = false;
 					*a_element->catched_down_side = false;
 				}
+			}
 
-				
+			//group catch can be overcatched by side borders
+			if (*a_group->is_catched)
+			{
+				if (LMB)
+				{
+					any_catch = true;
 
+					if (glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+					{
+						*a_group->offset_z += mouse_speed_y;
+						*a_group->offset_z = max(*a_group->offset_z, 0.0f);
+					}
+					else
+					{
+						*a_group->offset_x += mouse_speed_x;
+						*a_group->offset_y += mouse_speed_y;
+					}
+				}
 			}
 			
 
@@ -2538,23 +2576,23 @@ void EWindowMain::autobuilding_updater(std::vector<Entity*> _v)
 				if
 					(
 						(LMB)
-						&
+						&&
 						(glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) != GLFW_PRESS)
-						&
+						&&
 						(!any_catch)
-						&
+						&&
 						(EWindow::top_overlaped_group == NULL)
-						&
+						&&
 						(EWindow::operable_button == NULL)
-						&
+						&&
 						(get_real_world_position_x_by_mouse(main_camera) >= *e->position_x + *a_group->offset_x + *a_element->offset_x)
-						&
+						&&
 						(get_real_world_position_x_by_mouse(main_camera) <= *e->position_x + *a_group->offset_x + *a_element->offset_x + *a_element->size_x)
-						&
+						&&
 						(get_real_world_position_y_by_mouse(main_camera) >= *e->position_y + *a_group->offset_y + *a_element->offset_y + *e->position_z + *a_group->offset_z + *a_element->offset_z)
-						&
+						&&
 						(get_real_world_position_y_by_mouse(main_camera) <= *e->position_y + *a_group->offset_y + *a_element->offset_y + *e->position_z + *a_group->offset_z + *a_element->offset_z + *a_element->size_y)
-						&
+						&&
 						(
 							(
 								(last_matched_element != NULL)
@@ -2698,17 +2736,17 @@ void EWindowMain::reset_render()
 	//sun
 	EGraphicCore::batch->setcolor
 	(
-		1.0f * EGraphicCore::sun_lum * sqrt(sun_zenith_factor_sun),
-		0.8f * EGraphicCore::sun_lum * sun_zenith_factor_sun,
-		0.5f * EGraphicCore::sun_lum * sun_zenith_factor_sun * sun_zenith_factor_sun,
+		1.0f * 1.0f * sqrt(sun_zenith_factor_sun),
+		0.8f * 1.0f * sun_zenith_factor_sun,
+		0.5f * 1.0f * sun_zenith_factor_sun * sun_zenith_factor_sun,
 		1.0f
 	);
 
 
 	EGraphicCore::batch->draw_gabarite
 	(
-		(EGraphicCore::sun_position_x * 1.4f - 0.2f) - EGraphicCore::sun_size * 0.25f,
-		(EGraphicCore::sun_position_y * 1.4f - 0.2f) - EGraphicCore::sun_size * 0.5f,
+		(EGraphicCore::sun_position_x * 2.0f - 0.5f) - EGraphicCore::sun_size * 0.25f,
+		(EGraphicCore::sun_position_y * 2.0f - 0.5f) - EGraphicCore::sun_size * 0.5f,
 		EGraphicCore::sun_size * 0.5f,
 		EGraphicCore::sun_size,
 		EGraphicCore::gabarite_sun

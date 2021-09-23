@@ -19,6 +19,10 @@ uniform sampler2D SD_array[6];
 
 uniform float brightness_multiplier = 10.0f;
 uniform float input_gloss = 1.0f;
+uniform float skydome_light_power = 1.0f;
+uniform float free_top_light = 0.45f;
+uniform float direct_sun_matte_multiplier = 1.0f;
+
 uniform float sun_position_x;
 uniform float sun_position_y;
 
@@ -86,9 +90,8 @@ void main()
 				(
 					normal_gloss_map_texture,
 					NormalGlossMapTexCoord
-				).r - sun_position_x
-		) 
-		* 2.0f,
+				).r - (sun_position_x * 2.0f - 0.5f)
+		) * 2.0f,
 		1.0f
 	);
 	
@@ -103,9 +106,8 @@ void main()
 				(
 					normal_gloss_map_texture,
 					NormalGlossMapTexCoord
-				).g - sun_position_y
-		) 
-		* 2.0f,
+				).g - (sun_position_y * 2.0f - 0.5f)
+		) * 2.0f,
 		1.0f
 	);
 	
@@ -147,7 +149,7 @@ void main()
 		c_g = clamp ((texture(SD_array[1], reflect_coord).g * interpolation_A + texture(SD_array[2], reflect_coord).g * interpolation_B) * brightness_multiplier, 0.0f, 1.9f);
 		c_b = clamp ((texture(SD_array[1], reflect_coord).b * interpolation_A + texture(SD_array[2], reflect_coord).b * interpolation_B) * brightness_multiplier, 0.0f, 1.8f);
 	}
-	
+	else
 	if (glossy_flat == 2)
 	// linearly interpolate between both textures (80% container, 20% awesomeface)
 	{
@@ -155,7 +157,7 @@ void main()
 		c_g = clamp ((texture(SD_array[2], reflect_coord).g * interpolation_A + texture(SD_array[3], reflect_coord).g * interpolation_B) * brightness_multiplier, 0.0f, 1.9f);
 		c_b = clamp ((texture(SD_array[2], reflect_coord).b * interpolation_A + texture(SD_array[3], reflect_coord).b * interpolation_B) * brightness_multiplier, 0.0f, 1.8f);
 	}                                                                                                                                                                   
-	                                                                                                                                                                    
+	else																																									
 	if (glossy_flat == 3)                                                                                                                                               
 	// linearly interpolate between both textures (80% container, 20% awesomeface)                                                                                      
 	{                                                                                                                                                                   
@@ -163,7 +165,7 @@ void main()
 		c_g = clamp ((texture(SD_array[3], reflect_coord).g * interpolation_A + texture(SD_array[4], reflect_coord).g * interpolation_B) * brightness_multiplier, 0.0f, 1.9f);
 		c_b = clamp ((texture(SD_array[3], reflect_coord).b * interpolation_A + texture(SD_array[4], reflect_coord).b * interpolation_B) * brightness_multiplier, 0.0f, 1.8f);
 	}
-	
+	else
 	if (glossy_flat == 4)
 	// linearly interpolate between both textures (80% container, 20% awesomeface)
 	{
@@ -171,7 +173,7 @@ void main()
 		c_g = clamp ((texture(SD_array[4], reflect_coord).g * interpolation_A + texture(SD_array[5], reflect_coord).g * interpolation_B) * brightness_multiplier, 0.0f, 1.9f);
 		c_b = clamp ((texture(SD_array[4], reflect_coord).b * interpolation_A + texture(SD_array[5], reflect_coord).b * interpolation_B) * brightness_multiplier, 0.0f, 1.8f);
 	}
-	
+	else
 	if (glossy_flat == 5)
 	// linearly interpolate between both textures (80% container, 20% awesomeface)
 	{
@@ -183,31 +185,42 @@ void main()
 	gloss_result = gloss_power;
 	//gloss_result = 1.0f;
 	
+	AO_bottom_shade_factor = max(0.0f, (WorldPosition[2] / (WorldPosition[2] + 100.0f + 100.0f * (1.0f - gloss_result))) * (1.0f - normal_y) + normal_y);
+	AO_bottom_shade_factor = 1.0f - pow(1.0f - AO_bottom_shade_factor, 2);
+	AO_bottom_shade_factor = AO_bottom_shade_factor / 2.0f + 0.5f;
+	
 	matte_result_sun = (1.0f - gloss_power) * total_angle;
-	matte_result_sky = (1.0f - gloss_power) * (1.0f - total_angle) + (normal_y * (1.0f - gloss_power)  / 2.0f);
+	matte_result_sun *= direct_sun_matte_multiplier;
+	
+	matte_result_sky = (1.0f - gloss_power) * (1.0f - total_angle);
+	matte_result_sky += (normal_y * (1.0f - gloss_power)  / 2.0f) * free_top_light;
+	matte_result_sky *= skydome_light_power;
+	
+	//matte_result_sky = 1.0f;
+	//matte_result_sky *= skydome_light_power + (normal_y * (1.0f - gloss_power)  / 2.0f);
 	//matte_result = 0.0f;
 	
 	
-	AO_bottom_shade_factor = max(0.0f, (WorldPosition[2] / (WorldPosition[2] + 200.0f)) * (1.0f - normal_y) + normal_y);
-	AO_bottom_shade_factor = 1.0f - pow(1.0f - AO_bottom_shade_factor, 5);
-	AO_bottom_shade_factor = AO_bottom_shade_factor / 2.0f + 0.5f;
+
+	
 	FragColor = texture(texture1, TexCoord)
 	*
 	ourColor
 	*
 	vec4
 	(
-		c_r * gloss_result + (matte_result_sun * 1.1f + matte_result_sky	* 0.55f)	* sqrt(sun_zenith)			* AO_bottom_shade_factor,
-		c_g * gloss_result + (matte_result_sun * 1.05f + matte_result_sky	* 0.575f)	* sun_zenith				* AO_bottom_shade_factor,
-		c_b * gloss_result + (matte_result_sun * 1.0f + matte_result_sky	* 0.6f)		* sun_zenith * sun_zenith	* AO_bottom_shade_factor,
+		c_r * gloss_result + (matte_result_sun * 1.20f + matte_result_sky	* 0.740f)	* sun_zenith					* AO_bottom_shade_factor,
+		c_g * gloss_result + (matte_result_sun * 1.15f + matte_result_sky	* 0.770f)	* pow(sun_zenith, 1.5f)			* AO_bottom_shade_factor,
+		c_b * gloss_result + (matte_result_sun * 1.10f + matte_result_sky	* 0.800f)	* pow(sun_zenith, 2.0f)			* AO_bottom_shade_factor,
 	1.0f
 	);
 	
-	
+	//FragColor = texture(texture1, TexCoord);
+	//FragColor = texture(normal_gloss_map_texture, NormalGlossMapTexCoord);
 	
 	if ((WorldPosition[1] + screen_offset_y) < 50.0f)
 	{
-		FragColor.rgb *= max(vec3 ((WorldPosition[1] + screen_offset_y) / 1080.0f * 10.0f), 0.0f) + 0.5f;
+		FragColor.rgb *= max(vec3 ((WorldPosition[1] + screen_offset_y) / 1080.0f * 10.0f), 0.0f);
 		
 		if
 		(

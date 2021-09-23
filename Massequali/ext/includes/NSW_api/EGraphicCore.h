@@ -75,7 +75,7 @@ public:
 
 	static float sun_size;
 
-	static float sun_lum;
+	static float sun_matte_power;
 	static float sky_lum;
 	static float ground_lum;
 
@@ -84,6 +84,8 @@ public:
 	static float brightness_multiplier;
 
 	static float gloss_input;
+	static float sky_ambient_light_power;
+	static float sky_free_top_light;
 
 
 
