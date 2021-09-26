@@ -925,7 +925,7 @@ void EWindowMain::create_button_groups()
 	*button_group_autobuilding_group->can_be_moved_by_user = false;
 
 	//group
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 20; i++)
 	{
 		but = new EButton(0.0f, 0.0f, 100.0f, 20.0f);
 		button_group_autobuilding_group->button_list.push_back(but);
@@ -1835,7 +1835,7 @@ EGraphicCore::PBR_shader->setInt("texture1", 0);
 
 
 glActiveTexture(GL_TEXTURE1);
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);//texture filtering
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);//
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);

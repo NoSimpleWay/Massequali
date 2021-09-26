@@ -270,8 +270,20 @@ int main()
 	std::vector <float> fff(1000);
 	float start_id;
 
-	glfwSwapInterval(0);
-	
+	glfwSwapInterval(1);
+
+	//setVerticalSyncEnabled(true);
+
+	#if defined (_WIN32) || defined (_WIN64)
+			// Turn on vertical screen sync under Windows.
+			// (I.e. it uses the WGL_EXT_swap_control extension)
+		typedef BOOL(WINAPI* PFNWGLSWAPINTERVALEXTPROC)(int interval);
+		PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT = NULL;
+		wglSwapIntervalEXT = (PFNWGLSWAPINTERVALEXTPROC)wglGetProcAddress("wglSwapIntervalEXT");
+		if (wglSwapIntervalEXT)
+			wglSwapIntervalEXT(1);
+	#endif
+
 	while (!glfwWindowShouldClose(EWindow::main_window))
 	{
 		
@@ -304,6 +316,9 @@ int main()
 
 		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS))		{ EWindow::key_pressed_array[GLFW_KEY_LEFT_SHIFT] = true; }
 		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE))	{ EWindow::key_pressed_array[GLFW_KEY_LEFT_SHIFT] = false; }
+
+		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_GRAVE_ACCENT) == GLFW_PRESS))	{ EWindow::key_pressed_array[GLFW_KEY_GRAVE_ACCENT] = true; }
+		if ((glfwGetKey(EWindow::main_window, GLFW_KEY_GRAVE_ACCENT) == GLFW_RELEASE))	{ EWindow::key_pressed_array[GLFW_KEY_GRAVE_ACCENT] = false; }
 		
 		clock_t time = clock();
 		delta_time = (time - saved_time_for_delta) / 1000.0;
@@ -316,7 +331,7 @@ int main()
 
 
 		
-		if (glfwGetKey(EWindow::main_window, GLFW_KEY_GRAVE_ACCENT) == GLFW_PRESS)
+		/*if (!EWindow::key_pressed_array[GLFW_KEY_GRAVE_ACCENT])
 		{
 			
 			glfwSwapInterval(0);
@@ -324,7 +339,9 @@ int main()
 		else
 		{
 			glfwSwapInterval(1);
-		}
+		}*/
+
+		
 
 		if (delta_time > 0.5f) { delta_time = 0.5f; }
 

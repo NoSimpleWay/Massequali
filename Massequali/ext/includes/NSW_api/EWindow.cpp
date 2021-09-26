@@ -2243,7 +2243,7 @@ void EButton::update_data_id_for_buttons(button_group* _bg)
 		{
 			_bg->button_list.at(i)->data_id = id;
 
-			_bg->button_list.at(i)->text = std::to_string(id);
+			//_bg->button_list.at(i)->text = std::to_string(id);
 			id++;
 		}
 	}
