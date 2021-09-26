@@ -276,8 +276,6 @@ int main()
 
 	//setVerticalSyncEnabled(true);
 
-	
-	/*
 	#if defined (_WIN32) || defined (_WIN64)
 			// Turn on vertical screen sync under Windows.
 			// (I.e. it uses the WGL_EXT_swap_control extension)
@@ -286,7 +284,7 @@ int main()
 		wglSwapIntervalEXT = (PFNWGLSWAPINTERVALEXTPROC)wglGetProcAddress("wglSwapIntervalEXT");
 		if (wglSwapIntervalEXT)
 			wglSwapIntervalEXT(1);
-	#endif*/
+	#endif
 
 	while (!glfwWindowShouldClose(EWindow::main_window))
 	{
