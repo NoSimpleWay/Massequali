@@ -70,9 +70,9 @@ void main()
 	
 	
 	
-	level = (1.0f - gloss_power) * 5.0;
+	level = (1.0f - gloss_power) * 4.0f;
 	
-	glossy_flat = clamp(int(floor(level)), 0, 5);
+	glossy_flat = clamp(int(floor(level)), 0, 4);
 	interpolation_B = level - glossy_flat;
 	interpolation_A = 1.0f - interpolation_B;
 	
@@ -135,15 +135,13 @@ void main()
 	
 	//glossy_flat = 4;
 	if (glossy_flat == 0)
-	// linearly interpolate between both textures (80% container, 20% awesomeface)
 	{
 		c_r = clamp ((texture(SD_array[0], reflect_coord).r * interpolation_A + texture(SD_array[1], reflect_coord).r * interpolation_B) * brightness_multiplier, 0.0f, 2.0f);
 		c_g = clamp ((texture(SD_array[0], reflect_coord).g * interpolation_A + texture(SD_array[1], reflect_coord).g * interpolation_B) * brightness_multiplier, 0.0f, 1.9f);
 		c_b = clamp ((texture(SD_array[0], reflect_coord).b * interpolation_A + texture(SD_array[1], reflect_coord).b * interpolation_B) * brightness_multiplier, 0.0f, 1.8f);
 	}
-	
+	else
 	if (glossy_flat == 1)
-	// linearly interpolate between both textures (80% container, 20% awesomeface)
 	{
 		c_r = clamp ((texture(SD_array[1], reflect_coord).r * interpolation_A + texture(SD_array[2], reflect_coord).r * interpolation_B) * brightness_multiplier, 0.0f, 2.0f);
 		c_g = clamp ((texture(SD_array[1], reflect_coord).g * interpolation_A + texture(SD_array[2], reflect_coord).g * interpolation_B) * brightness_multiplier, 0.0f, 1.9f);
@@ -151,35 +149,23 @@ void main()
 	}
 	else
 	if (glossy_flat == 2)
-	// linearly interpolate between both textures (80% container, 20% awesomeface)
 	{
 		c_r = clamp ((texture(SD_array[2], reflect_coord).r * interpolation_A + texture(SD_array[3], reflect_coord).r * interpolation_B) * brightness_multiplier, 0.0f, 2.0f);
 		c_g = clamp ((texture(SD_array[2], reflect_coord).g * interpolation_A + texture(SD_array[3], reflect_coord).g * interpolation_B) * brightness_multiplier, 0.0f, 1.9f);
 		c_b = clamp ((texture(SD_array[2], reflect_coord).b * interpolation_A + texture(SD_array[3], reflect_coord).b * interpolation_B) * brightness_multiplier, 0.0f, 1.8f);
 	}                                                                                                                                                                   
-	else																																									
-	if (glossy_flat == 3)                                                                                                                                               
-	// linearly interpolate between both textures (80% container, 20% awesomeface)                                                                                      
-	{                                                                                                                                                                   
+	else
+	if (glossy_flat == 3)
+	{
 		c_r = clamp ((texture(SD_array[3], reflect_coord).r * interpolation_A + texture(SD_array[4], reflect_coord).r * interpolation_B) * brightness_multiplier, 0.0f, 2.0f);
 		c_g = clamp ((texture(SD_array[3], reflect_coord).g * interpolation_A + texture(SD_array[4], reflect_coord).g * interpolation_B) * brightness_multiplier, 0.0f, 1.9f);
 		c_b = clamp ((texture(SD_array[3], reflect_coord).b * interpolation_A + texture(SD_array[4], reflect_coord).b * interpolation_B) * brightness_multiplier, 0.0f, 1.8f);
-	}
+	}  
 	else
-	if (glossy_flat == 4)
-	// linearly interpolate between both textures (80% container, 20% awesomeface)
-	{
-		c_r = clamp ((texture(SD_array[4], reflect_coord).r * interpolation_A + texture(SD_array[5], reflect_coord).r * interpolation_B) * brightness_multiplier, 0.0f, 2.0f);
-		c_g = clamp ((texture(SD_array[4], reflect_coord).g * interpolation_A + texture(SD_array[5], reflect_coord).g * interpolation_B) * brightness_multiplier, 0.0f, 1.9f);
-		c_b = clamp ((texture(SD_array[4], reflect_coord).b * interpolation_A + texture(SD_array[5], reflect_coord).b * interpolation_B) * brightness_multiplier, 0.0f, 1.8f);
-	}
-	else
-	if (glossy_flat == 5)
-	// linearly interpolate between both textures (80% container, 20% awesomeface)
-	{
-		c_r = clamp ((texture(SD_array[5], reflect_coord).r) * brightness_multiplier, 0.0f, 2.1f);
-		c_g = clamp ((texture(SD_array[5], reflect_coord).g) * brightness_multiplier, 0.0f, 2.1f);
-		c_b = clamp ((texture(SD_array[5], reflect_coord).b) * brightness_multiplier, 0.0f, 2.1f);
+	{                                                                                                                                                                   
+		c_r = clamp ((texture(SD_array[5], reflect_coord).r) * brightness_multiplier, 0.0f, 2.0f);
+		c_g = clamp ((texture(SD_array[5], reflect_coord).g) * brightness_multiplier, 0.0f, 1.9f);
+		c_b = clamp ((texture(SD_array[5], reflect_coord).b) * brightness_multiplier, 0.0f, 1.8f);
 	}
 	
 	gloss_result = gloss_power;

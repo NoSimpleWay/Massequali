@@ -990,7 +990,52 @@ autobuilding_group_element_offset_and_size	-239	0	0	480	1475
 autobuilding_group_element_base_id	0
 PUT_ENTITY_TO_MAP
 CREATE_NEW_ENTITY
-entity_position	3646.291016	737.939392	0
+entity_position	3763.688721	641.984253	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/human.png
+autobuilding_base_space_between_sprites	0	0
+autobuilding_base_random_offset	0	0
+autobuilding_selected_sprite_fill_mode	0
+autobuilding_random_sprite_count	0
+autobuilding_base_selected_draw_mode	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	46	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	46	15	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	15	46	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	46
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	15	46
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	15	0	0	46
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	15	0
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	15	0	0	0
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_GROUP
+autobuilding_group_offset_and_size	-8	0	0	0	0
+direction_of_sprite_push	0
+autobuilding_group_name	!
+autobuilding_group_seed	0
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	1	0.5	0	15.5	46
+autobuilding_group_element_base_id	0
+PUT_ENTITY_TO_MAP
+CREATE_NEW_ENTITY
+entity_position	3704.291016	707.939392	0
 CREATE_NEW_AUTOBUILDING_BASE
 autobuilding_base_main_texture	data/textures/beton_002.png
 autobuilding_base_space_between_sprites	0	0
@@ -1714,52 +1759,7 @@ autobuilding_group_name	!
 autobuilding_group_seed	0
 PUT_ENTITY_TO_MAP
 CREATE_NEW_ENTITY
-entity_position	3815.688721	666.984253	0
-CREATE_NEW_AUTOBUILDING_BASE
-autobuilding_base_main_texture	data/textures/human.png
-autobuilding_base_space_between_sprites	0	0
-autobuilding_base_random_offset	0	0
-autobuilding_selected_sprite_fill_mode	0
-autobuilding_random_sprite_count	0
-autobuilding_base_selected_draw_mode	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	46	0	0
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	46	15	0
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	15	46	0	0
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	0	0	46
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	0	15	46
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	15	0	0	46
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	0	0	0
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	0	0	15	0
-grid_region_subdivision	0	0
-CREATE_NEW_GRID_REGION
-grid_region_position_and_size	15	0	0	0
-grid_region_subdivision	0	0
-CREATE_NEW_AUTOBUILDING_GROUP
-autobuilding_group_offset_and_size	-8	0	0	0	0
-direction_of_sprite_push	0
-autobuilding_group_name	!
-autobuilding_group_seed	0
-CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	1	0.5	0	15.5	46
-autobuilding_group_element_base_id	0
-PUT_ENTITY_TO_MAP
-CREATE_NEW_ENTITY
-entity_position	4476.203613	666.843689	0
+entity_position	4437.203613	551.843689	0
 CREATE_NEW_AUTOBUILDING_BASE
 autobuilding_base_main_texture	data/textures/hrusch_wall_01.png
 autobuilding_base_space_between_sprites	0	0
@@ -2203,7 +2203,7 @@ CREATE_NEW_GRID_REGION
 grid_region_position_and_size	50	0	0	0
 grid_region_subdivision	0	0
 CREATE_NEW_AUTOBUILDING_GROUP
-autobuilding_group_offset_and_size	49	101	0	0	0
+autobuilding_group_offset_and_size	52	80	0	0	0
 direction_of_sprite_push	1
 autobuilding_group_name	wall
 autobuilding_group_seed	144
@@ -2223,18 +2223,18 @@ CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
 autobuilding_group_element_offset_and_size	49	0	26	162	353
 autobuilding_group_element_base_id	1
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	-287	-4	132	500	306
+autobuilding_group_element_offset_and_size	-287	-4	150	500	306
 autobuilding_group_element_base_id	11
 CREATE_NEW_AUTOBUILDING_GROUP
-autobuilding_group_offset_and_size	62	96	361	0	0
+autobuilding_group_offset_and_size	65	100	373	0	0
 direction_of_sprite_push	0
 autobuilding_group_name	roof
 autobuilding_group_seed	71
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	-302	29	0	505	313
+autobuilding_group_element_offset_and_size	-302	1	0	505	312
 autobuilding_group_element_base_id	2
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	-298	0	0	499	337
+autobuilding_group_element_offset_and_size	-295	-54	38	499	337
 autobuilding_group_element_base_id	12
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
 autobuilding_group_element_offset_and_size	-289	72	0	480	259
@@ -2251,7 +2251,7 @@ CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
 autobuilding_group_element_offset_and_size	95	0	107	96	261
 autobuilding_group_element_base_id	5
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	30	-8	80	160	98
+autobuilding_group_element_offset_and_size	66	-17	164	160	283
 autobuilding_group_element_base_id	11
 CREATE_NEW_AUTOBUILDING_GROUP
 autobuilding_group_offset_and_size	-210	-7	388	0	0
@@ -2276,7 +2276,7 @@ CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
 autobuilding_group_element_offset_and_size	-27.25	-12	27	43.25	54
 autobuilding_group_element_base_id	9
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	-44	-3	47	137	92
+autobuilding_group_element_offset_and_size	-44	-3	145	137	92
 autobuilding_group_element_base_id	11
 CREATE_NEW_AUTOBUILDING_GROUP
 autobuilding_group_offset_and_size	-134	-53	87	0	0
@@ -2288,7 +2288,7 @@ autobuilding_group_element_offset_and_size	81	-4	0	125	70
 autobuilding_group_element_base_id	8
 PUT_ENTITY_TO_MAP
 CREATE_NEW_ENTITY
-entity_position	4569.694336	618.94519	0
+entity_position	5104.694336	1095.94519	0
 CREATE_NEW_AUTOBUILDING_BASE
 autobuilding_base_main_texture	data/textures/decor_pipe_water.png
 autobuilding_base_space_between_sprites	0	0
