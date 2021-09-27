@@ -141,11 +141,14 @@ class ECluster
 public:
 	std::vector<Entity*> entity_list;
 
-	static const int CLUSTER_SIZE_X = 250;
-	static const int CLUSTER_SIZE_Y = 250;
+	static const int CLUSTER_SIZE_X = 400;
+	static const int CLUSTER_SIZE_Y = 400;
 
-	static const int CLUSTED_DIM_X = 40;
-	static const int CLUSTED_DIM_Y = 40;
+	static const int CLUSTED_DIM_X = 20;
+	static const int CLUSTED_DIM_Y = 20;
+
+	float terrain_vertex_data_buffer[52 * 10];
+
 };
 
 class ECamera
