@@ -37,6 +37,7 @@ void char_input_callback(GLFWwindow* window, unsigned int _char);
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
+
 int main()
 {
 	//EDataWatcher::data_watcher_struct* just_created_float_struct = new EDataWatcher::data_watcher_struct;
@@ -65,7 +66,8 @@ int main()
 	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
 	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 	glfwWindowHint(GLFW_DECORATED, NULL);
-//	EWindow::main_window = glfwCreateWindow(EGraphicCore::SCR_WIDTH, EGraphicCore::SCR_HEIGHT, "Window name", glfwGetPrimaryMonitor(), NULL); 
+
+	//EWindow::main_window = glfwCreateWindow(EGraphicCore::SCR_WIDTH, EGraphicCore::SCR_HEIGHT, "Window name", glfwGetPrimaryMonitor(), NULL); 
 	EWindow::main_window = glfwCreateWindow(EGraphicCore::SCR_WIDTH, EGraphicCore::SCR_HEIGHT, "Window name", NULL, NULL);
 
 
@@ -167,10 +169,10 @@ int main()
 	//EWindow::AO_shadow_FBO = new ETextureAtlas(1920, 1080, GL_RGBA16, GL_UNSIGNED_SHORT);
 	EWindow::AO_shadow_FBO = new ETextureAtlas(2048.0f / 16.0f, 1024.0f / 16.0f, GL_RGBA16, GL_UNSIGNED_SHORT);
 
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < skydome_texture_levels; i++)
 	{
-		EWindow::skydome_light_FBO[i]			= new ETextureAtlas(int(2048.0f / pow(2.0f, i)), int(1024.0f / pow(2.0f, i)), GL_RGBA16, GL_UNSIGNED_SHORT);
-		EWindow::skydome_light_FBO_buffer[i]	= new ETextureAtlas(int(2048.0f / pow(2.0f, i)), int(1024.0f / pow(2.0f, i)), GL_RGBA16, GL_UNSIGNED_SHORT);
+		EWindow::skydome_light_FBO[i]			= new ETextureAtlas(int(2048.0f / pow(3.0f, i)), int(1024.0f / pow(3.0f, i)), GL_RGBA16, GL_UNSIGNED_SHORT);
+		EWindow::skydome_light_FBO_buffer[i]	= new ETextureAtlas(int(2048.0f / pow(3.0f, i)), int(1024.0f / pow(3.0f, i)), GL_RGBA16, GL_UNSIGNED_SHORT);
 	}
 	/*
 	EWindow::shadow_FBO = new ETextureAtlas(1920, 1580);
@@ -507,7 +509,7 @@ int main()
 		
 		//gl_flush();
 		glfwSwapBuffers(EWindow::main_window);
-
+		EWindow::add_time_process("swap buffer");
 		processInput(EWindow::main_window);
 
 		EWindow::last_inputed_char = NULL;

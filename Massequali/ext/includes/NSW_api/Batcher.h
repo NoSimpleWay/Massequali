@@ -141,7 +141,7 @@ public:
 		}
 	}
 
-	inline void draw_terrain_PBR(float _x, float _y, float _z, float _size_x, float _size_y, float _size_z, float _tile_offset_x, float _tile_offset_y, EGabarite* _g, EGabarite* _nmg, float _true_height)
+	__inline void draw_terrain_PBR(float _x, float _y, float _z, float _size_x, float _size_y, float _size_z, float _tile_offset_x, float _tile_offset_y, EGabarite* _g, EGabarite* _nmg, float _true_height)
 	{
 		//std::cout << "filled rect" << std::endl;
 
@@ -258,7 +258,7 @@ public:
 		}
 	}
 
-	inline void draw_sprite_PBR(float _x, float _y, float _z, float _size_x, float _size_y, float _size_z, float _left, float _right, float _down, float _up, EGabarite* _g, EGabarite* _nmg, float _true_height)
+	__inline void draw_sprite_PBR(float _x, float _y, float _z, float _size_x, float _size_y, float _size_z, float _left, float _right, float _down, float _up, EGabarite* _g, EGabarite* _nmg, float _true_height)
 	{
 		//std::cout << "filled rect" << std::endl;
 
