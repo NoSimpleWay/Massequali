@@ -141,14 +141,32 @@ class ECluster
 public:
 	std::vector<Entity*> entity_list;
 
-	static const int CLUSTER_SIZE_X = 400;
-	static const int CLUSTER_SIZE_Y = 400;
+	static const int CLUSTER_SIZE_X = 200;
+	static const int CLUSTER_SIZE_Y = 200;
 
-	static const int CLUSTED_DIM_X = 20;
-	static const int CLUSTED_DIM_Y = 20;
+	static const int CLUSTED_DIM_X = 40;
+	static const int CLUSTED_DIM_Y = 40;
 
-	float terrain_vertex_data_buffer[52 * 10];
+	float terrain_vertex_data_buffer[1300];
 
+	int btd_last_id = 0;
+
+	static void bake_terrain_data
+	(
+		ECluster* _cluster,
+		float _x,
+		float _y,
+
+		float _size_x,
+		float _size_y,
+
+		float _texture_offset_x,
+		float _texture_offset_y,
+
+		EGabarite* _texture,
+		EGabarite* _normal_gloss_map
+
+	);
 };
 
 class ECamera

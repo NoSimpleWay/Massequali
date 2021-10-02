@@ -2890,28 +2890,90 @@ void EWindow::default_draw_interface(float _d)
 			//EGraphicCore::batch->setcolor_alpha(EColor::COLOR_BLACK, 0.5f);
 			if (EWindow::top_overlaped_group == bsg)
 			{
-				EGraphicCore::batch->setcolor_alpha(EColor::COLOR_LIGHT_GRAY, 0.9f);
+				EGraphicCore::batch->setcolor_alpha(EColor::COLOR_WHITE, 1.0f);
 			}
 			else
 			{
-				EGraphicCore::batch->setcolor_alpha(EColor::COLOR_DARK_GRAY, 0.75f);
+				EGraphicCore::batch->setcolor_alpha(EColor::COLOR_DARK_GRAY, 0.9f);
 			}
 
 
-			EGraphicCore::batch->draw_gabarite_screen_space(*bsg->position_x, *bsg->position_y, *bsg->size_x, *bsg->size_y, EWindow::list_of_massive_style.at(0)->background);
+			//EGraphicCore::batch->draw_gabarite_screen_space(*bsg->position_x, *bsg->position_y, *bsg->size_x, *bsg->size_y, EWindow::list_of_massive_style.at(0)->background);
 			//EGraphicCore::batch->draw_gabarite(*bsg->position_x, *bsg->position_y, *bsg->size_x, *bsg->size_y, EGraphicCore::gabarite_white_pixel);
+
+			float bg_texture_size_x = 0.0f;
+			float bg_texture_size_y = 0.0f;
+
+			for (int i = 0; i < ceil(*bsg->size_y / 48.0f); i++)
+			for (int j = 0; j < ceil(*bsg->size_x / 48.0f); j++)
+			{
+				bg_texture_size_x = min(*bsg->size_x - j * 48.0f, 48.0f);
+				bg_texture_size_y = min(*bsg->size_y - i * 48.0f, 48.0f);
+
+				EGraphicCore::batch->draw_with_custom_uv
+				(
+					*bsg->position_x + j * 48.0f,
+					*bsg->position_y + i * 48.0f,
+
+					bg_texture_size_x,
+					bg_texture_size_y,
+
+					*bsg->background_texture->x + 3.0f / 4096.0f,
+					*bsg->background_texture->y + 3.0f / 4096.0f,
+
+					*bsg->background_texture->x + (bg_texture_size_x + 3.0f) / 4096.0f,
+					*bsg->background_texture->y + (bg_texture_size_y + 3.0f) / 4096.0f
+				);
+			}
+
+			for (int i = 0; i < ceil(*bsg->size_y / 48.0f); i++)
+			{
+				bg_texture_size_x = 3.0f;
+				bg_texture_size_y = min(*bsg->size_y - i * 48.0f, 48.0f);
+
+				EGraphicCore::batch->draw_with_custom_uv
+				(
+					*bsg->position_x - 3.0f,
+					*bsg->position_y + i * 48.0f,
+
+					bg_texture_size_x,
+					bg_texture_size_y,
+
+					*bsg->background_texture->x + 0.0f / 4096.0f,
+					*bsg->background_texture->y + 3.0f / 4096.0f,
+
+					*bsg->background_texture->x + (3.0f) / 4096.0f,
+					*bsg->background_texture->y + (bg_texture_size_y + 3.0f) / 4096.0f
+				);
+
+				EGraphicCore::batch->draw_with_custom_uv
+				(
+					*bsg->position_x + *bsg->size_x + 0.0f,
+					*bsg->position_y + i * 48.0f,
+
+					bg_texture_size_x,
+					bg_texture_size_y,
+
+					* bsg->background_texture->x + 51.0f / 4096.0f,
+					* bsg->background_texture->y + 3.0f / 4096.0f,
+
+					* bsg->background_texture->x + (51.0f + 3.0f) / 4096.0f,
+					* bsg->background_texture->y + (bg_texture_size_y + 3.0f) / 4096.0f
+				);
+			}
 
 			if (*bsg->is_catched)
 			{
-				EGraphicCore::batch->setcolor_alpha(EColor::COLOR_BLUE, 0.9f);
-				EGraphicCore::batch->draw_rama(*bsg->position_x, *bsg->position_y, *bsg->size_x, *bsg->size_y, 2.0f, EGraphicCore::gabarite_white_pixel);
+				EGraphicCore::batch->setcolor_alpha(EColor::COLOR_BLUE, 0.8f);
+				EGraphicCore::batch->draw_rama(*bsg->position_x - 5.0f, *bsg->position_y - 5.0f, *bsg->size_x + 10.0f, *bsg->size_y + 10.0f, 3.0f, EGraphicCore::gabarite_white_pixel);
 			}
 
+			/*
 			if (EWindow::top_overlaped_group == bsg)
 			{
-				EGraphicCore::batch->setcolor(EColor::COLOR_DARK_GREEN);
-				EGraphicCore::batch->draw_rama(*bsg->position_x, *bsg->position_y, *bsg->size_x, *bsg->size_y, 2.0f, EGraphicCore::gabarite_white_pixel);;
-			}
+				EGraphicCore::batch->setcolor_alpha(EColor::COLOR_GREEN, 0.8f);
+				EGraphicCore::batch->draw_rama(*bsg->position_x - 5.0f, *bsg->position_y - 5.0f, *bsg->size_x + 10.0f, *bsg->size_y + 10.0f, 2.0f, EGraphicCore::gabarite_white_pixel);;
+			}*/
 
 			EGraphicCore::batch->force_draw_call();
 
@@ -2956,8 +3018,8 @@ void EWindow::default_draw_interface(float _d)
 				}
 
 				//draw pass with scissors
-				EGraphicCore::batch->setcolor_alpha(EColor::COLOR_GRAY, 1.0f);
-				EGraphicCore::batch->draw_rama(total_x, total_y, *bg->size_x, *bg->size_y, 2.0f, EGraphicCore::gabarite_white_pixel);
+				EGraphicCore::batch->setcolor_alpha(EColor::COLOR_GRAY, 0.1f);
+				EGraphicCore::batch->draw_rama(total_x, total_y, *bg->size_x, *bg->size_y, 1.0f, EGraphicCore::gabarite_white_pixel);
 
 				for (EButton* but : bg->button_list)
 				if
@@ -3046,7 +3108,7 @@ void EWindow::default_draw_interface(float _d)
 				time_process_summ += time_process_average;
 
 				//if (glfwGetKey(EWindow::main_window, GLFW_KEY_TAB) == GLFW_PRESS)
-				//if (time_process_average > 0.1f)
+				if (time_process_average > 0.05f)
 				{
 					if (time_process_average > 0.2f)
 					{
@@ -3406,8 +3468,19 @@ EButton::button_super_group::button_super_group(EWindow* _w)
 
 	button_close = but;
 	additional_button_list.push_back(but);
+
+	background_texture = ETextureAtlas::put_texture_to_atlas("data/textures/gui_bg.png", EWindow::default_texture_atlas);
 }
 
 EButton::button_super_group::~button_super_group()
+{
+}
+
+EButton::button_group::button_group()
+{
+	
+}
+
+EButton::button_group::~button_group()
 {
 }

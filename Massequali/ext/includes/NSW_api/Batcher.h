@@ -4,7 +4,7 @@
 #include "EGabarite.h"
 #include <vector>
 
-const static int batch_force_draw_call = 4000;
+const static int batch_force_draw_call = 30000;
 
 class Batcher
 {

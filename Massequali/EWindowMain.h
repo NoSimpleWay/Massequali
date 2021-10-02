@@ -146,8 +146,8 @@ public:
 
 	static terrain_tile_struct* terrain_matrix[250][250];
 
-	const int TILES_COUNT_X = 250;
-	const int TILES_COUNT_Y = 250;
+	const int TILES_COUNT_X = 200;
+	const int TILES_COUNT_Y = 200;
 
 
 	enum GridRegionNameByOrder

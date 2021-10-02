@@ -44,8 +44,8 @@ float EGraphicCore::sun_matte_power = 1.00f;
 float EGraphicCore::sky_lum = 0.06f;
 float EGraphicCore::ground_lum = 0.05f;
 
-float EGraphicCore::blur_size = 6.00f;
-float EGraphicCore::blur_size_buffer = 3.00f;
+float EGraphicCore::blur_size = 5.50f;
+float EGraphicCore::blur_size_buffer = 2.50f;
 float EGraphicCore::brightness_multiplier = 20.00f;
 
 float EGraphicCore::gloss_input = 1.00f;
