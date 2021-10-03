@@ -14,7 +14,7 @@
 #include "EGabarite.h"
 #include <vector>
 
-
+constexpr int skydome_texture_levels = 5;
 class EGraphicCore {
 public:
 	static unsigned char* data1;
@@ -130,7 +130,7 @@ public:
 
 	static void draw_sprite_regular(sprite_array* _sprite_array, Batcher* _batch, float _offset_x, float _offset_y, float _offset_z);
 
-	inline static void draw_sprite_PBR(EGraphicCore::ESprite* _sprite, Batcher* _batch, float _offset_x, float _offset_y, float _offset_z, float _true_height)
+	__inline static void draw_sprite_PBR(EGraphicCore::ESprite* _sprite, Batcher* _batch, float _offset_x, float _offset_y, float _offset_z, float _true_height)
 	{
 		if ((_sprite != NULL) && (_sprite->texture_gabarite != NULL) && (_sprite->normal_gloss_map_gabarite != NULL))
 		{
