@@ -990,7 +990,7 @@ autobuilding_group_element_offset_and_size	-239	0	0	480	1475
 autobuilding_group_element_base_id	0
 PUT_ENTITY_TO_MAP
 CREATE_NEW_ENTITY
-entity_position	3646.291016	737.939392	0
+entity_position	3659.291016	750.939392	0
 CREATE_NEW_AUTOBUILDING_BASE
 autobuilding_base_main_texture	data/textures/beton_002.png
 autobuilding_base_space_between_sprites	0	0
@@ -1570,12 +1570,12 @@ CREATE_NEW_GRID_REGION
 grid_region_position_and_size	15	0	0	22
 grid_region_subdivision	0	0
 CREATE_NEW_AUTOBUILDING_GROUP
-autobuilding_group_offset_and_size	-263	-67	0	0	0
+autobuilding_group_offset_and_size	-237	-8	0	0	0
 direction_of_sprite_push	0
 autobuilding_group_name	trash
 autobuilding_group_seed	2021
 CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
-autobuilding_group_element_offset_and_size	-194	-141	0	1028	188
+autobuilding_group_element_offset_and_size	-226	-182	0	1028	178
 autobuilding_group_element_base_id	15
 CREATE_NEW_AUTOBUILDING_GROUP
 autobuilding_group_offset_and_size	-631	-69	0	0	0
@@ -2288,7 +2288,7 @@ autobuilding_group_element_offset_and_size	81	-4	0	125	70
 autobuilding_group_element_base_id	8
 PUT_ENTITY_TO_MAP
 CREATE_NEW_ENTITY
-entity_position	4569.694336	618.94519	0
+entity_position	5125.694336	967.94519	0
 CREATE_NEW_AUTOBUILDING_BASE
 autobuilding_base_main_texture	data/textures/decor_pipe_water.png
 autobuilding_base_space_between_sprites	0	0

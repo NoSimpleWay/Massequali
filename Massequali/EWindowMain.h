@@ -126,6 +126,27 @@ public:
 
 	static int last_index;
 
+	///
+	static EGraphicCore::ESprite*	selected_sprite;
+	
+	static int						selected_sprite_id;
+
+	static float					mid_wall_copies_x;
+	static float					mid_wall_copies_y;
+
+	static float					wall_full_size_x;
+	static float					wall_full_size_y;
+
+	static float					wall_fragment_x;
+	static float					wall_fragment_y;
+
+	static float					fragment_correction_factor_x;
+	static float					fragment_correction_factor_y;
+
+	static int						subdivision_x_count;
+	static int						subdivision_y_count;
+
+	///
 	//EGabarite* terrain_texture;
 
 	struct terrain_tile_struct
@@ -146,8 +167,8 @@ public:
 
 	static terrain_tile_struct* terrain_matrix[250][250];
 
-	const int TILES_COUNT_X = 250;
-	const int TILES_COUNT_Y = 250;
+	const int TILES_COUNT_X = 200;
+	const int TILES_COUNT_Y = 200;
 
 
 	enum GridRegionNameByOrder

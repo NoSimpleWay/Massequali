@@ -373,3 +373,130 @@ Entity::AutobuildingBase::AutobuildingBase()
 		grid_region.push_back(just_created_grid_region);
 	}
 }
+
+/*
+void ECluster::bake_terrain_data(ECluster* _cluster)
+{
+
+	
+}*/
+
+void ECluster::bake_terrain_data
+(
+	ECluster* _cluster,
+
+	float _x,
+	float _y,
+	
+	float _size_x,
+	float _size_y,
+	
+	float _texture_offset_x,
+	float _texture_offset_y,
+	
+	EGabarite* _texture,
+	EGabarite* _normal_gloss_map
+)
+{
+	//std::cout << "debil: " << std::to_string(_cluster->btd_last_id) << std::endl;
+	//xyz
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 0] = (_x + _size_x);
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 1] = (_y + _size_y);
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 2] = (0.0f);
+
+	//color
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 3] = 1.0f;
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 4] = 1.0f;
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 5] = 1.0f;
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 6] = 1.0f;
+
+	//uv
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 7] = *_texture->x + _texture_offset_x + _size_x / 4096.0f;
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 8] = *_texture->y + _texture_offset_y + _size_y / 4096.0f;
+
+	//uv reflection
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 9] = 0.0f;
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 10] = (0.0f + _size_y) / 1080.0f;
+
+	//normal gloss
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 11] = *_normal_gloss_map->x + _texture_offset_x + _size_x / 4096.0f;
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 12] = *_normal_gloss_map->y + _texture_offset_y + _size_y / 4096.0f;
+
+
+
+	//..
+	//.#
+
+	//xyz
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 13] = (_x + _size_x);
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 14] = _y;
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 15] = 0.0f;
+	//vertices[id + 10] = 0;
+
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 16] = 1.0f;
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 17] = 1.0f;
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 18] = 1.0f;
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 19] = 1.0f;
+
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 20] = *_texture->x + _texture_offset_x + _size_x / 4096.0f;
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 21] = *_texture->y + _texture_offset_y;
+
+	//uv reflection
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 22] = 0.0f;
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 23] = (0.0f) / 1080.0f;
+
+	//normal gloss
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 24] = *_normal_gloss_map->x + _texture_offset_x + _size_x / 4096.0f;
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 25] = *_normal_gloss_map->y + _texture_offset_y;
+
+
+	//..
+	//#.
+	// 
+	//xyz
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 26] = _x;
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 27] = _y;
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 28] = 0.0f;
+
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 29] = 1.0f;
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 30] = 1.0f;
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 31] = 1.0f;
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 32] = 1.0f;
+
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 33] = *_texture->x + _texture_offset_x;
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 34] = *_texture->y + _texture_offset_y;
+
+	//uv reflection
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 35] = 0.0f;
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 36] = (0.0f) / 1080.0f;
+
+
+	//normal gloss
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 37] = *_normal_gloss_map->x + _texture_offset_x;
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 38] = *_normal_gloss_map->y + _texture_offset_y;
+
+	//#.
+	//..
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 39] = _x;
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 40] = (_y + _size_y);
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 41] = (0.0f + 0.0f);
+	//vertices[id + 26] = 0;
+
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 42] = 1.0f;
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 43] = 1.0f;
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 44] = 1.0f;
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 45] = 1.0f;
+
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 46] = *_texture->x + _texture_offset_x;
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 47] = *_texture->y + _texture_offset_y + _size_y / 4096.0f;
+
+	//uv reflection
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 48] = 0.0f;
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 49] = (0.0f + _size_y) / 1080.0f;
+
+	//normal gloss
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 50] = *_normal_gloss_map->x + _texture_offset_x;
+	_cluster->terrain_vertex_data_buffer[_cluster->btd_last_id + 51] = *_normal_gloss_map->y + _texture_offset_y + _size_y / 4096.0f;
+
+	_cluster->btd_last_id += 52;
+}

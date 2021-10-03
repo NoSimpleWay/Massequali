@@ -387,6 +387,12 @@ public:
 		int* selected_push_method = new int(0);
 
 		EButton* selected_button = NULL;
+
+		
+
+		button_group();
+		~button_group();
+
 	};
 
 	static void update_data_id_for_buttons(button_group* _bg);
@@ -395,10 +401,10 @@ public:
 	{
 		button_group* target_button_group = NULL;
 
-		bool* is_search_by_name = new bool(false);
-		bool* is_search_by_text = new bool(false);
-		bool* is_search_by_description = new bool(false);
-		bool* is_search_by_data_string = new bool(false);
+		bool* is_search_by_name			= new bool(false);
+		bool* is_search_by_text			= new bool(false);
+		bool* is_search_by_description	= new bool(false);
+		bool* is_search_by_data_string	= new bool(false);
 	};
 
 	std::vector < SimpleButtonSearchDeactivator* > simple_button_search_deactivator_list;
@@ -427,6 +433,8 @@ public:
 		EButton* button_close = nullptr;
 
 		bool* inmovable_on_list = new bool(false);
+
+		EGabarite* background_texture;
 	};
 
 	EButton(float _x, float _y, float _sx, float _sy, EWindow* _w, button_super_group* _bsg, button_group* _bg);

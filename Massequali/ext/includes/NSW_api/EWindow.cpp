@@ -83,6 +83,7 @@ std::vector <EWindow::massive_style*>	EWindow::list_of_massive_style;
 EButton::button_super_group*			EWindow::top_overlaped_group;
 EButton*								EWindow::operable_button;
 
+constexpr auto time_process_rota_size = 60;
 
 EButton::EButton()
 {
@@ -2864,7 +2865,7 @@ void EWindow::default_draw_interface(float _d)
 			b->text_pass(EGraphicCore::batch);
 		}
 	}
-
+	EWindow::add_time_process("button process");
 	/*
 	for (button_array_collection_massive* massive : button_array_collection_massive_list)
 	if (*massive->is_active)
@@ -2882,35 +2883,97 @@ void EWindow::default_draw_interface(float _d)
 
 	//draw buttons on button group and update button group
 
-
+	if (true)
 	for (EButton::button_super_group* bsg : button_group_list)
 		if (*bsg->is_active)
 		{
 			//EGraphicCore::batch->setcolor_alpha(EColor::COLOR_BLACK, 0.5f);
 			if (EWindow::top_overlaped_group == bsg)
 			{
-				EGraphicCore::batch->setcolor_alpha(EColor::COLOR_LIGHT_GRAY, 0.9f);
+				EGraphicCore::batch->setcolor_alpha(EColor::COLOR_WHITE, 1.0f);
 			}
 			else
 			{
-				EGraphicCore::batch->setcolor_alpha(EColor::COLOR_DARK_GRAY, 0.75f);
+				EGraphicCore::batch->setcolor_alpha(EColor::COLOR_DARK_GRAY, 0.9f);
 			}
 
 
-			EGraphicCore::batch->draw_gabarite_screen_space(*bsg->position_x, *bsg->position_y, *bsg->size_x, *bsg->size_y, EWindow::list_of_massive_style.at(0)->background);
+			//EGraphicCore::batch->draw_gabarite_screen_space(*bsg->position_x, *bsg->position_y, *bsg->size_x, *bsg->size_y, EWindow::list_of_massive_style.at(0)->background);
 			//EGraphicCore::batch->draw_gabarite(*bsg->position_x, *bsg->position_y, *bsg->size_x, *bsg->size_y, EGraphicCore::gabarite_white_pixel);
+
+			float bg_texture_size_x = 0.0f;
+			float bg_texture_size_y = 0.0f;
+
+			for (int i = 0; i < ceil(*bsg->size_y / 48.0f); i++)
+			for (int j = 0; j < ceil(*bsg->size_x / 48.0f); j++)
+			{
+				bg_texture_size_x = min(*bsg->size_x - j * 48.0f, 48.0f);
+				bg_texture_size_y = min(*bsg->size_y - i * 48.0f, 48.0f);
+
+				EGraphicCore::batch->draw_with_custom_uv
+				(
+					*bsg->position_x + j * 48.0f,
+					*bsg->position_y + i * 48.0f,
+
+					bg_texture_size_x,
+					bg_texture_size_y,
+
+					*bsg->background_texture->x + 3.0f / 4096.0f,
+					*bsg->background_texture->y + 3.0f / 4096.0f,
+
+					*bsg->background_texture->x + (bg_texture_size_x + 3.0f) / 4096.0f,
+					*bsg->background_texture->y + (bg_texture_size_y + 3.0f) / 4096.0f
+				);
+			}
+
+			for (int i = 0; i < ceil(*bsg->size_y / 48.0f); i++)
+			{
+				bg_texture_size_x = 3.0f;
+				bg_texture_size_y = min(*bsg->size_y - i * 48.0f, 48.0f);
+
+				EGraphicCore::batch->draw_with_custom_uv
+				(
+					*bsg->position_x - 3.0f,
+					*bsg->position_y + i * 48.0f,
+
+					bg_texture_size_x,
+					bg_texture_size_y,
+
+					*bsg->background_texture->x + 0.0f / 4096.0f,
+					*bsg->background_texture->y + 3.0f / 4096.0f,
+
+					*bsg->background_texture->x + (3.0f) / 4096.0f,
+					*bsg->background_texture->y + (bg_texture_size_y + 3.0f) / 4096.0f
+				);
+
+				EGraphicCore::batch->draw_with_custom_uv
+				(
+					*bsg->position_x + *bsg->size_x + 0.0f,
+					*bsg->position_y + i * 48.0f,
+
+					bg_texture_size_x,
+					bg_texture_size_y,
+
+					* bsg->background_texture->x + 51.0f / 4096.0f,
+					* bsg->background_texture->y + 3.0f / 4096.0f,
+
+					* bsg->background_texture->x + (51.0f + 3.0f) / 4096.0f,
+					* bsg->background_texture->y + (bg_texture_size_y + 3.0f) / 4096.0f
+				);
+			}
 
 			if (*bsg->is_catched)
 			{
-				EGraphicCore::batch->setcolor_alpha(EColor::COLOR_BLUE, 0.9f);
-				EGraphicCore::batch->draw_rama(*bsg->position_x, *bsg->position_y, *bsg->size_x, *bsg->size_y, 2.0f, EGraphicCore::gabarite_white_pixel);
+				EGraphicCore::batch->setcolor_alpha(EColor::COLOR_BLUE, 0.8f);
+				EGraphicCore::batch->draw_rama(*bsg->position_x - 5.0f, *bsg->position_y - 5.0f, *bsg->size_x + 10.0f, *bsg->size_y + 10.0f, 3.0f, EGraphicCore::gabarite_white_pixel);
 			}
 
+			/*
 			if (EWindow::top_overlaped_group == bsg)
 			{
-				EGraphicCore::batch->setcolor(EColor::COLOR_DARK_GREEN);
-				EGraphicCore::batch->draw_rama(*bsg->position_x, *bsg->position_y, *bsg->size_x, *bsg->size_y, 2.0f, EGraphicCore::gabarite_white_pixel);;
-			}
+				EGraphicCore::batch->setcolor_alpha(EColor::COLOR_GREEN, 0.8f);
+				EGraphicCore::batch->draw_rama(*bsg->position_x - 5.0f, *bsg->position_y - 5.0f, *bsg->size_x + 10.0f, *bsg->size_y + 10.0f, 2.0f, EGraphicCore::gabarite_white_pixel);;
+			}*/
 
 			EGraphicCore::batch->force_draw_call();
 
@@ -2955,8 +3018,8 @@ void EWindow::default_draw_interface(float _d)
 				}
 
 				//draw pass with scissors
-				EGraphicCore::batch->setcolor_alpha(EColor::COLOR_GRAY, 1.0f);
-				EGraphicCore::batch->draw_rama(total_x, total_y, *bg->size_x, *bg->size_y, 2.0f, EGraphicCore::gabarite_white_pixel);
+				EGraphicCore::batch->setcolor_alpha(EColor::COLOR_GRAY, 0.1f);
+				EGraphicCore::batch->draw_rama(total_x, total_y, *bg->size_x, *bg->size_y, 1.0f, EGraphicCore::gabarite_white_pixel);
 
 				for (EButton* but : bg->button_list)
 				if
@@ -3012,10 +3075,11 @@ void EWindow::default_draw_interface(float _d)
 
 			EGraphicCore::batch->force_draw_call();
 		}
-
+		EWindow::add_time_process("button group process");
 	//draw graphic for button group
 
 	//if (time_process_active)
+		if (glfwGetKey(EWindow::main_window, GLFW_KEY_TAB) == GLFW_PRESS)
 		{
 			float time_process_h = 0.0f;
 			float time_process_summ = 0.0f;
@@ -3029,9 +3093,9 @@ void EWindow::default_draw_interface(float _d)
 				//EFont::active_font->draw(EGraphicCore::batch, EString::float_to_string(round(str->time_process_value.at(time_process_rota_id) * 100.0f) / 100.0f), 205.0f, EGraphicCore::SCR_HEIGHT - 52.0f - offset_y + 3.0f);
 
 				float time_process_average = 0.0f;
-				float min_value = 100.0f;
+				float min_value = 10000.0f;
 				float max_value = 0.0f;
-				for (int i = 0; i < 30; i++)
+				for (int i = 0; i < time_process_rota_size; i++)
 				{
 					float current = str->time_process_value.at(i);
 					time_process_average += current;
@@ -3040,13 +3104,27 @@ void EWindow::default_draw_interface(float _d)
 					if (current > max_value) { max_value = current; }
 				}
 
-				time_process_average /= 30.0f;
+				time_process_average /= time_process_rota_size;
 				time_process_summ += time_process_average;
 
-				if (glfwGetKey(EWindow::main_window, GLFW_KEY_TAB) == GLFW_PRESS)
+				//if (glfwGetKey(EWindow::main_window, GLFW_KEY_TAB) == GLFW_PRESS)
+				//if (time_process_average > 0.05f)
 				{
-					EGraphicCore::batch->setcolor_alpha(EColor::COLOR_BLACK, 0.9f);
-					EGraphicCore::batch->draw_gabarite(0.0f, EGraphicCore::SCR_HEIGHT - 52.0f - offset_y, 300.0f, 20.0f, EGraphicCore::gabarite_white_pixel);
+					if (time_process_average > 0.2f)
+					{
+						EGraphicCore::batch->setcolor_alpha(EColor::COLOR_BLACK, 0.9f);
+					}
+					else
+					if (time_process_average > 0.1f)
+					{
+						EGraphicCore::batch->setcolor_alpha(EColor::COLOR_DARK_GRAY, 0.8f);
+					}
+					else
+					{
+						EGraphicCore::batch->setcolor_alpha(EColor::COLOR_GRAY, 0.8f);
+					}
+
+					EGraphicCore::batch->draw_gabarite(0.0f, EGraphicCore::SCR_HEIGHT - 52.0f - offset_y, 400.0f, 20.0f, EGraphicCore::gabarite_white_pixel);
 
 					EGraphicCore::batch->setcolor_alpha(EColor::COLOR_WHITE, 0.9f);
 					EFont::active_font->draw(EGraphicCore::batch, str->time_process_name, 5.0f, EGraphicCore::SCR_HEIGHT - 52.0f - offset_y + 3.0f);
@@ -3054,17 +3132,19 @@ void EWindow::default_draw_interface(float _d)
 					EGraphicCore::batch->setcolor_alpha(EColor::COLOR_WHITE, 0.9f);
 					EFont::active_font->draw(EGraphicCore::batch, EString::float_to_string(round(time_process_average * 100.0f) / 100.0f), 205.0f, EGraphicCore::SCR_HEIGHT - 52.0f - offset_y + 3.0f);
 
-					EGraphicCore::batch->setcolor_alpha(EColor::COLOR_DARK_GREEN, 0.9f);
+					EGraphicCore::batch->setcolor_alpha(EColor::COLOR_GREEN, 0.9f);
 					EFont::active_font->draw(EGraphicCore::batch, EString::float_to_string(min_value), 255.0f, EGraphicCore::SCR_HEIGHT - 52.0f - offset_y + 3.0f);
 
-					EGraphicCore::batch->setcolor_alpha(EColor::COLOR_DARK_RED, 0.9f);
+					EGraphicCore::batch->setcolor_alpha(EColor::COLOR_RED, 0.9f);
 					EFont::active_font->draw(EGraphicCore::batch, EString::float_to_string(max_value), 305.0f, EGraphicCore::SCR_HEIGHT - 52.0f - offset_y + 3.0f);
+
+					offset_y += 25.0f;
 				}
-				offset_y += 25.0f;
+				
 			}
 
 			EGraphicCore::batch->setcolor_alpha(EColor::COLOR_BLACK, 0.9f);
-			EGraphicCore::batch->draw_gabarite(0.0f, EGraphicCore::SCR_HEIGHT - 32.0f, 300.0f, 20.0f, EGraphicCore::gabarite_white_pixel);
+			EGraphicCore::batch->draw_gabarite(0.0f, EGraphicCore::SCR_HEIGHT - 32.0f, 400.0f, 20.0f, EGraphicCore::gabarite_white_pixel);
 
 			EGraphicCore::batch->setcolor_alpha(EColor::COLOR_PINK, 0.9f);
 			EFont::active_font->draw(EGraphicCore::batch, "summ", 5.0f, EGraphicCore::SCR_HEIGHT - 32.0f + 3.0f);
@@ -3072,13 +3152,16 @@ void EWindow::default_draw_interface(float _d)
 
 			time_process_rota_id++;
 
-			if (time_process_rota_id >= 30)
+			if (time_process_rota_id >= time_process_rota_size)
 			{
 				time_process_rota_id = 0;
 			}
 		}
 
-		
+		EWindow::add_time_process("time process draw");
+
+		EGraphicCore::batch->force_draw_call();
+		EWindow::add_time_process("default interface draw call");
 }
 
 void EWindow::draw_interface(float _d)
@@ -3088,38 +3171,42 @@ void EWindow::draw_interface(float _d)
 void EWindow::add_time_process(std::string _name)
 {
 	//std::vector <float> tvec = new std::vector<float>(60, 0.0f);
-
-	int id = -1;
-	int tid = 0;
-	for (time_process_struct* tps : tps_list)
+	if (glfwGetKey(EWindow::main_window, GLFW_KEY_TAB) == GLFW_PRESS)
 	{
-		if (tps->time_process_name == _name) { id = tid; break; }
-
-		tid++;
-	}
-
-	stop = std::chrono::high_resolution_clock::now();
-
-	if (id != -1)
-	{
-		tps_list.at(id)->time_process_name = _name;
-		tps_list.at(id)->time_process_value.at(time_process_rota_id) = std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count() / 1000.0f;
-	}
-	else
-	{
-		time_process_struct* new_tps = new time_process_struct;
-
-		tps_list.push_back(new_tps);
-
-		for (int i = 0; i < 30; i++)
+		int id = -1;
+		int tid = 0;
+		for (time_process_struct* tps : tps_list)
 		{
-			new_tps->time_process_value.push_back(std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count() / 1000.0f);
+			if (tps->time_process_name == _name) { id = tid; break; }
+
+			tid++;
 		}
 
-		new_tps->time_process_name = _name;
-	}
+		stop = std::chrono::high_resolution_clock::now();
 
-	start = std::chrono::high_resolution_clock::now();
+		if (id != -1)
+		{
+			tps_list.at(id)->time_process_name = _name;
+			tps_list.at(id)->time_process_value.at(time_process_rota_id) = std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count() / 1000.0f;
+		}
+		else
+		{
+			time_process_struct* new_tps = new time_process_struct;
+
+			std::cout << "Create new time process (" << _name << ")" << std::endl;
+
+			tps_list.push_back(new_tps);
+
+			for (int i = 0; i < time_process_rota_size; i++)
+			{
+				new_tps->time_process_value.push_back(0.0f);
+			}
+
+			new_tps->time_process_name = _name;
+		}
+
+		start = std::chrono::high_resolution_clock::now();
+	}
 }
 
 void EWindow::push_cursor(float _x, float _y)
@@ -3384,8 +3471,19 @@ EButton::button_super_group::button_super_group(EWindow* _w)
 
 	button_close = but;
 	additional_button_list.push_back(but);
+
+	background_texture = ETextureAtlas::put_texture_to_atlas("data/textures/gui_bg.png", EWindow::default_texture_atlas);
 }
 
 EButton::button_super_group::~button_super_group()
+{
+}
+
+EButton::button_group::button_group()
+{
+	
+}
+
+EButton::button_group::~button_group()
 {
 }

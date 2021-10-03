@@ -11,6 +11,9 @@
 //#define INCLUDE_STB_IMAGE_WRITE_H
 #include "stb_image_write.h"
 
+#include <algorithm>
+#include <iterator>
+
 
 namespace fs = std::experimental::filesystem;
 
@@ -88,9 +91,33 @@ std::vector<Entity::AutobuildingGroup*>			EWindowMain::draw_group_buffer(1001);
 int												EWindowMain::last_index;
 
 EWindowMain::terrain_tile_struct*				EWindowMain::terrain_matrix[250][250];
+
+
+
+/// autobuilding section
+EGraphicCore::ESprite*	EWindowMain::selected_sprite;
+						
+int						EWindowMain::selected_sprite_id;
+
+float					EWindowMain::mid_wall_copies_x;
+float					EWindowMain::mid_wall_copies_y;
+
+float					EWindowMain::wall_full_size_x;
+float					EWindowMain::wall_full_size_y;
+
+float					EWindowMain::wall_fragment_x;
+float					EWindowMain::wall_fragment_y;
+
+float					EWindowMain::fragment_correction_factor_x;
+float					EWindowMain::fragment_correction_factor_y;
+
+int						EWindowMain::subdivision_x_count;
+int						EWindowMain::subdivision_y_count;
+
 EWindowMain::EWindowMain()
 {
 	EWindowMain::terrain_tile_struct* just_created_terrain_tile = NULL;
+
 	for (int i = 0; i < TILES_COUNT_X; i++)
 	for (int j = 0; j < TILES_COUNT_Y; j++)
 	{
@@ -108,15 +135,41 @@ EWindowMain::EWindowMain()
 		*just_created_terrain_tile->size_y = 40.0f;
 	}
 
+	
+
 	create_button_groups();
 
 	entity_selection_region = new EButton::EGridRegion();
 
-	for (int i = 0; i < ECluster::CLUSTED_DIM_X; i++)
+	for (int i = 0; i < ECluster::CLUSTED_DIM_Y; i++)
 	for (int j = 0; j < ECluster::CLUSTED_DIM_X; j++)
 	{
 		cluster_static		[j][i] = new ECluster();
 		cluster_non_static	[j][i] = new ECluster();
+	}
+
+	for (int i = 0; i < ECluster::CLUSTED_DIM_Y; i++)
+	for (int j = 0; j < ECluster::CLUSTED_DIM_X; j++)
+	for (int tx = 0; tx < 5; tx++)
+	for (int ty = 0; ty < 5; ty++)
+	{
+		//cluster_static[j][i]->terrain_vertex_data_buffer[tx][ty];
+		ECluster::bake_terrain_data
+		(
+			cluster_static[j][i],
+
+			(float)(j) * (float)ECluster::CLUSTER_SIZE_X + tx * 40.0f,
+			(float)(i) * (float)ECluster::CLUSTER_SIZE_Y + ty * 40.0f,
+
+			*terrain_matrix[j * 5 + tx][i * 5 + ty]->size_x,
+			*terrain_matrix[j * 5 + tx][i * 5 + ty]->size_y,
+
+			*terrain_matrix[j * 5 + tx][i * 5 + ty]->texture_offset_x,
+			*terrain_matrix[j * 5 + tx][i * 5 + ty]->texture_offset_y,
+
+			terrain_matrix[j * 5 + tx][i * 5 + ty]->terrain_texture,
+			terrain_matrix[j * 5 + tx][i * 5 + ty]->normal_gloss_texture
+		);
 	}
 
 	load_map("test");
@@ -1407,30 +1460,28 @@ void EWindowMain::draw(float _d)
 	EWindow::add_time_process("Start draw");
 	reset_render();
 
-
-
-	//EGraphicCore::batch->setcolor(EColor::COLOR_GRAY);
-	//EGraphicCore::batch->draw_gabarite(0.0f, 0.0f, 2000.0f, 2000.0f, EGraphicCore::gabarite_white_pixel);
-	//EWindow::add_time_process("Draw alt info on ground");
-	//EWindow::add_time_process("Reset render");
-
 	if (glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
-	for (int i = cluster_draw_start_y; i <= cluster_draw_end_y; i++)
-	for (int j = cluster_draw_start_x; j <= cluster_draw_end_x; j++)
 	{
-		EGraphicCore::batch->setcolor(EColor::COLOR_GRAY);
-		EGraphicCore::batch->draw_rama(j * ECluster::CLUSTER_SIZE_X, i * ECluster::CLUSTER_SIZE_Y, ECluster::CLUSTER_SIZE_X, ECluster::CLUSTER_SIZE_Y, 1.0f / *main_camera->zoom, EGraphicCore::gabarite_white_pixel);
+		for (int i = cluster_draw_start_y; i <= cluster_draw_end_y; i++)
+		for (int j = cluster_draw_start_x; j <= cluster_draw_end_x; j++)
+		{
+			EGraphicCore::batch->setcolor(EColor::COLOR_GRAY);
+			EGraphicCore::batch->draw_rama(j * ECluster::CLUSTER_SIZE_X, i * ECluster::CLUSTER_SIZE_Y, ECluster::CLUSTER_SIZE_X, ECluster::CLUSTER_SIZE_Y, 1.0f / *main_camera->zoom, EGraphicCore::gabarite_white_pixel);
 
+			EFont::active_font->draw(EGraphicCore::batch, std::to_string(cluster_static[j][i]->entity_list.size()), j * ECluster::CLUSTER_SIZE_X + 10.0f, i * ECluster::CLUSTER_SIZE_Y + 10.0f);
+		}
 
-		EFont::active_font->draw(EGraphicCore::batch, std::to_string(cluster_static[j][i]->entity_list.size()), j * ECluster::CLUSTER_SIZE_X + 10.0f, i * ECluster::CLUSTER_SIZE_Y + 10.0f);
-			
 	}
+
+	/*if (glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) != GLFW_PRESS)
+	{
+
+	}*/
+
 	EWindow::add_time_process("Draw rama");
 
 
 Entity* swap_entity = NULL;
-//std::cout << "static[0][0] size is " << std::to_string(cluster_static[0][0]->entity_list.size()) << std::endl;
-//std::cout << "non-static[0][0] size is " << std::to_string(cluster_non_static[0][0]->entity_list.size()) << std::endl;
 last_index = 0;
 
 	bool is_y_sort = false;
@@ -1439,8 +1490,6 @@ last_index = 0;
 	float t_z = 100.0f;
 	
 	last_index = 0;
-
-	//std::cout << "----------------" << std::endl;
 
 for (int i = cluster_draw_end_y; i >= cluster_draw_start_y; i--)
 for (int j = cluster_draw_start_x; j <= cluster_draw_end_x; j++)
@@ -1452,38 +1501,15 @@ for (int j = cluster_draw_start_x; j <= cluster_draw_end_x; j++)
 			{
 				draw_group_buffer.at(last_index) = a_group;
 
-				/*
-				if (glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
-				{
-					std::cout
-					<<
-					"push wall ["
-					<<
-					*a_group->name
-					<<
-					"]   last_index ["
-					<<
-					std::to_string(last_index)
-					<<
-					"]"
-					<<
-					std::endl;
-				}*/
-
-
 				last_index++;
 			}
-
-			
 		}
 	}
 
 EWindow::add_time_process("fill draw buffer");
 
 	bool need_sort = true;
-	//std::cout << "---" << std::endl;
 
-	
 	while (need_sort)
 	{
 		need_sort = false;
@@ -1491,97 +1517,9 @@ EWindow::add_time_process("fill draw buffer");
 		for (int z = 0; z < last_index - 1; z++)
 		{
 
-
-			/*if (glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
-			{
-				std::cout
-					<<
-					"z ("
-					<<
-					*draw_group_buffer.at(z)->name
-					<<
-					") ["
-					<<
-					std::to_string(*draw_group_buffer.at(z)->offset_z + *draw_group_buffer.at(z)->master_entity->position_z)
-					<<
-					"] z + 1 ("
-					<<
-					*draw_group_buffer.at(z + 1)->name
-					<<
-					") ["
-					<<
-					std::to_string(*draw_group_buffer.at(z + 1)->offset_z + *draw_group_buffer.at(z + 1)->master_entity->position_z)
-					<<
-					"]"
-					<< std::endl;
-			}*/
-
-			/*if
-				(
-					(
-						//(
-						//	*draw_group_buffer.at(z)->selected_direction_of_push == AutobuildingSpritePushDirection::AUTOBUILDING_SPRITE_PUSH_DIRECTION_WALL_Z
-						//)
-						//&
-
-						//if close to camera
-						(
-							*draw_group_buffer.at(z)->offset_y + *draw_group_buffer.at(z)->master_entity->position_y
-							<
-							*draw_group_buffer.at(z + 1)->offset_y + *draw_group_buffer.at(z + 1)->master_entity->position_y
-						)
-						//and 
-						&&
-						(
-							*draw_group_buffer.at(z)->master_entity->position_y
-							+
-							*draw_group_buffer.at(z)->offset_y
-							+
-							*draw_group_buffer.at(z)->master_entity->position_z
-							+
-							*draw_group_buffer.at(z)->offset_z
-							+
-							*draw_group_buffer.at(z)->max_height
-							>=
-							*draw_group_buffer.at(z)->master_entity->position_y
-							+
-							*draw_group_buffer.at(z)->offset_y
-							+
-							*draw_group_buffer.at(z)->master_entity->position_z
-							+
-							*draw_group_buffer.at(z)->offset_z
-						)
-
-					)
-				)
-			{
-				swap(draw_group_buffer.at(z), draw_group_buffer.at(z + 1));
-				need_sort = true;
-				if (glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
-				{
-					std::cout
-						<<
-						"swap ["
-						<<
-						*draw_group_buffer.at(z)->name
-						<<
-						"] and ["
-						<<
-						*draw_group_buffer.at(z + 1)->name
-						<<
-						"]"
-						<<
-						std::endl;
-				}
-			}*/
-
 			if
 				(
 					(
-						//(
-						//	*draw_group_buffer.at(z)->selected_direction_of_push == AutobuildingSpritePushDirection::AUTOBUILDING_SPRITE_PUSH_DIRECTION_WALL_Z
-						//)
-						//&
 
 						//if close to camera
 						(
@@ -1609,61 +1547,15 @@ EWindow::add_time_process("fill draw buffer");
 			{
 				
 				need_sort = true;
-				/*
-				if (glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
-				{
-					std::cout
-						<<
-						"swap Y ["
-						<<
-						*draw_group_buffer.at(z)->name
-						<<
-						"]("
-						<<
-						std::to_string
-						(
-							*draw_group_buffer.at(z)->offset_y + *draw_group_buffer.at(z)->master_entity->position_y
-						)
-						<<
-						") and ["
-						<<
-						*draw_group_buffer.at(z + 1)->name
-						<<
-						"]("
-						<<
-						std::to_string
-						(
-							*draw_group_buffer.at(z + 1)->offset_y + *draw_group_buffer.at(z + 1)->master_entity->position_y
-						)
-						<<
-						")"
-						<<
-						std::endl;
-				}*/
+				
 
 				swap(draw_group_buffer.at(z), draw_group_buffer.at(z + 1));
 			}
-			//std::cout << "try sort z" << std::endl;
+			
 			if
 				(
 					(
-						//(
-						//	*draw_group_buffer.at(z)->selected_direction_of_push == AutobuildingSpritePushDirection::AUTOBUILDING_SPRITE_PUSH_DIRECTION_WALL_Z
-						//)
-						//&
-
-						//if far to camera
-						//(
-						//	*draw_group_buffer.at(z)->offset_y + *draw_group_buffer.at(z)->master_entity->position_y
-						//	>
-						//	*draw_group_buffer.at(z + 1)->offset_y + *draw_group_buffer.at(z + 1)->master_entity->position_y
-						//)
-						//&&
-						//(
-						//	*draw_group_buffer.at(z)->selected_direction_of_push != AutobuildingSpritePushDirection::AUTOBUILDING_SPRITE_PUSH_DIRECTION_ROOF_Y
-						//)
-						//and 
-						//&&
+						
 						(
 
 							*draw_group_buffer.at(z)->master_entity->position_z
@@ -1680,97 +1572,10 @@ EWindow::add_time_process("fill draw buffer");
 					)
 				)
 			{
-				/*
-				if (glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
-				{
-					std::cout
-						<<
-						"swap Z ["
-						<<
-						*draw_group_buffer.at(z)->name
-						<<
-						"]("
-						<<
-						std::to_string
-						(
-							*draw_group_buffer.at(z)->master_entity->position_z
-							+
-							*draw_group_buffer.at(z)->offset_z
-						)
-						<<
-						") and ["
-						<<
-						*draw_group_buffer.at(z + 1)->name
-						<<
-						"]("
-						<<
-						std::to_string
-						(
-							*draw_group_buffer.at(z + 1)->master_entity->position_z
-							+
-							*draw_group_buffer.at(z + 1)->offset_z
-							+
-							*draw_group_buffer.at(z + 1)->max_height
-						)
-						<<
-						")"
-						<<
-						std::endl;
-				}
-				*/
 				swap(draw_group_buffer.at(z), draw_group_buffer.at(z + 1));
 				need_sort = true;
 				
 			}
-			
-			/*if
-				(
-					(
-						(
-							*draw_group_buffer.at(z)->selected_direction_of_push == AutobuildingSpritePushDirection::AUTOBUILDING_SPRITE_PUSH_DIRECTION_ROOF_Y
-						)
-						&
-						(
-							(
-								*draw_group_buffer.at(z)->offset_y + *draw_group_buffer.at(z)->master_entity->position_y
-								<
-								*draw_group_buffer.at(z + 1)->offset_y + *draw_group_buffer.at(z + 1)->master_entity->position_y
-							)
-							||
-							(
-								*draw_group_buffer.at(z)->offset_z + *draw_group_buffer.at(z)->master_entity->position_z
-								>
-								*draw_group_buffer.at(z + 1)->max_height
-							)
-
-						)
-					)
-				)
-			{
-				swap(draw_group_buffer.at(z), draw_group_buffer.at(z + 1));
-				need_sort = true;
-				if (glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
-				{
-					std::cout
-						<<
-						"swap ["
-						<<
-						*draw_group_buffer.at(z)->name
-						<<
-						"] and ["
-						<<
-						*draw_group_buffer.at(z + 1)->name
-						<<
-						"]"
-						<<
-						std::endl;
-				}
-			}*/
-
-			/*if ((z == last_index - 2) &(!need_sort))
-			{
-				break;
-			}*/
 		}
 
 		//need_sort = false;
@@ -1842,46 +1647,19 @@ glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 glBindTexture(GL_TEXTURE_2D, EWindow::default_texture_atlas->colorbuffer);
 EGraphicCore::PBR_shader->setInt("normal_gloss_map_texture", 1);
 
-glActiveTexture(GL_TEXTURE2);
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[0]->colorbuffer);//1
-EGraphicCore::PBR_shader->setInt("SD_array[0]", 2);
+for (int i = 0; i < skydome_texture_levels; i++)
+{
+	glActiveTexture(GL_TEXTURE2 + i);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[i]->colorbuffer);//1
+	EGraphicCore::PBR_shader->setInt("SD_array[" + std::to_string(i) + "]", i + 2);
+}
 
-glActiveTexture(GL_TEXTURE3);
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[1]->colorbuffer);//1/2
-EGraphicCore::PBR_shader->setInt("SD_array[1]", 3);
 
-glActiveTexture(GL_TEXTURE4);
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[2]->colorbuffer);//1/4
-EGraphicCore::PBR_shader->setInt("SD_array[2]", 4);
-
-glActiveTexture(GL_TEXTURE5);
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[3]->colorbuffer);//1/8
-EGraphicCore::PBR_shader->setInt("SD_array[3]", 5);
-
-glActiveTexture(GL_TEXTURE6);
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[4]->colorbuffer);//1/16
-EGraphicCore::PBR_shader->setInt("SD_array[4]", 6);
-
+/*
 glActiveTexture(GL_TEXTURE7);
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
@@ -1889,7 +1667,7 @@ glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[5]->colorbuffer);//1/32
 EGraphicCore::PBR_shader->setInt("SD_array[5]", 7);
-
+EWindow::add_time_process("Set shader parameters");*/
 
 
 	//DRAW BUFFER
@@ -1929,6 +1707,7 @@ EGraphicCore::PBR_shader->setInt("SD_array[5]", 7);
 			);
 		}
 	}
+
 	EWindow::add_time_process("Draw entities");
 	EGraphicCore::batch_PBR->force_draw_call_PBR();
 	EWindow::add_time_process("batch draw call [entities]");
@@ -1976,8 +1755,10 @@ if (is_entity_selection_started)
 EGraphicCore::batch->force_draw_call();
 
 EWindow::add_time_process("batch draw call [helpers]");
-	if ((glfwGetKey(EWindow::main_window, GLFW_KEY_TAB) == GLFW_PRESS))
+	
+	if ((glfwGetKey(EWindow::main_window, GLFW_KEY_TAB) == GLFW_PRESS) && (false))
 	{
+		
 		EGraphicCore::batch->setcolor(10.0f, 10.0f, 10.0f, 1.0f);
 		EGraphicCore::batch->reset();
 			ETextureAtlas::set_this_FBO_as_active(EWindow::skydome_light_FBO[0]);
@@ -1986,12 +1767,13 @@ EWindow::add_time_process("batch draw call [helpers]");
 			EGraphicCore::batch->draw_rect(0.0f, 0.0f, EWindow::skydome_light_FBO[0]->size_x, EWindow::skydome_light_FBO[0]->size_y);
 		EGraphicCore::batch->force_draw_call();
 
-		for (int i = 1; i < 8; i++)
+		for (int i = 1; i < skydome_texture_levels; i++)
 		{
 			ETextureAtlas::set_this_FBO_as_active(EWindow::skydome_light_FBO[i]);
 			EGraphicCore::batch->draw_rect(0.0f, (EWindow::skydome_light_FBO[0]->size_y + 5.0f) * i, EWindow::skydome_light_FBO[0]->size_x, EWindow::skydome_light_FBO[0]->size_y);
 			EGraphicCore::batch->force_draw_call();
 		}
+		
 
 
 
@@ -2019,9 +1801,32 @@ EWindow::add_time_process("batch draw call [helpers]");
 	}
 	
 
-	
 
+	if ((glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS) && (true))
+	{
+		EGraphicCore::ourShader->use();
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendEquation(GL_FUNC_ADD);
+		ETextureAtlas::set_this_FBO_as_active(EWindow::default_texture_atlas);
 
+		EGraphicCore::matrix_transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+		EGraphicCore::matrix_transform = glm::translate(EGraphicCore::matrix_transform, glm::vec3(-1.0f, -1.0f, 0.0f));
+		EGraphicCore::matrix_transform = glm::scale(EGraphicCore::matrix_transform, glm::vec3(EGraphicCore::correction_x * 1.0f, EGraphicCore::correction_y * 1.0f, 1.0f));
+		transformLoc = glGetUniformLocation(EGraphicCore::ourShader->ID, "transform");
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(EGraphicCore::matrix_transform));
+
+		EGraphicCore::batch->setcolor_lum(EColor::COLOR_WHITE, 0.1f);
+		EGraphicCore::batch->draw_gabarite(EGraphicCore::SCR_WIDTH - 168.0f, 8.0f, 160.0f, 150.0f, EGraphicCore::gabarite_white_pixel);
+
+		EGraphicCore::batch->setcolor_lum(EColor::COLOR_WHITE, 0.9f);
+		EFont::active_font->draw(EGraphicCore::batch, "Cluster start draw (x): " + std::to_string(cluster_draw_start_x), EGraphicCore::SCR_WIDTH - 165.0f, 100.0f);
+		EFont::active_font->draw(EGraphicCore::batch, "Cluster end draw (x): " + std::to_string(cluster_draw_end_x), EGraphicCore::SCR_WIDTH - 165.0f, 100.0f - 15.0f);
+		EFont::active_font->draw(EGraphicCore::batch, "Cluster start draw (y): " + std::to_string(cluster_draw_start_y), EGraphicCore::SCR_WIDTH - 165.0f, 100.0f - 30.0f);
+		EFont::active_font->draw(EGraphicCore::batch, "Cluster end draw (y): " + std::to_string(cluster_draw_end_y), EGraphicCore::SCR_WIDTH - 165.0f, 100.0f - 45.0f);
+
+		EGraphicCore::batch->force_draw_call();
+	}
 }
 
 void EWindowMain::update(float _d)
@@ -2030,11 +1835,11 @@ void EWindowMain::update(float _d)
 	EWindow::add_time_process("===--- update begin ---===");
 	if (_d > 0.1) { _d = 0.1f; }
 
-	cluster_draw_start_x = floor((*main_camera->position_x - EGraphicCore::SCR_WIDTH / 2.0f) / *main_camera->zoom / ECluster::CLUSTER_SIZE_X) - 5; cluster_draw_start_x = max(cluster_draw_start_x, 0);
-	cluster_draw_start_y = floor((*main_camera->position_y - EGraphicCore::SCR_HEIGHT / 2.0f) / *main_camera->zoom / ECluster::CLUSTER_SIZE_Y) - 5; cluster_draw_start_y = max(cluster_draw_start_y, 0);
+	cluster_draw_start_x = floor((*main_camera->position_x - EGraphicCore::SCR_WIDTH / 2.0f) / *main_camera->zoom / ECluster::CLUSTER_SIZE_X) - 1; cluster_draw_start_x = max(cluster_draw_start_x, 0);
+	cluster_draw_start_y = floor((*main_camera->position_y - EGraphicCore::SCR_HEIGHT / 2.0f) / *main_camera->zoom / ECluster::CLUSTER_SIZE_Y) - 1; cluster_draw_start_y = max(cluster_draw_start_y, 0);
 
-	cluster_draw_end_x = floor((*main_camera->position_x + EGraphicCore::SCR_WIDTH / 2.0f) / *main_camera->zoom / ECluster::CLUSTER_SIZE_X) + 5; cluster_draw_end_x = min(cluster_draw_end_x, ECluster::CLUSTED_DIM_X - 1);
-	cluster_draw_end_y = floor((*main_camera->position_y + EGraphicCore::SCR_HEIGHT / 2.0f) / *main_camera->zoom / ECluster::CLUSTER_SIZE_Y) + 5; cluster_draw_end_y = min(cluster_draw_end_y, ECluster::CLUSTED_DIM_Y - 1);
+	cluster_draw_end_x = floor((*main_camera->position_x + EGraphicCore::SCR_WIDTH / 2.0f) / *main_camera->zoom / ECluster::CLUSTER_SIZE_X) + 1; cluster_draw_end_x = min(cluster_draw_end_x, ECluster::CLUSTED_DIM_X - 1);
+	cluster_draw_end_y = floor((*main_camera->position_y + EGraphicCore::SCR_HEIGHT / 2.0f) / *main_camera->zoom / ECluster::CLUSTER_SIZE_Y) + 1; cluster_draw_end_y = min(cluster_draw_end_y, ECluster::CLUSTED_DIM_Y - 1);
 
 
 
@@ -2763,7 +2568,7 @@ void EWindowMain::reset_render()
 		EGraphicCore::sun_zenith_factor * EGraphicCore::sun_zenith_factor * EGraphicCore::sky_lum,
 		1.0f
 	);
-	EGraphicCore::batch->draw_gabarite(0.0f, 0.0f, 1.0f, 0.5f, EGraphicCore::gabarite_panorama);
+	EGraphicCore::batch->draw_gabarite(0.0f - *main_camera->position_x / 100000.0f, 0.0f, 1.0f, 0.5f, EGraphicCore::gabarite_panorama);
 	EGraphicCore::batch->force_draw_call();
 
 	EGraphicCore::simple_blur->use();
@@ -2779,7 +2584,7 @@ void EWindowMain::reset_render()
 	EGraphicCore::batch->setcolor(EColor::COLOR_WHITE);
 
 	//blur skydome
-	for (int i = 0; i < 7; i++)
+	for (int i = 0; i < skydome_texture_levels - 1; i++)
 	{
 		glUniform1f(glGetUniformLocation(EGraphicCore::simple_blur->ID, "blur_size_x"), (1.0f / skydome_light_FBO[i]->size_x) * (EGraphicCore::blur_size_buffer));
 		glUniform1f(glGetUniformLocation(EGraphicCore::simple_blur->ID, "blur_size_y"), (1.0f / skydome_light_FBO[i]->size_y) * (EGraphicCore::blur_size_buffer));
@@ -2874,10 +2679,10 @@ void EWindowMain::draw_terrain()
 	//glBlendFunc(GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glBlendEquation(GL_FUNC_ADD);
-	EGraphicCore::batch_PBR->reset();
 	
+
 	EGraphicCore::PBR_shader->use();
-	
+
 
 	EGraphicCore::matrix_transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
 	EGraphicCore::matrix_transform = glm::translate
@@ -2935,93 +2740,103 @@ void EWindowMain::draw_terrain()
 	glBindTexture(GL_TEXTURE_2D, EWindow::default_texture_atlas->colorbuffer);
 	EGraphicCore::PBR_shader->setInt("normal_gloss_map_texture", 1);
 
-	glActiveTexture(GL_TEXTURE2);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[0]->colorbuffer);//1
-	EGraphicCore::PBR_shader->setInt("SD_array[0]", 2);
 
-	glActiveTexture(GL_TEXTURE3);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[1]->colorbuffer);//1/2
-	EGraphicCore::PBR_shader->setInt("SD_array[1]", 3);
+	for (int i = 0; i < skydome_texture_levels; i++)
+	{
+		glActiveTexture(GL_TEXTURE2 + i);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[i]->colorbuffer);//1
+		EGraphicCore::PBR_shader->setInt("SD_array[" + std::to_string(i) + "]", i + 2);
+	}
 
-	glActiveTexture(GL_TEXTURE4);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[2]->colorbuffer);//1/4
-	EGraphicCore::PBR_shader->setInt("SD_array[2]", 4);
-
-	glActiveTexture(GL_TEXTURE5);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[3]->colorbuffer);//1/8
-	EGraphicCore::PBR_shader->setInt("SD_array[3]", 5);
-
-	glActiveTexture(GL_TEXTURE6);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[4]->colorbuffer);//1/16
-	EGraphicCore::PBR_shader->setInt("SD_array[4]", 6);
-
+	/*
 	glActiveTexture(GL_TEXTURE7);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//texture filtering
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glBindTexture(GL_TEXTURE_2D, EWindow::skydome_light_FBO[5]->colorbuffer);//1/32
-	EGraphicCore::PBR_shader->setInt("SD_array[5]", 7);
+	EGraphicCore::PBR_shader->setInt("SD_array[5]", 7);*/
 
-	
+
 
 	EGraphicCore::batch_PBR->setcolor(EColor::COLOR_WHITE);
-
-	for (int i = terrain_draw_start_y; i <= terrain_draw_end_y; i++)
-	for (int j = terrain_draw_start_x; j <= terrain_draw_end_x; j++)
+	EGraphicCore::batch_PBR->reset();
+	if (key_pressed_array[GLFW_KEY_LEFT_SHIFT])
 	{
+			for (int i = terrain_draw_start_y; i <= terrain_draw_end_y; i++)
+			for (int j = terrain_draw_start_x; j <= terrain_draw_end_x; j++)
+			{
 
-		if (terrain_matrix[j][i] != NULL)
+				if (terrain_matrix[j][i] != NULL)
+				{
+					EGraphicCore::batch_PBR->draw_terrain_PBR
+					(
+						j * 40.0f,
+						i * 40.0f,
+						0.0f,
+
+						*terrain_matrix[j][i]->size_x,
+						*terrain_matrix[j][i]->size_y,
+						0.0f,
+
+						*terrain_matrix[j][i]->texture_offset_x,
+						*terrain_matrix[j][i]->texture_offset_y,
+
+						terrain_matrix[j][i]->terrain_texture,
+						terrain_matrix[j][i]->normal_gloss_texture,
+
+						0.0f
+					);
+				}
+				else
+				{
+					std::cout << "DOLBOYOB?" << " [" << std::to_string(j) << "][" << std::to_string(i) << "]" << std::endl;
+				}
+			}
+
+			EGraphicCore::batch_PBR->force_draw_call_PBR();
+	}
+	else
+	{
+		for (int j = cluster_draw_start_x; j <= cluster_draw_end_x; j++)
 		{
-			EGraphicCore::batch_PBR->draw_terrain_PBR
-			(
-				j * 40.0f,
-				i * 40.0f,
-				0.0f,
+			for (int i = cluster_draw_start_y; i <= cluster_draw_end_y; i++)
+			{
 
-				*terrain_matrix[j][i]->size_x,
-				*terrain_matrix[j][i]->size_y,
-				0.0f,
+				std::copy
+				(
+					std::begin(cluster_static[j][i]->terrain_vertex_data_buffer),
+					std::end(cluster_static[j][i]->terrain_vertex_data_buffer),
+					std::begin(EGraphicCore::batch_PBR->vertices) + EGraphicCore::batch_PBR->id
+				);
 
-				*terrain_matrix[j][i]->texture_offset_x,
-				*terrain_matrix[j][i]->texture_offset_y,
+				EGraphicCore::batch_PBR->id += 52 * 25;
 
-				terrain_matrix[j][i]->terrain_texture,
-				terrain_matrix[j][i]->normal_gloss_texture,
+				if (EGraphicCore::batch_PBR->id > 25000)
+				{
+					//logger_param("forceful drawcall PBR, because vertices data more than 25000", EGraphicCore::batch_PBR->id);
+					EGraphicCore::batch_PBR->force_draw_call_PBR();
+					//EWindow::add_time_process("Draw terrain force draw call [" + std::to_string(i) + "]");
+				}
+			}
 
-				0.0f
-			);
+			//logger_param("last_id", EGraphicCore::batch_PBR->id);
+
+			
 		}
-		else
-		{
-			std::cout << "DOLBOYOB?" << " [" << std::to_string(j) << "][" << std::to_string(i) << "]" << std::endl;
-		}
+
+		
+		EGraphicCore::batch_PBR->force_draw_call_PBR();
 	}
 
-	
+	EWindow::add_time_process("Draw terrain draw call");
 
-	EGraphicCore::batch_PBR->force_draw_call_PBR();
-	EGraphicCore::batch_PBR->reset();
+	//EGraphicCore::batch_PBR->force_draw_call_PBR();
+	//EGraphicCore::batch_PBR->reset();
 
 
 }
@@ -3127,7 +2942,7 @@ void EWindowMain::create_new_elements_of_autobuilding_if_need(Entity* _e)
 			(_e->autobuilding_base_list.empty())
 			&
 			(glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
-			)
+		)
 	{
 		just_created_autobuilding_region = new Entity::AutobuildingBase();
 		_e->autobuilding_base_list.push_back(just_created_autobuilding_region);
@@ -3152,7 +2967,7 @@ void EWindowMain::create_new_elements_of_autobuilding_if_need(Entity* _e)
 			(_e->autobuilding_group_list.empty())
 			&
 			(glfwGetKey(EWindow::main_window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
-			)
+		)
 	{
 		Entity::AutobuildingGroup* just_created_autobuilding_group = new Entity::AutobuildingGroup();
 		just_created_autobuilding_group->master_entity = _e;
@@ -3596,44 +3411,23 @@ void EWindowMain::add_new_sprite_to_group_if_need(int _i, Entity::AutobuildingGr
 
 void EWindowMain::generate_building(Entity* _e)
 {
-	EGraphicCore::ESprite* selected_sprite = NULL;
-	int selected_sprite_id = 0;
+	selected_sprite					= NULL;
+	selected_sprite_id				= 0;
 
-	/*for (int i = 0; i < (100 - _e->entity_sprite_array->sprite_list.size()); i++)
-	{
-		EGraphicCore::ESprite* just_created_sprite = new EGraphicCore::ESprite();
-		_e->entity_sprite_array->sprite_list.push_back(just_created_sprite);
-	}*/
+	 mid_wall_copies_x				= 0.0f;
+	 mid_wall_copies_y				= 0.0f;
 
-	/*for (EGraphicCore::ESprite* spr : _e->entity_sprite_array->sprite_list)
-	{
-		EGraphicCore::reset_sprite_data(spr);
-	}*/
+	 wall_full_size_x				= 0.0f;
+	 wall_full_size_y				= 0.0f;
 
-	//add_new_sprite_if_need(0, _e);
+	 wall_fragment_x				= 0.0f;
+	 wall_fragment_y				= 0.0f;
 
-	//if (_e->entity_sprite_array == NULL)
-	//{
-	//	_e->entity_sprite_array = new EGraphicCore::sprite_array();
-	//}
-	//std::cout << "ebanye dauny 00" << std::endl;
+	 fragment_correction_factor_x	= 1.0f;
+	 fragment_correction_factor_y	= 1.0f;
 
-	//std::cout << "ebanye dauny 01" << std::endl;
-
-	float mid_wall_copies_x = 0.0f;
-	float mid_wall_copies_y = 0.0f;
-
-	float wall_full_size_x = 0.0f;
-	float wall_full_size_y = 0.0f;
-
-	float wall_fragment_x = 0.0f;
-	float wall_fragment_y = 0.0f;
-
-	float fragment_correction_factor_x = 1.0f;
-	float fragment_correction_factor_y = 1.0f;
-
-	int subdivision_x_count = 0;
-	int subdivision_y_count = 0;
+	 subdivision_x_count			= 0;
+	 subdivision_y_count			= 0;
 
 	for (Entity::AutobuildingGroup* a_group : _e->autobuilding_group_list)
 	{
@@ -3740,22 +3534,6 @@ void EWindowMain::generate_building(Entity* _e)
 
 			wall_full_size_x = round((*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_MID)->size_x) / (subdivision_x_count + 1.0f));
 			wall_full_size_y = round((*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_MID)->size_y) / (subdivision_y_count + 1.0f));
-
-			/*std::cout
-			<<
-			" WFS x: ["
-			<<
-			std::to_string(wall_full_size_x)
-			<<
-			"] WFS y: ["
-			<<
-			std::to_string(wall_full_size_y)
-			<<
-			"]"
-			<<
-			std::endl
-			<<
-			std::endl;*/
 
 			mid_wall_copies_x
 				=
@@ -4155,6 +3933,7 @@ void EWindowMain::generate_building(Entity* _e)
 
 							*selected_sprite->size_y = round(wall_full_size_y * wall_fragment_y);
 						}
+
 						convert_size_to_fragment
 						(
 							a_element->autobuilding_base->main_texture,

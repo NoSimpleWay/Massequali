@@ -5,6 +5,7 @@
 
 #include "EColor.h"
 #include "EGabarite.h"
+#include <NSW_api/EUtils.h>
 
 float Batcher::shadow_FBO_w;
 float Batcher::shadow_FBO_h;
@@ -2283,6 +2284,7 @@ void Batcher::reinit()
 
 void Batcher::draw_call()
 {
+	//logger_param("Vertices data count:", id);
 	//reinit();
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, 6 * (id / 32), GL_UNSIGNED_INT, 0);
@@ -2450,6 +2452,7 @@ void Batcher::draw_simple_rect(float _x, float _y, float _size_x, float _size_y)
 
 void Batcher::force_draw_call()
 {
+	
 	reinit();
 	draw_call();
 	reset();
