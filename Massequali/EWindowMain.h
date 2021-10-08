@@ -196,5 +196,5 @@ public:
 
 	static void put_entity_to_map(Entity* _e);
 
-	static void draw_vertical_border_element(float _x, float _y, float _z, Entity::AutobuildingGroup* _group, Entity::AutobuildingGroupElement* _element, int _border_enum, float _texture_offset, int _id);
+	static void draw_vertical_border_element(float _x, float _y, float _z, float _DH_offset, Entity::AutobuildingGroup* _group, Entity::AutobuildingGroupElement* _element, int _border_enum, float _texture_offset, int _id);
 };

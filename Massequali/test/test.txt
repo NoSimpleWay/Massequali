@@ -2288,6 +2288,51 @@ autobuilding_group_element_offset_and_size	81	-4	0	125	70
 autobuilding_group_element_base_id	8
 PUT_ENTITY_TO_MAP
 CREATE_NEW_ENTITY
+entity_position	500.959991	800.539978	0
+CREATE_NEW_AUTOBUILDING_BASE
+autobuilding_base_main_texture	data/textures/roof.png
+autobuilding_base_space_between_sprites	0	0
+autobuilding_base_random_offset	0	0
+autobuilding_selected_sprite_fill_mode	0
+autobuilding_random_sprite_count	0
+autobuilding_base_selected_draw_mode	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	80	5	5
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	5	80	92	5
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	97	80	5	5
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	20	5	60
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	5	20	92	60
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	97	20	5	60
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	0	0	5	20
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	5	0	92	20
+grid_region_subdivision	0	0
+CREATE_NEW_GRID_REGION
+grid_region_position_and_size	97	0	5	20
+grid_region_subdivision	0	0
+CREATE_NEW_AUTOBUILDING_GROUP
+autobuilding_group_offset_and_size	0	0	0	0	0
+direction_of_sprite_push	0
+autobuilding_group_name	!
+autobuilding_group_seed	0
+CREATE_NEW_AUTOBUILDING_GROUP_ELEMENT
+autobuilding_group_element_offset_and_size	-151	2	0	300	100
+autobuilding_group_element_base_id	0
+PUT_ENTITY_TO_MAP
+CREATE_NEW_ENTITY
 entity_position	5125.694336	967.94519	0
 CREATE_NEW_AUTOBUILDING_BASE
 autobuilding_base_main_texture	data/textures/decor_pipe_water.png

@@ -3387,7 +3387,7 @@ void EWindowMain::put_entity_to_map(Entity* _e)
 	}
 }
 
-void EWindowMain::draw_vertical_border_element(float _x, float _y, float _z, Entity::AutobuildingGroup* _group, Entity::AutobuildingGroupElement* _element, int _border_enum, float _texture_offset, int _id)
+void EWindowMain::draw_vertical_border_element(float _x, float _y, float _z, float _DH_offset, Entity::AutobuildingGroup* _group, Entity::AutobuildingGroupElement* _element, int _border_enum, float _texture_offset, int _id)
 {
 	if
 		(
@@ -3432,6 +3432,8 @@ void EWindowMain::draw_vertical_border_element(float _x, float _y, float _z, Ent
 
 					*selected_sprite->offset_z = _z;
 					*selected_sprite->offset_z += yy * (wall_full_size_y + *_element->autobuilding_base->space_between_sprite_y);
+					*selected_sprite->offset_z += _DH_offset;
+
 					*selected_sprite->size_z = round(wall_full_size_y * wall_fragment_y);
 				}
 
@@ -3442,6 +3444,8 @@ void EWindowMain::draw_vertical_border_element(float _x, float _y, float _z, Ent
 
 					*selected_sprite->offset_y = _y;
 					*selected_sprite->offset_y += yy * (wall_full_size_y + *_element->autobuilding_base->space_between_sprite_y);
+					*selected_sprite->offset_y += _DH_offset;
+
 					*selected_sprite->size_y = round(wall_full_size_y * wall_fragment_y);
 				}
 
@@ -3721,34 +3725,41 @@ void EWindowMain::generate_building(Entity* _e)
 			float saved_mid_wall_full_size_x = wall_full_size_x;
 			float saved_mid_wall_full_size_y = wall_full_size_y;
 
-			if (false)
-			for (int yy = 0; yy < ceil(mid_wall_copies_y) - 2; yy++)
-			for (int xx = 0; xx < ceil(mid_wall_copies_x); xx++)
+			if (true)
 			{
+				for (int yy = 1; yy < ceil(mid_wall_copies_y) - 0; yy++)
+				for (int xx = 0; xx < ceil(mid_wall_copies_x); xx++)
+				{
 					EWindowMain::draw_vertical_border_element
 					(
 						/*offset x */				*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_LEFT)->size_x,
 						/*offset y */				*a_group->offset_y + *a_element->offset_y,
-						/*offset height/depth */	*a_group->offset_z + *a_element->offset_z + yy * saved_mid_wall_full_size_y,
+						/*offset z */				*a_group->offset_z + *a_element->offset_z,
+						/*offset depth/height */	saved_mid_wall_full_size_y * yy,
 						/*autobuilding group*/		a_group,
 						/*autobuilding element*/	a_element,
 						/*id of grid region*/		EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_DOWN,
 						/*texture offset (y)*/		0.0f,
 						xx
 					);
+				}
 
-					//up
-					EWindowMain::draw_vertical_border_element
-					(
-						/*offset x */				*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_LEFT)->size_x,
-						/*offset y */				*a_group->offset_y + *a_element->offset_y,
-						/*offset height/depth */	*a_group->offset_z + *a_element->offset_z + saved_mid_wall_full_size_y - (*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_UP)->size_y) + yy * saved_mid_wall_full_size_y,
-						/*autobuilding group*/		a_group,
-						/*autobuilding element*/	a_element,
-						/*id of grid region*/		EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_UP,
-						/*texture offset (y)*/		*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_UP)->position_y,
-						xx
-					);
+				//up
+				for (int yy = 0; yy < ceil(mid_wall_copies_y) - 1; yy++)
+				for (int xx = 0; xx < ceil(mid_wall_copies_x); xx++)
+				{
+						EWindowMain::draw_vertical_border_element
+						(
+							/*offset x */				*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_LEFT)->size_x,
+							/*offset y */				*a_group->offset_y + *a_element->offset_y,
+							/*offset height/depth */	*a_group->offset_z + *a_element->offset_z + saved_mid_wall_full_size_y - (*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_UP)->size_y) + yy * saved_mid_wall_full_size_y,
+							/*autobuilding group*/		a_group,
+							/*autobuilding element*/	a_element,
+							/*id of grid region*/		EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_UP,
+							/*texture offset (y)*/		*a_element->autobuilding_base->grid_region.at(EWindowMain::GridRegionNameByOrder::GRID_REGION_NAME_BY_ORDER_UP)->position_y,
+							xx
+						);
+				}
 			}
 
 			if (*a_element->autobuilding_base->selected_sprite_fill_mode == SpriteFillMode::SPRITE_FILL_MODE_RANDOM)
